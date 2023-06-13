@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { NavLink } from 'react-router-dom'
 import openseaLogo from '../images/openseaLogo.png';
 //Styling 
 
@@ -106,7 +107,7 @@ const Header = () => {
               {/* logo and nav section  */}
               <div className='justify-self-start  flex items-center'>
 
-                <div className='text-white pt-2 mx-2  md:hidden lg:hidden' >
+                <div className='text-black pt-2 mx-2  md:hidden lg:hidden' >
                   <button onClick={() => setMenuToggle(!menuToggle)}>
 
                     <span class="material-symbols-outlined">
@@ -115,14 +116,20 @@ const Header = () => {
                   </button>
                 </div>
 
-                <div className='h-10 w-10'>
-                  <img src={openseaLogo} alt="logo" className='h-fit w-fit' />
+                <div className='flex'>
+                  <NavLink to='/home' className='flex items-center'>
+
+                    <div className='h-10 w-10'>
+                      <img src={openseaLogo} alt="logo" className='h-fit w-fit' />
+                    </div>
+                    <div className='ml-2 text-white'>
+                      <p className="font-bold text-black">
+                        OpenSea
+                      </p>
+                    </div>
+                  </NavLink>
                 </div>
-                <div className='ml-2 text-white'>
-                  <p className="font-bold text-black">
-                    OpenSea
-                  </p>
-                </div>
+
                 <div className='w-px h-8 mx-6 bg-gray-500'>
                 </div>
                 <div className='lg:flex hidden'>
@@ -146,7 +153,7 @@ const Header = () => {
               {/* Wallet and cart section  */}
               <div className='flex justify-self-end'>
                 <div className=' bg-opacity-10 rounded-xl flex items-center bg-white bg-blur-xl border-2 border-gray-400'>
-                  <div className='lg:flex hidden text-gray-700'>
+                  <div className='lg:flex hidden text-gray-700 cursor-pointer'>
                     <span class="mx-2 material-symbols-outlined">
                       wallet
                     </span>
@@ -154,7 +161,7 @@ const Header = () => {
                   </div>
                   <div onMouseOver={() => setDropdown(true)} onMouseLeave={() => setDropdown(false)} className='h-full'>
 
-                    <div className=' text-gray-600 border-solid border-gray-400 justify-end lg:border lg:border-y-0 lg:border-r-0 h-full hidden md:flex lg:flex items-center border-opacity-100 mx-2 px-4 '>
+                    <div className=' text-gray-600 border-solid border-gray-400 justify-end lg:border lg:border-y-0 lg:border-r-0 h-full hidden md:flex lg:flex items-center border-opacity-100 mx-2 px-4 cursor-pointer'>
                       <span class="material-symbols-outlined" >
                         account_circle
                       </span>
@@ -166,10 +173,10 @@ const Header = () => {
                       <div class="cursor-pointer">
                       </div>
                       {profileDropdown ?
-                        <div class="absolute right-0 mt-0 w-40 bg-white border border-gray-200 rounded-md shadow-lg ">
-                          <a class="block px-4 py-2 text-gray-800 hover:bg-gray-200" href="#">Option 1</a>
-                          <a class="block px-4 py-2 text-gray-800 hover:bg-gray-200" href="#">Option 2</a>
-                          <a class="block px-4 py-2 text-gray-800 hover:bg-gray-200" href="#">Option 3</a>
+                        <div class="absolute right-0 mt-0 w-40 bg-white border border-gray-200 rounded-md shadow-lg z-10">
+                          <NavLink to='/profile' ><p class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Profile</p></NavLink>
+                          <p class="block px-4 py-2 text-gray-800 hover:bg-gray-200" href="#">Option 2</p>
+                          <p class="block px-4 py-2 text-gray-800 hover:bg-gray-200" href="#">Option 3</p>
                         </div>
                         : <></>}
                     </div>
@@ -182,7 +189,7 @@ const Header = () => {
                     </span>
                   </div>
                 </div>
-                <div className='ml-2 px-4 bg-opacity-10  text-gray-600 rounded-xl flex items-center bg-white bg-blur-xl text-white  border-2 border-gray-400'>
+                <div className='cursor-pointer ml-2 px-4 bg-opacity-10  text-gray-600 rounded-xl flex items-center bg-white bg-blur-xl border-2 border-gray-400'>
                   <span class="material-symbols-outlined">
                     shopping_cart
                   </span>
