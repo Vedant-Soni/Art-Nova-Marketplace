@@ -19,7 +19,6 @@ const Collected = () => {
         nftsForOwnerMainnet,
         nftsForOwnerPolygon,
       } = await alchemyClient('0xcc1190D3Aad29b3E29FD435B793A830e8ccFE464');
-      console.log(nftsForOwnerSepolia.totalCount + 'hiiii');
       if (nftsForOwnerMumbai.totalCount !== 0)
         setnftsForOwnerMumbai(nftsForOwnerMumbai);
       if (nftsForOwnerSepolia.totalCount !== 0)
@@ -48,15 +47,40 @@ const Collected = () => {
         {nftsForOwnerMumbai &&
           nftsForOwnerMumbai.ownedNfts.map((nftdetail, key) => {
             return (
-              <NavLink to="/nftdetail/123">
+              <NavLink
+                to={{
+                  pathname: `/nftdetail/${nftdetail.contract.address}/${nftdetail.tokenId}`,
+                  state: {
+                    nftsForOwner: nftsForOwnerMumbai,
+                    nftdetail: nftdetail,
+                  },
+                }}
+                key={key}
+              >
                 <div className="grid grid-cols-8 py-2 border-b-2 border-gray-200 group cursor-pointer text-left items-center">
                   <div className="col-span-2 pl-2 relative image  items-center">
                     <div className="flex items-center">
-                      <img src={avtar} alt="NFT" className="h-10 w-10 m-2" />
+                      <img
+                        src={
+                          nftdetail.rawMetadata.image
+                            ? nftdetail.rawMetadata.image
+                            : 'https://cdn3.iconfinder.com/data/icons/nft/64/nft_non_fungible_token_blockchain_sign_coin-512.png'
+                        }
+                        alt="NFT"
+                        className="h-10 w-10 m-2"
+                      />
                       {nftdetail.title === '' ? '#untitled' : nftdetail.title}
                     </div>
                     <div class="absolute left-0  mt-0 w-40 bg-gray-200 z-10 border border-gray-200 p-4 rounded-md shadow-lg h-40 hidden group-hover:block">
-                      <img src={avtar} alt="NFT" className="h-fit " />
+                      <img
+                        src={
+                          nftdetail.rawMetadata.image
+                            ? nftdetail.rawMetadata.image
+                            : 'https://cdn3.iconfinder.com/data/icons/nft/64/nft_non_fungible_token_blockchain_sign_coin-512.png'
+                        }
+                        alt="NFT"
+                        className="h-fit "
+                      />
                     </div>
                   </div>
                   <div>-- -- </div>
@@ -76,15 +100,31 @@ const Collected = () => {
         {nftsForOwnerSepolia &&
           nftsForOwnerSepolia.ownedNfts.map((nftdetail, key) => {
             return (
-              <NavLink to="/nftdetail/123">
+              <NavLink
+                to={{
+                  pathname: `/nftdetail/${nftdetail.contract.address}/${nftdetail.tokenId}`,
+                  state: {
+                    nftsForOwner: nftsForOwnerSepolia,
+                    nftdetail: nftdetail,
+                  },
+                }}
+              >
                 <div className="grid grid-cols-8 py-2 border-b-2 border-gray-200 group cursor-pointer text-left items-center">
                   <div className="col-span-2 pl-2 relative image  items-center">
                     <div className="flex items-center">
-                      <img src={''} alt="NFT" className="h-10 w-10 m-2" />
+                      <img
+                        src={nftdetail.rawMetadata.image}
+                        alt="NFT"
+                        className="h-10 w-10 m-2"
+                      />
                       {nftdetail.title === '' ? '#untitled' : nftdetail.title}
                     </div>
                     <div class="absolute left-0  mt-0 w-40 bg-gray-200 z-10 border border-gray-200 p-4 rounded-md shadow-lg h-40 hidden group-hover:block">
-                      <img src={avtar} alt="NFT" className="h-fit " />
+                      <img
+                        src={nftdetail.rawMetadata.image}
+                        alt="NFT"
+                        className="h-fit "
+                      />
                     </div>
                   </div>
                   <div>-- -- </div>
@@ -104,15 +144,31 @@ const Collected = () => {
         {nftsForOwnerMainnet &&
           nftsForOwnerMainnet.ownedNfts.map((nftdetail, key) => {
             return (
-              <NavLink to="/nftdetail/123">
+              <NavLink
+                to={{
+                  pathname: `/nftdetail/${nftdetail.contract.address}/${nftdetail.tokenId}`,
+                  state: {
+                    nftsForOwner: nftsForOwnerMainnet,
+                    nftdetail: nftdetail,
+                  },
+                }}
+              >
                 <div className="grid grid-cols-8 py-2 border-b-2 border-gray-200 group cursor-pointer text-left items-center">
                   <div className="col-span-2 pl-2 relative image  items-center">
                     <div className="flex items-center">
-                      <img src={''} alt="NFT" className="h-10 w-10 m-2" />
+                      <img
+                        src={nftdetail.rawMetadata.image}
+                        alt="NFT"
+                        className="h-10 w-10 m-2"
+                      />
                       {nftdetail.title === '' ? '#untitled' : nftdetail.title}
                     </div>
                     <div class="absolute left-0  mt-0 w-40 bg-gray-200 z-10 border border-gray-200 p-4 rounded-md shadow-lg h-40 hidden group-hover:block">
-                      <img src={avtar} alt="NFT" className="h-fit " />
+                      <img
+                        src={nftdetail.rawMetadata.image}
+                        alt="NFT"
+                        className="h-fit "
+                      />
                     </div>
                   </div>
                   <div>-- -- </div>
@@ -132,15 +188,31 @@ const Collected = () => {
         {nftsForOwnerPolygon &&
           nftsForOwnerPolygon.ownedNfts.map((nftdetail, key) => {
             return (
-              <NavLink to="/nftdetail/123">
+              <NavLink
+                to={{
+                  pathname: `/nftdetail/${nftdetail.contract.address}/${nftdetail.tokenId}`,
+                  state: {
+                    nftsForOwner: nftsForOwnerPolygon,
+                    nftdetail: nftdetail,
+                  },
+                }}
+              >
                 <div className="grid grid-cols-8 py-2 border-b-2 border-gray-200 group cursor-pointer text-left items-center">
                   <div className="col-span-2 pl-2 relative image  items-center">
                     <div className="flex items-center">
-                      <img src={''} alt="NFT" className="h-10 w-10 m-2" />
+                      <img
+                        src={nftdetail.rawMetadata.image}
+                        alt="NFT"
+                        className="h-10 w-10 m-2"
+                      />
                       {nftdetail.title === '' ? '#untitled' : nftdetail.title}
                     </div>
                     <div class="absolute left-0  mt-0 w-40 bg-gray-200 z-10 border border-gray-200 p-4 rounded-md shadow-lg h-40 hidden group-hover:block">
-                      <img src={avtar} alt="NFT" className="h-fit " />
+                      <img
+                        src={nftdetail.rawMetadata.image}
+                        alt="NFT"
+                        className="h-fit "
+                      />
                     </div>
                   </div>
                   <div>-- -- </div>
