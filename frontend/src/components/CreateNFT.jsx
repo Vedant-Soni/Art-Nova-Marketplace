@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { IPFS } from './IPFS';
 
 const CreateNFT = () => {
   const [traitsDropdown, setTraitsDropdown] = useState(false);
@@ -8,19 +7,24 @@ const CreateNFT = () => {
   const [traits, setTraitData] = useState([]);
   const [supply, setSupply] = useState(1);
   const [blockchainDropdown, setBlockchainDropdown] = useState(false);
-  const chainName = 'Ethereum';
-  const symbolSrc =
-    'https://ethresear.ch/uploads/default/original/1X/bc9ee6d276a251519dd12dca7202a9e3658a7eb3.png';
-  console.log(
-    'length:',
-    traits.length,
-    'type:',
-    traitsType,
-    'value:',
-    traitsValue,
-    'traits:',
-    traits,
+  const [chainName, setChainName] = useState('Ethereum');
+  const [name, setName] = useState('  ');
+  const [description, setDescription] = useState('');
+
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [symbolSrc, setSymbolSrc] = useState(
+    'https://ethresear.ch/uploads/default/original/1X/bc9ee6d276a251519dd12dca7202a9e3658a7eb3.png',
   );
+
+  const ethLogo =
+    'https://ethresear.ch/uploads/default/original/1X/bc9ee6d276a251519dd12dca7202a9e3658a7eb3.png';
+  const polygonLogo =
+    'https://w7.pngwing.com/pngs/659/334/png-transparent-polygon-matic-coin-cryptocoin-exchange-coins-crypto-blockchain-cryptocurrency-logo-glyph-icon-thumbnail.png';
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    setSelectedFile(file);
+  };
   const setTrait = () => {
     if (traitsType != '' && traitsValue != '') {
       const currentTrait = {
@@ -39,15 +43,77 @@ const CreateNFT = () => {
       setTraitData(newArray);
     }
   };
+  //chain selection in creation form
+  const handleSelectNetwork = (chain, logo) => {
+    setChainName(chain);
+    setSymbolSrc(logo);
+    setBlockchainDropdown(false);
+  };
+
+  const handleCreateNFT = () => {
+    //here code
+
+    console.log(
+      'file: ',
+      selectedFile,
+      'name: ',
+      name,
+      'Desc: ',
+      description,
+      'properties :',
+      traits,
+      'supply :',
+      supply,
+      'blockchain :',
+      chainName,
+    );
+  };
   return (
     <div>
       <div className="justify-center flex pt-8 text-left">
         {/* title */}
-        <div className="bg-yellow-400 w-1/3">
+        <div className=" w-1/3">
           <p className="text-3xl my-4 p-4">Create New Item</p>
           {/* image upload */}
-          <div className="bg-red-200 p-4">
-            <IPFS />
+          <div className=" p-4">
+            <div>
+              <h1>File Input</h1>
+              <input
+                type="file"
+                accept="image/*, audio/*, video/*"
+                onChange={handleFileChange}
+              />
+              {selectedFile && (
+                <div>
+                  <h2>Selected File:</h2>
+                  <p>Name: {selectedFile.name}</p>
+                  <p>Size: {selectedFile.size} bytes</p>
+                  <p>Type: {selectedFile.type}</p>
+                  {selectedFile.type.startsWith('image/') && (
+                    <img
+                      src={URL.createObjectURL(selectedFile)}
+                      alt="Selected File"
+                    />
+                  )}
+                  {selectedFile.type.startsWith('audio/') && (
+                    <audio controls>
+                      <source
+                        src={URL.createObjectURL(selectedFile)}
+                        type={selectedFile.type}
+                      />
+                    </audio>
+                  )}
+                  {selectedFile.type.startsWith('video/') && (
+                    <video controls>
+                      <source
+                        src={URL.createObjectURL(selectedFile)}
+                        type={selectedFile.type}
+                      />
+                    </video>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Name */}
@@ -57,6 +123,9 @@ const CreateNFT = () => {
               type="text"
               placeholder="Item Name"
               className="bg-transparent border border-gray-400 rounded-xl p-4 outline-0"
+              onChange={(event) => {
+                setName(event.target.value);
+              }}
             />
           </div>
 
@@ -68,6 +137,9 @@ const CreateNFT = () => {
               cols=""
               placeholder="provide a detailed description of your item."
               className="bg-transparent border border-gray-400 rounded-xl p-4 outline-0"
+              onChange={(event) => {
+                setDescription(event.target.value);
+              }}
             />
           </div>
 
@@ -77,7 +149,7 @@ const CreateNFT = () => {
               <p>Properties</p>
               <div>
                 <span
-                  class="material-symbols-outlined mx-4 bg-gray-200 rounded-xl p-2 cursor-pointer"
+                  class="material-symbols-outlined  bg-gray-200 rounded-xl p-2 cursor-pointer"
                   onClick={() => setTraitsDropdown(!traitsDropdown)}
                 >
                   {!traitsDropdown ? 'add' : 'close'}
@@ -170,17 +242,18 @@ const CreateNFT = () => {
               }}
             />
           </div>
-          {/* Blockchain */}
+
+          {/* Blockchain Dropdown*/}
           <div className="flex flex-col p-4">
             <p>Blockchain</p>
             <div className="border-2 border-gray-200 h-full w-full text-center rounded-xl my-4">
               <div className="p-6 text-xl text-left flex justify-between  ">
                 <div className="flex gap-2 ">
                   <img
-                    src="https://ethresear.ch/uploads/default/original/1X/bc9ee6d276a251519dd12dca7202a9e3658a7eb3.png"
-                    className="h-8 bg-pink-400 rounded-full p-2 "
+                    src={symbolSrc}
+                    className="h-8 bg-gray-300 rounded-full p-2 "
                   />
-                  Ethereum
+                  {chainName}
                 </div>
                 <span
                   class="material-symbols-outlined cursor-pointer"
@@ -193,25 +266,58 @@ const CreateNFT = () => {
               </div>
               {blockchainDropdown ? (
                 <>
-                  <div className="w-full py-4 px-6 border-t text-left border-gray-300 flex items-center gap-2">
+                  <div
+                    className="w-full py-4 px-6 border-t text-left border-gray-300 flex items-center gap-2 cursor-pointer"
+                    onClick={() => {
+                      handleSelectNetwork('Ethereum', ethLogo);
+                    }}
+                  >
                     <img
-                      src="https://ethresear.ch/uploads/default/original/1X/bc9ee6d276a251519dd12dca7202a9e3658a7eb3.png"
-                      className="h-8 bg-pink-400 rounded-full p-2 "
+                      src={ethLogo}
+                      className="h-8 bg-gray-300 rounded-full p-2 "
                     />
-                    Sepolia
+                    Ethereum
                   </div>
-                  <div className="w-full py-4 px-6 border-t text-left flex item-center  border-gray-300 gap-2">
+                  <div
+                    className="w-full py-4 px-6 border-t text-left border-gray-300 flex items-center gap-2 cursor-pointer"
+                    onClick={() => {
+                      handleSelectNetwork('Sepolia Testnet', ethLogo);
+                    }}
+                  >
                     <img
-                      src="https://w7.pngwing.com/pngs/659/334/png-transparent-polygon-matic-coin-cryptocoin-exchange-coins-crypto-blockchain-cryptocurrency-logo-glyph-icon-thumbnail.png"
-                      className="h-8 bg-pink-400 rounded-full p-2 "
+                      src={ethLogo}
+                      className="h-8 bg-gray-300 rounded-full p-2 "
                     />
-                    Mumbai
+                    Sepolia Testnet
+                  </div>
+                  <div
+                    className="w-full py-4 px-6 border-t text-left flex item-center  border-gray-300 gap-2 cursor-pointer"
+                    onClick={() => {
+                      handleSelectNetwork('Polygon Mumbai', polygonLogo);
+                    }}
+                  >
+                    <img
+                      src={polygonLogo}
+                      className="h-8 bg-gray-300 rounded-full p-2 "
+                    />
+                    Polygon Mumbai
                   </div>
                 </>
               ) : (
                 <></>
               )}
             </div>
+          </div>
+
+          <div className=" p-4">
+            <button
+              className="bg-blue-500 px-4 py-2 text-2xl text-white rounded-xl"
+              onClick={() => {
+                handleCreateNFT();
+              }}
+            >
+              Create
+            </button>
           </div>
         </div>
       </div>

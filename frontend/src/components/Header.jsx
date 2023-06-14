@@ -82,7 +82,7 @@ const Header = () => {
           </div>
         </div>
       ) : (
-        <div className="sm:px-8 md:px-10 lg:px-16 px-4 h-full bg-white py-3.5">
+        <div className="sm:px-8 md:px-10 lg:px-16 border-b border-gray-200 px-4 h-full bg-white py-3.5">
           <div>
             <nav className=" flex lg:grid lg:grid-cols-3 justify-between">
               {/* logo and nav section  */}
