@@ -6,7 +6,6 @@ import openseaLogo from '../images/openseaLogo.png';
 const Header = () => {
   const [menuToggle, setMenuToggle] = useState(false);
   const [profileDropdown, setDropdown] = useState(false);
-  console.log(profileDropdown);
   return (
     <>
       {menuToggle ? (
