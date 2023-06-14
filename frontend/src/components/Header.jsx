@@ -154,12 +154,14 @@ const Header = () => {
                               Profile
                             </p>
                           </NavLink>
-                          <p
-                            class="block px-4 py-2 text-gray-800 hover:bg-gray-200"
-                            href="#"
-                          >
-                            Option 2
-                          </p>
+                          <NavLink to="/create">
+                            <p
+                              class="block px-4 py-2 text-gray-800 hover:bg-gray-200"
+                              href="#"
+                            >
+                              Create
+                            </p>
+                          </NavLink>
                           <p
                             class="block px-4 py-2 text-gray-800 hover:bg-gray-200"
                             href="#"

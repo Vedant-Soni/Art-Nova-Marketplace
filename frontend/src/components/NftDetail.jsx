@@ -14,7 +14,7 @@ const NftDetail = () => {
   const [amount1155, setAmount1155] = useState(10);
   const [component, setComponent] = useState('Sell');
   const [totalSupply1155, setTotalSupply] = useState(10);
-  const tokenStandard = 1155;
+  const tokenStandard = 721;
   const priceOfToken = 0.04;
   const chainCrypto = 'ETH';
   const chainCryptoPrice = 1243;
