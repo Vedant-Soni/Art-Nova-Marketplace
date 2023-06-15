@@ -5,7 +5,6 @@ import Buy from './1155/Buy';
 import Sell from './1155/Sell';
 import Buy721 from './721/Buy721';
 import Description from './Description';
-const { Network, Alchemy } = require('alchemy-sdk');
 
 const NftDetail = () => {
   const { address, id } = useParams();
@@ -17,20 +16,36 @@ const NftDetail = () => {
   const [totalSupply1155, setTotalSupply] = useState(10);
   const [nftData, setNftData] = useState();
 
+  const networks = {
+    1: 'Ethereum Mainnet',
+    11155111: 'Sepolia',
+    80001: 'Polygon Mumbai',
+    137: 'Polygon Mainnet',
+  };
   useEffect(() => {
     const fetchData = async () => {
-      const alchemyMumbai = new Alchemy({
-        apiKey: `${process.env.REACT_APP_ALCHEMY_API}`,
-        network: Network.MATIC_MUMBAI,
-      });
-      const response = await alchemyMumbai.nft.getNftMetadata(address, id);
-      setNftData(response);
+      try {
+        const response = await fetch(
+          `http://localhost:5000/detailsPage/${address}/${id}`,
+          {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          },
+        );
+        const getnftData = await response.json();
+        setNftData(getnftData.nft);
+        console.log(getnftData);
+      } catch (error) {
+        console.log(error);
+      }
+      // setNftData(response);
     };
     fetchData();
   }, [address, id]);
 
-  console.log(nftData);
-  const tokenStandard = nftData?.tokenType;
+  const tokenStandard = nftData?.nftJsonData.tokenType;
   const priceOfToken = 0.04;
   const chainCrypto = 'ETH';
   const chainCryptoPrice = 1243;
@@ -61,8 +76,8 @@ const NftDetail = () => {
               <img
                 src={
                   nftData
-                    ? nftData.rawMetadata.image
-                      ? nftData.rawMetadata.image
+                    ? nftData.nftJsonData.rawMetadata.image
+                      ? nftData.nftJsonData.rawMetadata.image
                       : 'https://cdn3.iconfinder.com/data/icons/nft/64/nft_non_fungible_token_blockchain_sign_coin-512.png'
                     : 'https://cdn3.iconfinder.com/data/icons/nft/64/nft_non_fungible_token_blockchain_sign_coin-512.png'
                 }
@@ -83,8 +98,8 @@ const NftDetail = () => {
             <div className="flex justify-between">
               <div>
                 {nftData
-                  ? nftData.contract.name
-                    ? nftData.contract.name
+                  ? nftData.nftJsonData.contract.name
+                    ? nftData.nftJsonData.contract.name
                     : 'Untitled'
                   : 'Untitled'}
               </div>
@@ -99,9 +114,9 @@ const NftDetail = () => {
             <div>
               <p className="text-4xl text-left my-2">
                 {nftData
-                  ? nftData.title === ''
+                  ? nftData.nftJsonData.title === ''
                     ? '#untitled'
-                    : nftData.title
+                    : nftData.nftJsonData.title
                   : 'Untitled'}
               </p>
               <p className="text-base text-left my-4">Owned by You </p>{' '}
