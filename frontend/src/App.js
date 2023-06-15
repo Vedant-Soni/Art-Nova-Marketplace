@@ -5,6 +5,8 @@ import Header from './components/Header';
 import Profile from './components/Profile';
 // import Collected from './components/Collected';
 import NftDetail from './components/NftDetail';
+import CreateNFT from './components/CreateNFT';
+import AmountPopup from './components/AmountPopup';
 
 function App() {
   return (
@@ -16,7 +18,7 @@ function App() {
             <Route index element={<Home />} />
             <Route path="/home" element={<Home />} />
           </Route>
-
+          <Route path="/create" element={<CreateNFT />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/nftdetail/:address/:id" element={<NftDetail />} />
         </Routes>
