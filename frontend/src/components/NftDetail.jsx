@@ -30,8 +30,7 @@ const NftDetail = () => {
   }, [address, id]);
 
   console.log(nftData);
-
-  const tokenStandard = 721;
+  const tokenStandard = nftData?.tokenType;
   const priceOfToken = 0.04;
   const chainCrypto = 'ETH';
   const chainCryptoPrice = 1243;
@@ -111,7 +110,7 @@ const NftDetail = () => {
           </div>
 
           {/* 1155 or 721 buy-sell option */}
-          {tokenStandard === 1155 ? (
+          {tokenStandard === 'ERC1155' ? (
             <>
               {/* total supply of 1155 */}
               <div className=" h-fit w-full rounded-xl">
@@ -167,7 +166,7 @@ const NftDetail = () => {
                 </div>
               </div>
             </>
-          ) : tokenStandard === 721 ? (
+          ) : tokenStandard === 'ERC721' ? (
             <>
               <div className="border-2 border-gray-200 h-full w-full text-center rounded-xl my-4">
                 <div className="p-6 text-xl text-left flex justify-between  ">
