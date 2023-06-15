@@ -3,9 +3,8 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './components/Home';
 import Header from './components/Header';
 import Profile from './components/Profile';
-import Collected from './components/Collected';
+// import Collected from './components/Collected';
 import NftDetail from './components/NftDetail';
-import CreateNFT from './components/CreateNFT';
 
 function App() {
   return (
@@ -19,8 +18,7 @@ function App() {
           </Route>
 
           <Route path="/profile" element={<Profile />} />
-          <Route path="/nftdetail/:hash" element={<NftDetail />} />
-          <Route path="/create" element={<CreateNFT />} />
+          <Route path="/nftdetail/:address/:id" element={<NftDetail />} />
         </Routes>
       </div>
     </Router>

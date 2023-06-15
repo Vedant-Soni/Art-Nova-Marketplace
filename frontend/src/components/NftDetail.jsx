@@ -1,20 +1,36 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import avtar from '../images/avatr.png';
 import Buy from './1155/Buy';
 import Sell from './1155/Sell';
 import Buy721 from './721/Buy721';
 import Description from './Description';
+const { Network, Alchemy } = require('alchemy-sdk');
 
 const NftDetail = () => {
-  const { hash } = useParams();
+  const { address, id } = useParams();
   const [historyDropdown, setHistoryDropdown] = useState(false);
   const [listDropdown, setListDropdown] = useState(false);
   const [offerDropdown, setOfferDropdown] = useState(false);
   const [amount1155, setAmount1155] = useState(10);
   const [component, setComponent] = useState('Sell');
   const [totalSupply1155, setTotalSupply] = useState(10);
-  const tokenStandard = 721;
+  const [nftData, setNftData] = useState();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const alchemyMumbai = new Alchemy({
+        apiKey: `${process.env.REACT_APP_ALCHEMY_API}`,
+        network: Network.MATIC_MUMBAI,
+      });
+      const response = await alchemyMumbai.nft.getNftMetadata(address, id);
+      setNftData(response);
+    };
+    fetchData();
+  }, [address, id]);
+
+  console.log(nftData);
+  const tokenStandard = nftData?.tokenType;
   const priceOfToken = 0.04;
   const chainCrypto = 'ETH';
   const chainCryptoPrice = 1243;
@@ -42,20 +58,36 @@ const NftDetail = () => {
               <span class="material-symbols-outlined ">favorite</span>
             </div>
             <div className="p-8">
-              <img src={avtar} alt="NFT" className="rounded-xl w-full " />
+              <img
+                src={
+                  nftData
+                    ? nftData.rawMetadata.image
+                      ? nftData.rawMetadata.image
+                      : 'https://cdn3.iconfinder.com/data/icons/nft/64/nft_non_fungible_token_blockchain_sign_coin-512.png'
+                    : 'https://cdn3.iconfinder.com/data/icons/nft/64/nft_non_fungible_token_blockchain_sign_coin-512.png'
+                }
+                alt="NFT"
+                className="rounded-xl w-full "
+              />
             </div>
           </div>
 
           {/* details */}
           <div className=" h-full w-full rounded-xl my-4">
-            <Description c_id={123} />
+            <Description nftdata={nftData} />
           </div>
         </div>
 
         <div className=" p-4 w-full h-fit col-span-3">
           <div className=" h-48 w-full rounded-xl">
             <div className="flex justify-between">
-              <div>user name</div>
+              <div>
+                {nftData
+                  ? nftData.contract.name
+                    ? nftData.contract.name
+                    : 'Untitled'
+                  : 'Untitled'}
+              </div>
               <div className="cursor-pointer">
                 <span class="material-symbols-outlined m-2">send</span>
                 <span class="material-symbols-outlined m-2">share</span>
@@ -65,13 +97,20 @@ const NftDetail = () => {
 
             {/* NFT name */}
             <div>
-              <p className="text-4xl text-left my-2">Name</p>
-              <p className="text-base text-left my-4">Owned by You </p>
+              <p className="text-4xl text-left my-2">
+                {nftData
+                  ? nftData.title === ''
+                    ? '#untitled'
+                    : nftData.title
+                  : 'Untitled'}
+              </p>
+              <p className="text-base text-left my-4">Owned by You </p>{' '}
+              {/* Fetch from DB */}
             </div>
           </div>
 
           {/* 1155 or 721 buy-sell option */}
-          {tokenStandard === 1155 ? (
+          {tokenStandard === 'ERC1155' ? (
             <>
               {/* total supply of 1155 */}
               <div className=" h-fit w-full rounded-xl">
@@ -127,7 +166,7 @@ const NftDetail = () => {
                 </div>
               </div>
             </>
-          ) : tokenStandard === 721 ? (
+          ) : tokenStandard === 'ERC721' ? (
             <>
               <div className="border-2 border-gray-200 h-full w-full text-center rounded-xl my-4">
                 <div className="p-6 text-xl text-left flex justify-between  ">
