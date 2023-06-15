@@ -5,23 +5,34 @@ import Header from './components/Header';
 import Profile from './components/Profile';
 // import Collected from './components/Collected';
 import NftDetail from './components/NftDetail';
+import { createContext, useState } from 'react';
+import AmountPopup from './components/AmountPopup';
+import CreateNFT from './components/CreateNFT';
+import { WagmiConfig } from 'wagmi';
+import { config } from './utils/wagmiConfigFile';
+
+export const AppContext = createContext();
 
 function App() {
   return (
-    <Router>
-      <div className="App">
-        <Header />
-        <Routes>
-          <Route path="/">
-            <Route index element={<Home />} />
-            <Route path="/home" element={<Home />} />
-          </Route>
-
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/nftdetail/:address/:id" element={<NftDetail />} />
-        </Routes>
-      </div>
-    </Router>
+    <WagmiConfig config={config}>
+      <AppContext.Provider value={{}}>
+        <Router>
+          <div>
+            <Header />
+            <Routes>
+              <Route path="/">
+                <Route index element={<Home />} />
+                <Route path="/home" element={<Home />} />
+              </Route>
+              <Route path="/create" element={<CreateNFT />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/nftdetail/:id" element={<NftDetail />} />
+            </Routes>
+          </div>
+        </Router>
+      </AppContext.Provider>
+    </WagmiConfig>
   );
 }
 

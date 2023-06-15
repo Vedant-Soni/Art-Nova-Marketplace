@@ -1,11 +1,32 @@
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import openseaLogo from '../images/openseaLogo.png';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/material/styles';
+import { Connector, useConnect } from 'wagmi';
 //Styling
 
 const Header = () => {
+  const { connectors, connect } = useConnect();
+  const [open, setOpen] = React.useState(false);
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
   const [menuToggle, setMenuToggle] = useState(false);
   const [profileDropdown, setDropdown] = useState(false);
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   return (
     <>
       {menuToggle ? (
@@ -82,7 +103,7 @@ const Header = () => {
           </div>
         </div>
       ) : (
-        <div className="sm:px-8 md:px-10 lg:px-16 border-b border-gray-200 px-4 h-full bg-white py-3.5">
+        <div className="sm:px-8 md:px-10 lg:px-16 border-b border-gray-200 px-4 h-fit bg-white py-3.5">
           <div>
             <nav className=" flex lg:grid lg:grid-cols-3 justify-between">
               {/* logo and nav section  */}
@@ -130,10 +151,43 @@ const Header = () => {
               {/* Wallet and cart section  */}
               <div className="flex justify-self-end">
                 <div className=" bg-opacity-10 rounded-xl flex items-center bg-white bg-blur-xl border-2 border-gray-400">
-                  <div className="lg:flex hidden text-gray-700 cursor-pointer">
+                  <div
+                    className="lg:flex hidden text-gray-700 cursor-pointer"
+                    onClick={() => {
+                      handleClickOpen();
+                      console.log('connect');
+                    }}
+                  >
                     <span class="mx-2 material-symbols-outlined">wallet</span>
                     <p className="px-2">Connect Wallet</p>
                   </div>
+                  <Dialog
+                    fullScreen={fullScreen}
+                    open={open}
+                    onClose={handleClose}
+                    aria-labelledby="responsive-dialog-title"
+                  >
+                    <DialogTitle id="responsive-dialog-title">
+                      Connect Wallet
+                    </DialogTitle>
+                    <DialogContent>
+                      {connectors.map((connector) => (
+                        <button
+                          key={connector.id}
+                          onClick={() => {
+                            connect({ connector });
+                          }}
+                        >
+                          {connector.name}
+                        </button>
+                      ))}
+                    </DialogContent>
+                    <DialogActions>
+                      <Button autoFocus onClick={handleClose}>
+                        Cancel
+                      </Button>
+                    </DialogActions>
+                  </Dialog>
                   <div
                     onMouseOver={() => setDropdown(true)}
                     onMouseLeave={() => setDropdown(false)}
