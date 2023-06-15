@@ -1,8 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useEffect } from 'react';
-import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import { alchemyClient } from '../alchemyClient';
 import avtar from '../images/avatr.png';
 
 const Collected = () => {
@@ -39,12 +37,12 @@ const Collected = () => {
     <div>
       <div className=" h-96 py-4 px-4 rounded-xl">
         <div className="grid grid-cols-8 py-2 border-b-2 border-gray-200 text-gray-400 text-left">
-          <div className="col-span-2 pl-2">Items</div>
+          <div className="col-span-2 pl-2">n Items</div>
           <div>Floor price</div>
           <div>Best offer</div>
           <div>Listing price</div>
-          <div>Token Type</div>
-          <div>Network</div>
+          <div>Cost</div>
+          <div>Difference</div>
           <div></div>
         </div>
 

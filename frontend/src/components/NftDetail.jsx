@@ -15,7 +15,7 @@ const NftDetail = () => {
   const [component, setComponent] = useState('Sell');
   const [totalSupply1155, setTotalSupply] = useState(10);
   const [nftData, setNftData] = useState();
-
+  console.log('hii');
   const networks = {
     1: 'Ethereum Mainnet',
     11155111: 'Sepolia',
@@ -24,6 +24,7 @@ const NftDetail = () => {
   };
   useEffect(() => {
     const fetchData = async () => {
+      console.log('hiii');
       try {
         const response = await fetch(
           `http://localhost:5000/detailsPage/${address}/${id}`,
@@ -89,7 +90,7 @@ const NftDetail = () => {
 
           {/* details */}
           <div className=" h-full w-full rounded-xl my-4">
-            <Description nftdata={nftData} />
+            <Description c_id={123} />
           </div>
         </div>
 
