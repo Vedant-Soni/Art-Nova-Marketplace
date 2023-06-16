@@ -9,9 +9,14 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
-import { Connector, useConnect } from 'wagmi';
-
-import { useAccount, useDisconnect, useEnsAvatar, useEnsName } from 'wagmi';
+import {
+  useAccount,
+  useConnect,
+  useEnsName,
+  useEnsAvatar,
+  useDisconnect,
+} from 'wagmi';
+import { InjectedConnector } from 'wagmi/connectors/injected';
 //Styling
 
 const Header = () => {
