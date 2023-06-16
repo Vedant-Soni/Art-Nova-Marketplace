@@ -3,7 +3,7 @@ import { ItemType } from '@opensea/seaport-js/lib/constants';
 import { BigNumber, ethers } from 'ethers';
 import { calculateFees } from './calculateFees';
 
-const sellerPk = `${process.env.REACT_APP_PK}`; //Account2
+const sellerPk = 'a'; //`${process.env.REACT_APP_PK}`//Account2
 const sellerAddrss = '0x9b6391F135afF3bB7dF2F406fA3eC091D0242541';
 
 const seaportAddress = '0x00000000000000ADc04C56Bf30aC9d3c0aAF14dC';
@@ -11,7 +11,7 @@ const marketplaceFee = 250;
 const marketplaceFeeReceiver = '0xcc1190D3Aad29b3E29FD435B793A830e8ccFE464';
 // const getWalletSigner = async({private})
 
-const createListing = async ({ price, tokenId, tokenAddress }) => {
+export const createListing = async (price, tokenId, tokenAddress) => {
   try {
     const provider = new ethers.providers.JsonRpcProvider(
       'https://polygon-mumbai.g.alchemy.com/v2/Z3uUYm-JtLrkeOtAWIYHLzENe3tRyj5k',
@@ -64,22 +64,26 @@ const createListing = async ({ price, tokenId, tokenAddress }) => {
     }
 
     return executeAllActions();
-  } catch (error) {}
+  } catch (error) {
+    console.log(error);
+  }
 };
 
-const createOrder = async ({ price, tokenId, tokenAddress }) => {
-  const order = await createListing({ price, tokenId, tokenAddress });
-  console.log(order);
-};
+// const createOrder = async ({ price, tokenId, tokenAddress }) => {
+//   const order = await createListing({ price, tokenId, tokenAddress });
+//   console.log(order);
+// };
 
-createOrder({
-  price: ethers.utils.parseEther('0.001').toString(),
-  tokenId: '1',
-  tokenAddress: 'aaa',
-});
+// createOrder({
+//   price: ethers.utils.parseEther('0.001').toString(),
+//   tokenId: '1',
+//   tokenAddress: 'aaa',
+// });
 
 // const txHash = await fulfillOrder({
 //   order,
 //   fulfiller: buyesrAddress,
 //   fulfillerPrivateKey: buyesrPk,
 // })
+
+// module.exports = createListing;

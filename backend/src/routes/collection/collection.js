@@ -10,9 +10,7 @@ router.get('/collections/:ownerAddress', async (req, res) => {
     let nftData = await nftdetails.findAll({
       where: { nftOwnerAddress: owner },
     });
-    console.log(nftData);
-    if (!nftData) {
-      console.log('No data ------------');
+    if (nftData.length === 0) {
       const {
         nftsForOwnerMumbai,
         nftsForOwnerSepolia,
@@ -86,6 +84,7 @@ router.get('/collections/:ownerAddress', async (req, res) => {
       res.status(200).json({ nftData });
     }
   } catch (error) {
+    console.log(error);
     res.status(400).json({ error });
   }
 });

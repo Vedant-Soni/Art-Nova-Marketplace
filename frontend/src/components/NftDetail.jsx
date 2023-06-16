@@ -50,8 +50,8 @@ const NftDetail = () => {
   const priceOfToken = 0.04;
   const chainCrypto = 'ETH';
   const chainCryptoPrice = 1243;
-  const chainId = 80001;
-  const ownerOfNft = 0x00;
+  const chainId = nftData?.network;
+  const ownerOfNft = nftData?.nftOwnerAddress;
   return (
     <div>
       <div className="grid grid-cols-5 px-8">
@@ -196,7 +196,7 @@ const NftDetail = () => {
                   </div>
                 </div>
                 <div className="w-full h-fit border-t  border-gray-300">
-                  <Buy721 owner={ownerOfNft} />
+                  <Buy721 nftData={nftData} />
                 </div>
               </div>
             </>
