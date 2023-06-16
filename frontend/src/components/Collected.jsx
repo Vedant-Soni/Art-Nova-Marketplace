@@ -3,8 +3,18 @@ import { useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import avtar from '../images/avatr.png';
 
+import { Connector, useConnect } from 'wagmi';
+
+import { useAccount, useDisconnect, useEnsAvatar, useEnsName } from 'wagmi';
+
 const Collected = () => {
   const [nftData, setNftData] = useState(null);
+  const [walletAddress, setWalletAddress] = useState('0x00');
+  const { address, connector, isConnected } = useAccount();
+  useEffect(() => {
+    isConnected ? setWalletAddress(address) : console.log('needd to connect');
+  }, []);
+
   const networks = {
     1: 'Ethereum Mainnet',
     11155111: 'Sepolia',
@@ -15,7 +25,7 @@ const Collected = () => {
     const getNftData = async () => {
       try {
         const response = await fetch(
-          'http://localhost:5000/collections/0xcc1190D3Aad29b3E29FD435B793A830e8ccFE464',
+          'http://localhost:5000/collections/0xC9399199f40686cfacF7Ae7555Ef0DEfa0487Ebe',
           {
             method: 'GET',
             headers: {

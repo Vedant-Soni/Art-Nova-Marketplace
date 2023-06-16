@@ -10,6 +10,7 @@ import AmountPopup from './components/AmountPopup';
 import CreateNFT from './components/CreateNFT';
 import { WagmiConfig } from 'wagmi';
 import { config } from './utils/wagmiConfigFile';
+import ScrollToTop from './components/ScrollToTop';
 
 export const AppContext = createContext();
 
@@ -18,6 +19,8 @@ function App() {
     <WagmiConfig config={config}>
       <AppContext.Provider value={{}}>
         <Router>
+          <ScrollToTop />
+
           <div>
             <Header />
             <Routes>
