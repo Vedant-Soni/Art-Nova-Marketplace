@@ -189,7 +189,7 @@ const Header = () => {
                         <div>
                           <img src={ensAvatar} alt="ENS Avatar" />
                           <div>{address}</div>
-                          <div>Connected to {connector.name}</div>
+                          {/* <div>Connected to {connector.name}</div> */}
                           <button onClick={disconnect}>Disconnect</button>
                         </div>
                       ) : (

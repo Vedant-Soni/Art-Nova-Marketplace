@@ -25,6 +25,7 @@ const Collected = () => {
         );
         const getnftData = await response.json();
         setNftData(getnftData.nftData);
+        console.log('inside try block............');
         console.log(getnftData.nftData);
       } catch (error) {
         console.log(error);
