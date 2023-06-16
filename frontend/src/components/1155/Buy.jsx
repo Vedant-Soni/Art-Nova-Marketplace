@@ -14,7 +14,7 @@ const Buy = ({ total1155 }) => {
       <div className="grid grid-cols-2 p-6 text-center ">
         <div className="mx-4">
           <button className="flex justify-center gap-4 h-full w-full text-blue-500 border border-gray-300 text-xl p-4 rounded-xl">
-            <span class="material-symbols-outlined text-3xl">sell</span>List{' '}
+            <span class="material-symbols-outlined text-3xl">sell</span>Buy{' '}
             {tokenAmount} item{' '}
           </button>
         </div>
