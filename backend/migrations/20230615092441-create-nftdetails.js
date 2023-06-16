@@ -47,6 +47,9 @@ module.exports = {
         type: Sequelize.BOOLEAN,
         allowNull: false,
       },
+      order: {
+        type: Sequelize.JSON,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

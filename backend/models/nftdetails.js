@@ -23,6 +23,7 @@ module.exports = (sequelize, DataTypes) => {
       floorPrice: DataTypes.DECIMAL(38, 18),
       listingPrice: DataTypes.DECIMAL(38, 18),
       isListed: DataTypes.BOOLEAN,
+      order: DataTypes.JSON,
     },
     {
       sequelize,

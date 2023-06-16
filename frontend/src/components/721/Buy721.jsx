@@ -5,10 +5,10 @@ import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import { createListing } from '../../createOrder';
 
-const Buy721 = ({ owner }) => {
+const Buy721 = (props) => {
   const handleBuyNow = () => {};
   const [open, setOpen] = React.useState(false);
   const [offerAmount, setOfferAmount] = useState(0);
@@ -22,8 +22,12 @@ const Buy721 = ({ owner }) => {
     setOpen(false);
   };
   // confirm listing
-  const handleListItem = () => {
+  const handleListItem = async () => {
     console.log(listingValue); //listing value accsessible here
+    const nftAddress = props.nftData?.nftJsonData.contract.name;
+    const tokenId = props.nftData?.tokenId;
+    const order = await createListing(listingValue, nftAddress, tokenId);
+    console.log(order);
     //code logic
     //wait till transaction complete
     handleClose();
@@ -36,15 +40,16 @@ const Buy721 = ({ owner }) => {
   const handleMakeOffer = () => {
     console.log(offerAmount); //it is accsessible here
     //code logic here wait for transaction
+
     handleClickOpen();
   };
   const {} = useContext(AppContext);
-  const listed = false;
-  const userAddress = '0x00';
+  const listed = props.nftData?.isListed;
+  const userAddress = '0xcc1190D3Aad29b3E29FD435B793A830e8ccFE464';
   return (
     <div>
       <div className="grid grid-cols-2 p-6 text-center ">
-        {owner == userAddress && listed == true ? (
+        {props.nftData?.nftOwnerAddress == userAddress && listed == true ? (
           <>
             <div className="flex gap-6 text-2xl h-full w-full p-4 px-8 rounded-xl text-center ">
               <button
@@ -84,7 +89,7 @@ const Buy721 = ({ owner }) => {
               </Dialog>
             </div>
           </>
-        ) : owner == userAddress && listed == false ? (
+        ) : props.nftData?.nftOwnerAddress == userAddress && listed == false ? (
           <>
             <div className="flex gap-6 text-2xl h-full w-full p-4 px-8 rounded-xl text-center">
               <button
@@ -129,7 +134,7 @@ const Buy721 = ({ owner }) => {
               </button>
             </div>
           </>
-        ) : owner != userAddress && listed == true ? (
+        ) : props.nftData?.nftOwnerAddress != userAddress && listed == true ? (
           <>
             <div className="flex gap-6 text-2xl h-full w-full p-4 px-8 rounded-xl text-center">
               <button
@@ -151,7 +156,7 @@ const Buy721 = ({ owner }) => {
               </button>
             </div>
           </>
-        ) : owner != userAddress && listed == false ? (
+        ) : props.nftData?.nftOwnerAddress != userAddress && listed == false ? (
           <>
             <div className="flex gap-6 text-2xl h-full w-full p-4 px-8 rounded-xl text-center">
               <button
