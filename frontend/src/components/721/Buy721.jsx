@@ -31,8 +31,9 @@ const Buy721 = (props) => {
     isConnected ? setWalletAddress(address) : console.log('need to connect');
     console.log(listingValue); //listing value accsessible here
     const nftOwner = props.nftData?.nftOwnerAddress;
-    const nftContract = props.nftData?.nftJsonData.contract.name;
+    const nftContract = props.nftData?.nftJsonData.contract.address;
     const tokenId = props.nftData?.tokenId;
+    // let order = { Placed: 'yes' };
     const order = await createListing({
       price: listingValue,
       tokenAddress: nftContract,
@@ -40,6 +41,7 @@ const Buy721 = (props) => {
       tokenId,
     });
     console.log('Order:- ------', order);
+    console.log(nftOwner, nftContract, tokenId, order, listingValue);
     if (order) {
       const listedNftData = {
         nftOwner,
@@ -58,9 +60,9 @@ const Buy721 = (props) => {
       const responseData = await response.json();
       console.log(responseData);
     }
-    //code logic
-    //wait till transaction complete
+    console.log('Here');
     handleClose();
+    // window.location.reload();
   };
   //cancel list
   const handleCancelList = () => {
@@ -68,8 +70,7 @@ const Buy721 = (props) => {
     handleClickOpen();
   };
   const handleMakeOffer = () => {
-    console.log(offerAmount); //it is accsessible here
-    //code logic here wait for transaction
+    console.log(offerAmount);
 
     handleClickOpen();
   };

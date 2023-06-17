@@ -21,8 +21,8 @@ export const createListing = async ({
   signer,
 }) => {
   try {
-    const connector = new Connector();
-    await connector.connect();
+    // const connector = new Connector();
+    // await connector.connect();
     console.log(signer.provider);
 
     price = ethers.utils.parseEther(`${price}`).toString();
