@@ -6,16 +6,54 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { createListing } from '../../createOrder';
-import { Connector, useConnect } from 'wagmi';
-import { useAccount, useDisconnect, useEnsAvatar, useEnsName } from 'wagmi';
+
+import { useAccount, useConnect, useEnsName, useSigner } from 'wagmi';
+import { InjectedConnector } from 'wagmi/connectors/injected';
+import { fulfillorder } from '../../fulfillOrder';
+
 
 const Buy721 = (props) => {
-  const handleBuyNow = () => {};
   const [open, setOpen] = React.useState(false);
   const [offerAmount, setOfferAmount] = useState(0);
   const [listingValue, setListingValue] = useState(0);
   const [walletAddress, setWalletAddress] = useState('0x00');
   const { address, connector, isConnected } = useAccount();
+
+  const { data: walletClient } = useSigner();
+
+  const handleBuyNow = async () => {
+    const nftContract = props.nftData?.nftJsonData.contract.address;
+    const tokenId = props.nftData?.tokenId;
+    console.log(nftContract, tokenId);
+    const response = await fetch(
+      `http://localhost:5000/getOrder/${nftContract}/${tokenId}`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      },
+    );
+    const order = await response.json();
+    const nftPurchase = await fulfillorder({
+      order,
+      fulfiller: address,
+      signer: walletClient,
+    });
+    if (nftPurchase) {
+      const updatedData = { nftOwner: address, nftContract, tokenId };
+      await fetch(`http://localhost:5000/orderfulfill`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updatedData),
+      });
+      console.log('Success');
+    }
+    console.log('Finallyyyyyyyy:----');
+  };
+
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -26,12 +64,21 @@ const Buy721 = (props) => {
   };
   // confirm listing
   const handleListItem = async () => {
+
+    console.log('signer', walletClient);
     isConnected ? setWalletAddress(address) : console.log('need to connect');
     console.log(listingValue); //listing value accsessible here
     const nftOwner = props.nftData?.nftOwnerAddress;
-    const nftContract = props.nftData?.nftJsonData.contract.name;
+    const nftContract = props.nftData?.nftJsonData.contract.address;
     const tokenId = props.nftData?.tokenId;
-    const order = await createListing(listingValue, nftContract, tokenId);
+    const order = await createListing({
+      price: listingValue,
+      tokenAddress: nftContract,
+      signer: walletClient,
+      tokenId,
+      offerer: address,
+    });
+
     console.log('Order:- ------', order);
     if (order) {
       const listedNftData = {
@@ -51,9 +98,11 @@ const Buy721 = (props) => {
       const responseData = await response.json();
       console.log(responseData);
     }
-    //code logic
-    //wait till transaction complete
+
+    console.log('Here');
+
     handleClose();
+    // window.location.reload();
   };
   //cancel list
   const handleCancelList = () => {
@@ -61,8 +110,7 @@ const Buy721 = (props) => {
     handleClickOpen();
   };
   const handleMakeOffer = () => {
-    console.log(offerAmount); //it is accsessible here
-    //code logic here wait for transaction
+    console.log(offerAmount);
 
     handleClickOpen();
   };

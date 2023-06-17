@@ -1,7 +1,8 @@
+import { Connector } from 'wagmi';
 import { Seaport } from '@opensea/seaport-js';
 import { ItemType } from '@opensea/seaport-js/lib/constants';
 import { BigNumber, ethers } from 'ethers';
-// import { ABI721 } from './ABI721';
+import { ABI721 } from './ABI721';
 import { calculateFees } from './calculateFees';
 import { Buffer } from 'buffer';
 
@@ -12,22 +13,19 @@ const sellerPk = 'a'; //`${process.env.REACT_APP_PK}`//Account2
 const seaportAddress = '0x00000000000000ADc04C56Bf30aC9d3c0aAF14dC';
 const marketplaceFee = 250;
 const marketplaceFeeReceiver = '0xcc1190D3Aad29b3E29FD435B793A830e8ccFE464';
-// const getWalletSigner = async({private})
-const ABI721 = '';
-export const createListing = async (price, tokenId, tokenAddress) => {
-  try {
-    const provider = new ethers.providers.Web3Provider(window.ethereum);
-    const walletAdd = await provider.send('eth_requestAccounts', []);
-    const WalletAddress = walletAdd[0];
-    const sellerAddrss = WalletAddress;
-    const signer = provider.getSigner();
 
-    console.log('Signer', signer);
-    console.log(await signer.getAddress());
-    console.log('hi 1---------------------');
-    // const provider = new ethers.providers.JsonRpcProvider(
-    //   'https://polygon-mumbai.g.alchemy.com/v2/Z3uUYm-JtLrkeOtAWIYHLzENe3tRyj5k',
-    // );
+export const createListing = async ({
+  price,
+  tokenId,
+  tokenAddress,
+  signer,
+  offerer,
+}) => {
+  try {
+    // const connector = new Connector();
+    // await connector.connect();
+    console.log(signer.provider);
+
     price = ethers.utils.parseEther(`${price}`).toString();
     const { amountDue, marketplaceFeeAmount } = calculateFees({
       marketplaceFee,
@@ -40,7 +38,7 @@ export const createListing = async (price, tokenId, tokenAddress) => {
     consideration.push(
       {
         amount: amountDue.toString(),
-        recipient: sellerAddrss,
+        recipient: offerer,
       },
       {
         amount: marketplaceFeeAmount.toString(),
@@ -48,7 +46,6 @@ export const createListing = async (price, tokenId, tokenAddress) => {
       },
     );
     console.log('hi 3---------------------');
-    // const signer = new ethers.Wallet(sellerPk, provider);
     const seaport = new Seaport(signer);
     console.log('seaport:-', seaport);
     console.log('hi 4---------------------');
@@ -63,14 +60,11 @@ export const createListing = async (price, tokenId, tokenAddress) => {
       consideration,
     });
     console.log('hi 5---------------------');
-    // const wallet = new ethers.Wallet(sellerPk);
 
     const contract = new ethers.Contract(tokenAddress, ABI721, signer);
     console.log('hi 6---------------------');
-    const approved = await contract.isApprovedForAll(
-      sellerAddrss,
-      seaportAddress,
-    );
+    const approved = await contract.isApprovedForAll(offerer, seaportAddress);
+  
     if (!approved) {
       const tx = await contract.setApprovalForAll(seaportAddress, true);
       await tx.wait();

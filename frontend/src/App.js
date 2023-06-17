@@ -9,32 +9,30 @@ import { createContext, useState } from 'react';
 import AmountPopup from './components/AmountPopup';
 import CreateNFT from './components/CreateNFT';
 import { WagmiConfig } from 'wagmi';
-import { config } from './utils/wagmiConfigFile';
-import ScrollToTop from './components/ScrollToTop';
+
+import { client } from './utils/wagmiConfigFile';
+
 
 export const AppContext = createContext();
 
 function App() {
   return (
-    <WagmiConfig config={config}>
-      <AppContext.Provider value={{}}>
-        <Router>
-          <ScrollToTop />
+    <WagmiConfig client={client}>
+      <Router>
+        <div>
+          <Header />
+          <Routes>
+            <Route path="/">
+              <Route index element={<Home />} />
+              <Route path="/home" element={<Home />} />
+            </Route>
+            <Route path="/create" element={<CreateNFT />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/nftdetail/:address/:id" element={<NftDetail />} />
+          </Routes>
+        </div>
+      </Router>
 
-          <div>
-            <Header />
-            <Routes>
-              <Route path="/">
-                <Route index element={<Home />} />
-                <Route path="/home" element={<Home />} />
-              </Route>
-              <Route path="/create" element={<CreateNFT />} />
-              <Route path="/profile" element={<Profile />} />
-              <Route path="/nftdetail/:address/:id" element={<NftDetail />} />
-            </Routes>
-          </div>
-        </Router>
-      </AppContext.Provider>
     </WagmiConfig>
   );
 }

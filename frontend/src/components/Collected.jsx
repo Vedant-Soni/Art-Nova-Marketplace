@@ -1,12 +1,8 @@
 import React, { useState } from 'react';
 import { useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
-import avtar from '../images/avatr.png';
-
-import { Connector, useConnect } from 'wagmi';
-
-import { useAccount, useDisconnect, useEnsAvatar, useEnsName } from 'wagmi';
-
+import { useAccount, useConnect, useEnsName } from 'wagmi';
+import { InjectedConnector } from 'wagmi/connectors/injected';
 const Collected = () => {
   const [nftData, setNftData] = useState(null);
   const [walletAddress, setWalletAddress] = useState('0x00');
@@ -21,11 +17,15 @@ const Collected = () => {
     80001: 'Polygon Mumbai',
     137: 'Polygon Mainnet',
   };
+  const [walletAddress, setWalletAddress] = useState('0x00');
+  const { address, connector, isConnected } = useAccount();
+
   useEffect(() => {
     const getNftData = async () => {
+      isConnected ? setWalletAddress(address) : console.log('need to connect');
       try {
         const response = await fetch(
-          'http://localhost:5000/collections/0xC9399199f40686cfacF7Ae7555Ef0DEfa0487Ebe',
+          `http://localhost:5000/collections/${address}`,
           {
             method: 'GET',
             headers: {

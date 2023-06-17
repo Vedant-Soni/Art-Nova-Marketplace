@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import avtar from '../images/avatr.png';
 import Buy from './1155/Buy';
 import Sell from './1155/Sell';
 import Buy721 from './721/Buy721';
@@ -17,10 +16,10 @@ const NftDetail = () => {
   const [nftData, setNftData] = useState();
   console.log('hii');
   const networks = {
-    1: 'Ethereum Mainnet',
-    11155111: 'Sepolia',
-    80001: 'Polygon Mumbai',
-    137: 'Polygon Mainnet',
+    1: 'ETH Mainnet',
+    11155111: 'ETH Sepolia',
+    80001: 'MATIC Mumbai',
+    137: 'MATIC Mainnet',
   };
   useEffect(() => {
     const fetchData = async () => {
@@ -47,9 +46,8 @@ const NftDetail = () => {
   }, [address, id]);
 
   const tokenStandard = nftData?.nftJsonData.tokenType;
-  const priceOfToken = 0.04;
-  const chainCrypto = 'ETH';
-  const chainCryptoPrice = 1243;
+  const priceOfToken = nftData?.listingPrice;
+  const chainCrypto = networks[nftData?.network];
   const chainId = nftData?.network;
   const ownerOfNft = nftData?.nftOwnerAddress;
   return (
@@ -189,9 +187,6 @@ const NftDetail = () => {
                   <div className="flex gap-2 align-bottom">
                     <p className="text-3xl">
                       {priceOfToken} {chainCrypto}
-                    </p>
-                    <p className="text-sm text-gray-400 ">
-                      $ {priceOfToken * chainCryptoPrice}USD
                     </p>
                   </div>
                 </div>
