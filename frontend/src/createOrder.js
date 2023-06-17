@@ -46,7 +46,6 @@ export const createListing = async ({
       },
     );
     console.log('hi 3---------------------');
-
     const seaport = new Seaport(signer);
     console.log('seaport:-', seaport);
     console.log('hi 4---------------------');
@@ -65,6 +64,7 @@ export const createListing = async ({
     const contract = new ethers.Contract(tokenAddress, ABI721, signer);
     console.log('hi 6---------------------');
     const approved = await contract.isApprovedForAll(offerer, seaportAddress);
+  
     if (!approved) {
       const tx = await contract.setApprovalForAll(seaportAddress, true);
       await tx.wait();

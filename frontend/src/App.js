@@ -9,7 +9,9 @@ import { createContext, useState } from 'react';
 import AmountPopup from './components/AmountPopup';
 import CreateNFT from './components/CreateNFT';
 import { WagmiConfig } from 'wagmi';
+
 import { client } from './utils/wagmiConfigFile';
+
 
 export const AppContext = createContext();
 
@@ -30,6 +32,7 @@ function App() {
           </Routes>
         </div>
       </Router>
+
     </WagmiConfig>
   );
 }

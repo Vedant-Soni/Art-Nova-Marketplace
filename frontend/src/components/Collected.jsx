@@ -5,6 +5,12 @@ import { useAccount, useConnect, useEnsName } from 'wagmi';
 import { InjectedConnector } from 'wagmi/connectors/injected';
 const Collected = () => {
   const [nftData, setNftData] = useState(null);
+  const [walletAddress, setWalletAddress] = useState('0x00');
+  const { address, connector, isConnected } = useAccount();
+  useEffect(() => {
+    isConnected ? setWalletAddress(address) : console.log('needd to connect');
+  }, []);
+
   const networks = {
     1: 'Ethereum Mainnet',
     11155111: 'Sepolia',

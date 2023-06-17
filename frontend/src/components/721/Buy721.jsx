@@ -6,9 +6,11 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { createListing } from '../../createOrder';
+
 import { useAccount, useConnect, useEnsName, useSigner } from 'wagmi';
 import { InjectedConnector } from 'wagmi/connectors/injected';
 import { fulfillorder } from '../../fulfillOrder';
+
 
 const Buy721 = (props) => {
   const [open, setOpen] = React.useState(false);
@@ -16,6 +18,7 @@ const Buy721 = (props) => {
   const [listingValue, setListingValue] = useState(0);
   const [walletAddress, setWalletAddress] = useState('0x00');
   const { address, connector, isConnected } = useAccount();
+
   const { data: walletClient } = useSigner();
 
   const handleBuyNow = async () => {
@@ -51,6 +54,7 @@ const Buy721 = (props) => {
     console.log('Finallyyyyyyyy:----');
   };
 
+
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -60,6 +64,7 @@ const Buy721 = (props) => {
   };
   // confirm listing
   const handleListItem = async () => {
+
     console.log('signer', walletClient);
     isConnected ? setWalletAddress(address) : console.log('need to connect');
     console.log(listingValue); //listing value accsessible here
@@ -73,6 +78,7 @@ const Buy721 = (props) => {
       tokenId,
       offerer: address,
     });
+
     console.log('Order:- ------', order);
     if (order) {
       const listedNftData = {
@@ -92,7 +98,9 @@ const Buy721 = (props) => {
       const responseData = await response.json();
       console.log(responseData);
     }
+
     console.log('Here');
+
     handleClose();
     // window.location.reload();
   };
