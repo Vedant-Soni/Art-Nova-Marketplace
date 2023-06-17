@@ -8,15 +8,48 @@ import DialogTitle from '@mui/material/DialogTitle';
 import { createListing } from '../../createOrder';
 import { useAccount, useConnect, useEnsName, useSigner } from 'wagmi';
 import { InjectedConnector } from 'wagmi/connectors/injected';
+import { fulfillorder } from '../../fulfillOrder';
 
 const Buy721 = (props) => {
-  const handleBuyNow = () => {};
   const [open, setOpen] = React.useState(false);
   const [offerAmount, setOfferAmount] = useState(0);
   const [listingValue, setListingValue] = useState(0);
   const [walletAddress, setWalletAddress] = useState('0x00');
   const { address, connector, isConnected } = useAccount();
   const { data: walletClient } = useSigner();
+
+  const handleBuyNow = async () => {
+    const nftContract = props.nftData?.nftJsonData.contract.address;
+    const tokenId = props.nftData?.tokenId;
+    console.log(nftContract, tokenId);
+    const response = await fetch(
+      `http://localhost:5000/getOrder/${nftContract}/${tokenId}`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      },
+    );
+    const order = await response.json();
+    const nftPurchase = await fulfillorder({
+      order,
+      fulfiller: address,
+      signer: walletClient,
+    });
+    if (nftPurchase) {
+      const updatedData = { nftOwner: address, nftContract, tokenId };
+      await fetch(`http://localhost:5000/orderfulfill`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updatedData),
+      });
+      console.log('Success');
+    }
+    console.log('Finallyyyyyyyy:----');
+  };
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -33,15 +66,14 @@ const Buy721 = (props) => {
     const nftOwner = props.nftData?.nftOwnerAddress;
     const nftContract = props.nftData?.nftJsonData.contract.address;
     const tokenId = props.nftData?.tokenId;
-    // let order = { Placed: 'yes' };
     const order = await createListing({
       price: listingValue,
       tokenAddress: nftContract,
       signer: walletClient,
       tokenId,
+      offerer: address,
     });
     console.log('Order:- ------', order);
-    console.log(nftOwner, nftContract, tokenId, order, listingValue);
     if (order) {
       const listedNftData = {
         nftOwner,

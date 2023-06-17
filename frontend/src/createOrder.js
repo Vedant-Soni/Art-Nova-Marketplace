@@ -19,6 +19,7 @@ export const createListing = async ({
   tokenId,
   tokenAddress,
   signer,
+  offerer,
 }) => {
   try {
     // const connector = new Connector();
@@ -37,7 +38,7 @@ export const createListing = async ({
     consideration.push(
       {
         amount: amountDue.toString(),
-        recipient: '0x9b6391F135afF3bB7dF2F406fA3eC091D0242541',
+        recipient: offerer,
       },
       {
         amount: marketplaceFeeAmount.toString(),
@@ -63,10 +64,7 @@ export const createListing = async ({
 
     const contract = new ethers.Contract(tokenAddress, ABI721, signer);
     console.log('hi 6---------------------');
-    const approved = await contract.isApprovedForAll(
-      '0x9b6391F135afF3bB7dF2F406fA3eC091D0242541',
-      seaportAddress,
-    );
+    const approved = await contract.isApprovedForAll(offerer, seaportAddress);
     if (!approved) {
       const tx = await contract.setApprovalForAll(seaportAddress, true);
       await tx.wait();

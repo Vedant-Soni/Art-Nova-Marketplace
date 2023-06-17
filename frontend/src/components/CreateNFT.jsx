@@ -26,10 +26,10 @@ const CreateNFT = () => {
     setSelectedFile(file);
   };
   const setTrait = () => {
-    if (traitsType != '' && traitsValue != '') {
+    if (traitsType !== '' && traitsValue !== '') {
       const currentTrait = {
-        traitType: traitsType,
-        traitValue: traitsValue,
+        trait_type: traitsType,
+        value: traitsValue,
       };
       setTraitData([...traits, currentTrait]);
     }
@@ -50,8 +50,71 @@ const CreateNFT = () => {
     setBlockchainDropdown(false);
   };
 
-  const handleCreateNFT = () => {
-    //here code
+  const uploadToIpfs = async (imageFile) => {
+    const formData = new FormData();
+    formData.append('file', imageFile);
+    console.log(imageFile);
+    const requestOptions = {
+      method: 'POST',
+      body: formData,
+      headers: {
+        Authorization: `Bearer ${process.env.REACT_APP_PINATA_JWT}`,
+      },
+    };
+
+    try {
+      const response = await fetch(
+        'https://api.pinata.cloud/pinning/pinFileToIPFS',
+        requestOptions,
+      );
+      const data = await response.json();
+      return data.IpfsHash;
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  const metadata = {};
+  const uploadMeta = async (imageUrl) => {
+    metadata.name = name;
+    metadata.description = description;
+    metadata.image = imageUrl;
+    if (traits) {
+      metadata.attributes = traits;
+    }
+
+    const json = JSON.stringify(metadata, null, 2);
+
+    const file = new File([json], 'metadata.json', {
+      type: 'application/json',
+    });
+    const formData = new FormData();
+    formData.append('file', file);
+    console.log(process.env.REACT_APP_PINATA_JWT);
+    try {
+      const response = await fetch(
+        'https://api.pinata.cloud/pinning/pinFileToIPFS',
+        {
+          method: 'POST',
+          body: formData,
+          headers: {
+            Authorization: `Bearer ${process.env.REACT_APP_PINATA_JWT}`,
+          },
+        },
+      );
+      console.log(response);
+      const data = await response.json();
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleCreateNFT = async () => {
+    const imageIpfsHash = await uploadToIpfs(selectedFile);
+    const imageUrl = `https://coffee-different-cat-534.mypinata.cloud/ipfs/${imageIpfsHash}`;
+    const generateMetadata = await uploadMeta(imageUrl);
+
+    // Here we can Mint NFT with contract
 
     console.log(
       'file: ',
@@ -167,8 +230,8 @@ const CreateNFT = () => {
                       className="bg-blue-100 p-2 rounded-md text-center flex items-center justify-between"
                     >
                       <div>
-                        <p>{e.traitType}</p>
-                        <p className="text-gray-600">{e.traitValue}</p>
+                        <p>{e.trait_type}</p>
+                        <p className="text-gray-600">{e.value}</p>
                       </div>
                       <div>
                         <span
@@ -251,6 +314,7 @@ const CreateNFT = () => {
                 <div className="flex gap-2 ">
                   <img
                     src={symbolSrc}
+                    alt=""
                     className="h-8 bg-gray-300 rounded-full p-2 "
                   />
                   {chainName}
@@ -274,6 +338,7 @@ const CreateNFT = () => {
                   >
                     <img
                       src={ethLogo}
+                      alt=""
                       className="h-8 bg-gray-300 rounded-full p-2 "
                     />
                     Ethereum
@@ -286,6 +351,7 @@ const CreateNFT = () => {
                   >
                     <img
                       src={ethLogo}
+                      alt=""
                       className="h-8 bg-gray-300 rounded-full p-2 "
                     />
                     Sepolia Testnet
@@ -298,6 +364,7 @@ const CreateNFT = () => {
                   >
                     <img
                       src={polygonLogo}
+                      alt=""
                       className="h-8 bg-gray-300 rounded-full p-2 "
                     />
                     Polygon Mumbai
