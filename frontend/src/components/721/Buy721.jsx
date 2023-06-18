@@ -6,11 +6,10 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { createListing } from '../../createOrder';
-
 import { useAccount, useConnect, useEnsName, useSigner } from 'wagmi';
 import { InjectedConnector } from 'wagmi/connectors/injected';
 import { fulfillorder } from '../../fulfillOrder';
-
+import { cancelOrder } from '../../cancelOrder';
 
 const Buy721 = (props) => {
   const [open, setOpen] = React.useState(false);
@@ -54,7 +53,6 @@ const Buy721 = (props) => {
     console.log('Finallyyyyyyyy:----');
   };
 
-
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -64,7 +62,6 @@ const Buy721 = (props) => {
   };
   // confirm listing
   const handleListItem = async () => {
-
     console.log('signer', walletClient);
     isConnected ? setWalletAddress(address) : console.log('need to connect');
     console.log(listingValue); //listing value accsessible here
@@ -105,9 +102,27 @@ const Buy721 = (props) => {
     // window.location.reload();
   };
   //cancel list
-  const handleCancelList = () => {
+  const handleCancelList = async () => {
     //code logic and wait is here
-    handleClickOpen();
+    const nftContract = props.nftData?.nftJsonData.contract.address;
+    const tokenId = props.nftData?.tokenId;
+    console.log(nftContract, tokenId);
+    const response = await fetch(
+      `http://localhost:5000/getOrder/${nftContract}/${tokenId}`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      },
+    );
+    const order = await response.json();
+    const cancel = await cancelOrder({
+      order,
+      offerer: address,
+      signer: walletClient,
+    });
+    console.log(cancel);
   };
   const handleMakeOffer = () => {
     console.log(offerAmount);
@@ -141,7 +156,7 @@ const Buy721 = (props) => {
                 <span class="material-symbols-outlined text-3xl">sell</span>
                 Cancel list
               </button>
-              <Dialog
+              {/* <Dialog
                 open={open}
                 onClose={handleClose}
                 aria-labelledby="alert-dialog-title"
@@ -157,7 +172,7 @@ const Buy721 = (props) => {
                     Confirm
                   </Button>
                 </DialogActions>
-              </Dialog>
+              </Dialog> */}
             </div>
           </>
         ) : props.nftData?.nftOwnerAddress === userAddress &&
