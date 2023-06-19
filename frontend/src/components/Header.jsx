@@ -41,7 +41,17 @@ const Header = () => {
   const handleClose = () => {
     setOpen(false);
   };
-
+  console.log(isConnected, ':isConnected');
+  window.ethereum.on('chainChanged', (accounts) => {
+    !isConnected &&
+      connect({
+        connector: connectors[0],
+      });
+    // setFlag(flag + 1);
+    console.log('changed chain event ');
+    if (accounts.length === 0) {
+    }
+  });
   return (
     <>
       {menuToggle ? (
@@ -179,17 +189,19 @@ const Header = () => {
                         : 'Connect Wallet'}
                     </p>
                   </div>
+
                   <Dialog
                     fullScreen={fullScreen}
                     open={open}
                     onClose={handleClose}
                     aria-labelledby="responsive-dialog-title"
                   >
+                    {/* {isConnected ? setOpen(false) : console.log('')} */}
                     <DialogTitle id="responsive-dialog-title">
                       Connect Wallet
                     </DialogTitle>
                     <DialogContent>
-                      <div className="grid grid-cols-2">
+                      <div className="grid grid-cols-2 cursor-pointer">
                         <div
                           className="border border-gray-400 m-2 p-2 rounded-xl "
                           onClick={() => {
@@ -208,6 +220,7 @@ const Header = () => {
                           className="border border-gray-400 m-2 p-2 rounded-xl "
                           onClick={() => {
                             connect({ connector: connectors[0] });
+                            isConnected ? handleClose() : console.log('');
                           }}
                         >
                           <img
@@ -243,6 +256,7 @@ const Header = () => {
                       <Button onClick={handleClose}>Cancel</Button>
                     </DialogActions>
                   </Dialog>
+
                   <div
                     onMouseOver={() => setDropdown(true)}
                     onMouseLeave={() => setDropdown(false)}

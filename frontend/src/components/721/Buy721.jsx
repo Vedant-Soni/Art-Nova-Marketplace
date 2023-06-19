@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
@@ -11,13 +11,26 @@ import { useAccount, useConnect, useEnsName, useSigner } from 'wagmi';
 import { InjectedConnector } from 'wagmi/connectors/injected';
 import { fulfillorder } from '../../fulfillOrder';
 
+import { useNetwork, useSwitchNetwork } from 'wagmi';
 
 const Buy721 = (props) => {
+  //by vivek chain change
+  window.ethereum.on('accountsChanged', (accounts) => {
+    setFlag(flag + 1);
+    if (accounts.length === 0) {
+    }
+  });
+  const { chain } = useNetwork();
+  const { chains, error, isLoading, pendingChainId, isSuccess, switchNetwork } =
+    useSwitchNetwork();
+
+  //
   const [open, setOpen] = React.useState(false);
   const [offerAmount, setOfferAmount] = useState(0);
   const [listingValue, setListingValue] = useState(0);
   const [walletAddress, setWalletAddress] = useState('0x00');
   const { address, connector, isConnected } = useAccount();
+  const [flag, setFlag] = useState(0);
 
   const { data: walletClient } = useSigner();
 
@@ -54,8 +67,7 @@ const Buy721 = (props) => {
     console.log('Finallyyyyyyyy:----');
   };
 
-
-  const handleClickOpen = () => {
+  const handleClickOpen = async () => {
     setOpen(true);
   };
 
@@ -64,7 +76,8 @@ const Buy721 = (props) => {
   };
   // confirm listing
   const handleListItem = async () => {
-
+    const networkChangetx = switchNetwork(props.nftData.network); //network switch handled
+    console.log(isSuccess, ' :after listing after network switch req');
     console.log('signer', walletClient);
     isConnected ? setWalletAddress(address) : console.log('need to connect');
     console.log(listingValue); //listing value accsessible here
@@ -120,7 +133,16 @@ const Buy721 = (props) => {
   return (
     <div>
       <div className="grid grid-cols-2 p-6 text-center ">
-        {props.nftData?.nftOwnerAddress === userAddress && listed === true ? (
+        {console.log(
+          '1:',
+          props.nftData?.nftOwnerAddress,
+          '===',
+          userAddress,
+          ' 2: ',
+          listed,
+        ) &&
+        props.nftData?.nftOwnerAddress === userAddress &&
+        listed === true ? (
           <>
             <div className="flex gap-6 text-2xl h-full w-full p-4 px-8 rounded-xl text-center ">
               <button
@@ -166,7 +188,7 @@ const Buy721 = (props) => {
             <div className="flex gap-6 text-2xl h-full w-full p-4 px-8 rounded-xl text-center">
               <button
                 className="flex justify-center gap-4 h-full w-full text-white border bg-blue-500 border-gray-300 text-xl p-4 rounded-xl"
-                onClick={() => {
+                onClick={async () => {
                   handleClickOpen();
                 }}
               >

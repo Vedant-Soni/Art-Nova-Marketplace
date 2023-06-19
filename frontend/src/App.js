@@ -12,7 +12,6 @@ import { WagmiConfig } from 'wagmi';
 
 import { client } from './utils/wagmiConfigFile';
 
-
 export const AppContext = createContext();
 
 function App() {
@@ -32,7 +31,6 @@ function App() {
           </Routes>
         </div>
       </Router>
-
     </WagmiConfig>
   );
 }
