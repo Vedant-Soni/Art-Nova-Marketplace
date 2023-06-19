@@ -1,38 +1,72 @@
 import React from 'react';
+import cover from '../../src/images/cover.jpg';
 
 const Home = () => {
   return (
     <div>
-      <div className=" w-full  mt-4 flex gap-5 sm:px-8 md:px-10 lg:px-16 px-4">
-        {/* <div className=" w-full mt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 sm:px-8 md:px-10 lg:px-16 px-4"> */}
-        <div className="rounded-xl w-full ">
+      <div className=" w-full  mt-4 flex flex-col gap-5 sm:px-8 md:px-10 lg:px-16 px-4">
+        <div className="rounded-xl w-full my-6 ">
           <img
-            src="https://image.mux.com/TWkn1Dn00bl00fj7qZv5RIFzYbKKz97C01jNL1O00CH7gkM/thumbnail.jpg?auto=format&dpr=1&w=2560"
-            className="w-screen object-cover h-1/2 rounded-3xl mt-4"
+            src={cover}
+            className="w-screen object-cover h-96 rounded-3xl mt-4"
             alt="img"
           />
         </div>
-        {/* <div className="rounded-xl ">
-          <img
-            src="https://nftnow.com/wp-content/uploads/2023/02/Ordinal-Punk-78.png"
-            className="rounded-xl hidden sm:block"
-            alt="img"
-          />
+        <div className="text-left m-2">
+          <p className="text-lg">Top NFT </p>
         </div>
-        <div className="rounded-xl ">
-          <img
-            src="https://nftnow.com/wp-content/uploads/2023/02/Ordinal-Punk-78.png"
-            className="rounded-xl hidden md:block "
-            alt="img"
-          />
+        <div className="bg-blue-500 grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-8">
+          <div className=" bg-green-200 rounded-xl h-full transition-all duration-300 hover:bg-blue-400 flex flex-col justify-between">
+            <div className="bg-orange-400 h-fit rounded-xl">
+              {/* <img src='' alt='img' /> */}
+              this is image area
+            </div>
+            <div>
+              <p>Name</p>
+              <p>Price</p>
+            </div>
+          </div>
+
+          <div className=" bg-green-200 rounded-xl ">1aaa</div>
+          <div className="h-48 bg-green-200 rounded-xl">1</div>
+          <div className="h-48 bg-green-200 rounded-xl">1</div>
+          <div className="h-48 bg-green-200 rounded-xl">1</div>
+          <div className="h-48 bg-green-200 rounded-xl">1</div>
+          <div className="h-48 bg-green-200 rounded-xl">1</div>
+          <div className="h-48 bg-green-200 rounded-xl">1</div>
         </div>
-        <div className="rounded-xl ">
-          <img
-            src="https://nftnow.com/wp-content/uploads/2023/02/Ordinal-Punk-78.png"
-            className="rounded-xl hidden lg:block"
-            alt="img"
-          />
-        </div> */}
+
+        <div className="text-left m-2">
+          <p className="text-lg">ALL NFT COllection </p>
+        </div>
+        <div className="bg-blue-500 grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-8">
+          <div className=" bg-green-200 rounded-xl h-full transition-all duration-300 hover:bg-blue-400 flex flex-col justify-between">
+            <div className="bg-orange-400 h-fit rounded-xl">
+              {/* <img src='' alt='img' /> */}
+              this is image area
+            </div>
+            <div>
+              <p>Name</p>
+              <p>Price</p>
+            </div>
+          </div>
+          <div className="h-48 bg-green-200 rounded-xl">1</div>
+          <div className="h-48 bg-green-200 rounded-xl">1</div>
+          <div className="h-48 bg-green-200 rounded-xl">1</div>
+          <div className="h-48 bg-green-200 rounded-xl">1</div>
+          <div className="h-48 bg-green-200 rounded-xl">1</div>
+          <div className="h-48 bg-green-200 rounded-xl">1</div>
+          <div className="h-48 bg-green-200 rounded-xl">1</div>
+          <div className="h-48 bg-green-200 rounded-xl">1</div>
+          <div className="h-48 bg-green-200 rounded-xl">1</div>
+          <div className="h-48 bg-green-200 rounded-xl">1</div>
+          <div className="h-48 bg-green-200 rounded-xl">1</div>
+          <div className="h-48 bg-green-200 rounded-xl">1</div>
+          <div className="h-48 bg-green-200 rounded-xl">1</div>
+          <div className="h-48 bg-green-200 rounded-xl">1</div>
+          <div className="h-48 bg-green-200 rounded-xl">1</div>
+          <div className="h-48 bg-green-200 rounded-xl">1</div>
+        </div>
       </div>
     </div>
   );
