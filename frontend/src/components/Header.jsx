@@ -208,7 +208,7 @@ const Header = () => {
                             const connectrespo = connect({
                               connector: connectors[0],
                             });
-                            console.log(connectrespo);
+                            handleClose();
                           }}
                         >
                           <img
@@ -220,7 +220,7 @@ const Header = () => {
                           className="border border-gray-400 m-2 p-2 rounded-xl "
                           onClick={() => {
                             connect({ connector: connectors[0] });
-                            isConnected ? handleClose() : console.log('');
+                            handleClose();
                           }}
                         >
                           <img
@@ -232,6 +232,7 @@ const Header = () => {
                           className="border border-gray-400 m-2 p-2 rounded-xl "
                           onClick={() => {
                             connect({ connector: connectors[0] });
+                            handleClose();
                           }}
                         >
                           <img
@@ -243,6 +244,7 @@ const Header = () => {
                           className="border border-gray-400 m-2 p-2 rounded-xl "
                           onClick={() => {
                             connect({ connector: connectors[0] });
+                            handleClose();
                           }}
                         >
                           <img

@@ -120,7 +120,7 @@ const NftDetail = () => {
           </div>
 
           {/* details */}
-          <div className=" h-full w-full rounded-xl my-4">
+          <div className=" h-fit w-full rounded-xl my-4">
             <Description c_id={123} />
           </div>
         </div>

@@ -3,15 +3,12 @@ import { useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import { useAccount, useConnect, useEnsName } from 'wagmi';
 import { InjectedConnector } from 'wagmi/connectors/injected';
-
 const Collected = () => {
   const [nftData, setNftData] = useState(null);
   const [walletAddress, setWalletAddress] = useState('0x00');
   const { address, connector, isConnected } = useAccount();
-  const [loading, setLoading] = useState(false);
-  const [flag, setFlag] = useState(0);
   useEffect(() => {
-    isConnected ? setWalletAddress(address) : console.log('need to connect');
+    isConnected ? setWalletAddress(address) : console.log('needd to connect');
   }, []);
 
   const networks = {
@@ -26,9 +23,7 @@ const Collected = () => {
   useEffect(() => {
     const getNftData = async () => {
       isConnected ? setWalletAddress(address) : console.log('need to connect');
-
       try {
-        setLoading(true);
         const response = await fetch(
           `http://localhost:5000/collections/${address}`,
           {
@@ -44,21 +39,14 @@ const Collected = () => {
         console.log(getnftData.nftData);
       } catch (error) {
         console.log(error);
-      } finally {
-        setLoading(false);
       }
     };
     getNftData();
-  }, [flag]);
-  window.ethereum.on('accountsChanged', (accounts) => {
-    setFlag(flag + 1);
-    if (accounts.length === 0) {
-    }
-  });
+  }, []);
 
   return (
     <div>
-      <div className=" h-96 py-4 px-4 rounded-xl">
+      <div className=" h-full py-4 pb-24 px-4 rounded-xl">
         <div className="grid grid-cols-8 py-2 border-b-2 border-gray-200 text-gray-400 text-left">
           <div className="col-span-2 pl-2">n Items</div>
           <div>Floor price</div>
@@ -69,11 +57,7 @@ const Collected = () => {
           <div></div>
         </div>
 
-        {loading ? (
-          <div>loader here</div>
-        ) : !nftData ? (
-          <div>No nft data found on your address</div>
-        ) : (
+        {nftData &&
           nftData.map((nftdetail, key) => {
             return (
               <NavLink
@@ -122,8 +106,7 @@ const Collected = () => {
                 </div>
               </NavLink>
             );
-          })
-        )}
+          })}
       </div>
     </div>
   );

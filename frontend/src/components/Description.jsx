@@ -47,7 +47,7 @@ const Description = ({ c_id }) => {
                 </span>
               </div>
               {traitsDropdown ? (
-                <div className="w-full h-48 border-t p-6 text-gray-500 border-gray-300">
+                <div className="w-full h-fit border-t p-6 text-gray-500 border-gray-300">
                   this is traits
                 </div>
               ) : (
@@ -75,7 +75,7 @@ const Description = ({ c_id }) => {
                 </span>
               </div>
               {levelsDropdown ? (
-                <div className="w-full h-48 border-t p-6 text-gray-500 border-gray-300">
+                <div className="w-full h-fit border-t p-6 text-gray-500 border-gray-300">
                   this is levels
                 </div>
               ) : (
@@ -104,7 +104,7 @@ const Description = ({ c_id }) => {
             </div>
 
             {detailsDropdown ? (
-              <div className="w-full h-48 border-t p-6 text-gray-500 border-gray-300">
+              <div className="w-full h-fit border-t p-6 text-gray-500 border-gray-300">
                 <div className="flex justify-between text-gray-600 text-base ">
                   <p>Contract Address</p> <p>{contractAddress}</p>
                 </div>
