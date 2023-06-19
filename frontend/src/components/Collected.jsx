@@ -17,8 +17,8 @@ const Collected = () => {
     80001: 'Polygon Mumbai',
     137: 'Polygon Mainnet',
   };
-  const [walletAddress, setWalletAddress] = useState('0x00');
-  const { address, connector, isConnected } = useAccount();
+  // const [walletAddress, setWalletAddress] = useState('0x00');
+  // const { address, connector, isConnected } = useAccount();
 
   useEffect(() => {
     const getNftData = async () => {
