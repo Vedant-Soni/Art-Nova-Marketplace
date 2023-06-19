@@ -6,7 +6,7 @@ const db = require('./models');
 const port = process.env.PORT;
 const collection = require('./src/routes/collection/collection');
 const detailsPage = require('./src/routes/detailsPage/detailsPage');
-
+const fetchNft = require('./src/routes/fetchNFT/fetchNft');
 // db.sequelize.sync({ alter: true });
 const list721 = require('./src/routes/list721/list721');
 const getOrder = require('./src/routes/getOrder/getOrder');
@@ -17,6 +17,7 @@ const orderfulfill1155 = require('./src/routes/orderfulfill1155/orderfulfill1155
 app.use(express.json());
 app.use(cors());
 
+app.use(fetchNft);
 app.use(orderfulfill1155);
 app.use(list1155);
 app.use(cancelOrder);

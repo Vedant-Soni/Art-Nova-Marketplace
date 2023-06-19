@@ -16,7 +16,7 @@ const NftDetail = () => {
   const [offerDropdown, setOfferDropdown] = useState(false);
   const [amount1155, setAmount1155] = useState(10);
   const [component, setComponent] = useState('Sell');
-  const [totalSupply1155, setTotalSupply] = useState(100);
+  const [totalSupply1155, setTotalSupply] = useState(10000);
   const [nftData, setNftData] = useState();
   const { data: walletClient } = useSigner();
 
@@ -63,11 +63,6 @@ const NftDetail = () => {
       fetchData();
     }
   }, [address, id, flag, walletAddress, walletClient]);
-  window.ethereum.on('accountsChanged', (accounts) => {
-    setFlag(flag + 1);
-    if (accounts.length === 0) {
-    }
-  });
 
   window.ethereum.on('accountsChanged', (accounts) => {
     setFlag(flag + 1);
@@ -75,7 +70,7 @@ const NftDetail = () => {
     }
   });
   const totalListed = nftData?.totalListed;
-  const availableToList = nftData?.availableForListing;
+  const availableToList = nftData?.availableForListing || amount1155;
   const tokenStandard = nftData?.nftJsonData.tokenType;
   const priceOfToken = nftData?.listingPrice;
   const chainCrypto = networks[nftData?.network];
