@@ -1,5 +1,8 @@
+import { ethers } from 'ethers';
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import { useAccount, useSigner } from 'wagmi';
+import { ABI1155 } from '../ABI1155';
 import Buy from './1155/Buy';
 import Sell from './1155/Sell';
 import Buy721 from './721/Buy721';
@@ -7,14 +10,17 @@ import Description from './Description';
 
 const NftDetail = () => {
   const { address, id } = useParams();
+  const { address: walletAddress } = useAccount();
   const [historyDropdown, setHistoryDropdown] = useState(false);
   const [listDropdown, setListDropdown] = useState(false);
   const [offerDropdown, setOfferDropdown] = useState(false);
   const [amount1155, setAmount1155] = useState(10);
   const [component, setComponent] = useState('Sell');
-  const [totalSupply1155, setTotalSupply] = useState(10);
+  const [totalSupply1155, setTotalSupply] = useState(100);
   const [nftData, setNftData] = useState();
-  console.log('hii');
+  const { data: walletClient } = useSigner();
+
+  // const [totalListed, settotalListed] = useState();
   const networks = {
     1: 'ETH Mainnet',
     11155111: 'ETH Sepolia',
@@ -23,7 +29,6 @@ const NftDetail = () => {
   };
   useEffect(() => {
     const fetchData = async () => {
-      console.log('hiii');
       try {
         const response = await fetch(
           `http://localhost:5000/detailsPage/${address}/${id}`,
@@ -36,20 +41,30 @@ const NftDetail = () => {
         );
         const getnftData = await response.json();
         setNftData(getnftData.nft);
+        // console.log(getnftData.nft.balance);
         console.log(getnftData);
+        const contract = new ethers.Contract(address, ABI1155, walletClient);
+        const balance = await contract.balanceOf(walletAddress, id);
+        setAmount1155(balance);
       } catch (error) {
         console.log(error);
       }
       // setNftData(response);
     };
-    fetchData();
-  }, [address, id]);
+    if (walletClient) {
+      fetchData();
+    }
+  }, [address, id, walletAddress, walletClient]);
 
+  const totalListed = nftData?.totalListed;
+  const availableToList = nftData?.availableForListing;
   const tokenStandard = nftData?.nftJsonData.tokenType;
   const priceOfToken = nftData?.listingPrice;
   const chainCrypto = networks[nftData?.network];
   const chainId = nftData?.network;
   const ownerOfNft = nftData?.nftOwnerAddress;
+  const buyLimit = totalSupply1155 - amount1155;
+  console.log(buyLimit);
   return (
     <div>
       <div className="grid grid-cols-5 px-8">
@@ -118,7 +133,9 @@ const NftDetail = () => {
                     : nftData.nftJsonData.title
                   : 'Untitled'}
               </p>
-              <p className="text-base text-left my-4">Owned by You </p>{' '}
+              <p className="text-base text-left my-4">
+                Owned by {ownerOfNft === walletAddress ? 'You' : ownerOfNft}{' '}
+              </p>{' '}
               {/* Fetch from DB */}
             </div>
           </div>
@@ -167,13 +184,13 @@ const NftDetail = () => {
                       </div>
                     </div>
                   </div>
-                  <div>You own {amount1155}</div>
+                  <div>You own {amount1155.toString()}</div>
                 </div>
                 <div className="border-t border-gray-300">
                   {component === 'Buy' ? (
-                    <Buy total1155={totalSupply1155} />
+                    <Buy total1155={{ totalListed, nftData }} />
                   ) : component === 'Sell' ? (
-                    <Sell own1155={amount1155} />
+                    <Sell own1155={{ availableToList, nftData }} />
                   ) : (
                     <></>
                   )}

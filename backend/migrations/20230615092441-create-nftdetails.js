@@ -50,6 +50,12 @@ module.exports = {
       order: {
         type: Sequelize.JSON,
       },
+      totalListed: {
+        type: Sequelize.INTEGER,
+      },
+      availableForListing: {
+        type: Sequelize.INTEGER,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

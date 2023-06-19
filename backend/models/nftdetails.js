@@ -24,6 +24,8 @@ module.exports = (sequelize, DataTypes) => {
       listingPrice: DataTypes.DECIMAL(38, 18),
       isListed: DataTypes.BOOLEAN,
       order: DataTypes.JSON,
+      totalListed: DataTypes.INTEGER,
+      availableForListing: DataTypes.INTEGER,
     },
     {
       sequelize,
