@@ -22,8 +22,6 @@ const Sell = (props) => {
     setOpen(true);
   };
   const handleListItem = async () => {
-    console.log(sellValue);
-    console.log(props.own1155.nftData);
     const nftOwner = props.own1155.nftData?.nftOwnerAddress;
     const nftContract = props.own1155.nftData?.nftJsonData.contract.address;
     const tokenId = props.own1155.nftData?.tokenId;
