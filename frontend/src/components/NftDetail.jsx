@@ -262,7 +262,9 @@ const NftDetail = () => {
               </span>
             </div>
             {offerDropdown ? (
-              <div className="w-full h-48 border-t  border-gray-300"></div>
+              <div className="w-full h-48 border-t  border-gray-300">
+                No offer
+              </div>
             ) : (
               <></>
             )}

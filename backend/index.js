@@ -8,10 +8,12 @@ const detailsPage = require('./src/routes/detailsPage/detailsPage');
 const list721 = require('./src/routes/list721/list721');
 const getOrder = require('./src/routes/getOrder/getOrder');
 const orderfulfill = require('./src/routes/orderfulfil/orderfulfil');
+const cancelOrder = require('./src/routes/cancelOrder/cancelOrder');
 
 app.use(express.json());
 app.use(cors());
 
+app.use(cancelOrder);
 app.use(orderfulfill);
 app.use(getOrder);
 app.use(list721);

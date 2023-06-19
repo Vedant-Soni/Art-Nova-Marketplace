@@ -10,6 +10,7 @@ import { useAccount, useConnect, useEnsName, useSigner } from 'wagmi';
 import { InjectedConnector } from 'wagmi/connectors/injected';
 import { fulfillorder } from '../../fulfillOrder';
 import { cancelOrder } from '../../cancelOrder';
+import { createOffer } from '../../createOffer';
 
 const Buy721 = (props) => {
   const [open, setOpen] = React.useState(false);
@@ -117,16 +118,43 @@ const Buy721 = (props) => {
       },
     );
     const order = await response.json();
+    console.log(order);
     const cancel = await cancelOrder({
       order,
       offerer: address,
       signer: walletClient,
     });
     console.log(cancel);
+    if (cancel) {
+      const params = { nftContract, tokenId };
+      const updateDB = await fetch(`http://localhost:5000/cancelOrder`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(params),
+      });
+      const message = await updateDB.json();
+      console.log(message);
+    }
   };
-  const handleMakeOffer = () => {
+  const handleMakeOffer = async () => {
     console.log(offerAmount);
+    console.log('signer', walletClient);
+    isConnected ? setWalletAddress(address) : console.log('need to connect');
 
+    const nftOwner = props.nftData?.nftOwnerAddress;
+    const nftContract = props.nftData?.nftJsonData.contract.address;
+    const tokenId = props.nftData?.tokenId;
+    const offer = await createOffer({
+      price: offerAmount,
+      tokenAddress: nftContract,
+      signer: walletClient,
+      tokenId,
+      offerer: address,
+    });
+
+    // console.log(props.nftData.network);
     handleClickOpen();
   };
 
