@@ -3,10 +3,15 @@ import { useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import { useAccount, useConnect, useEnsName } from 'wagmi';
 import { InjectedConnector } from 'wagmi/connectors/injected';
+
 const Collected = () => {
   const [nftData, setNftData] = useState(null);
+  const [walletAddress, setWalletAddress] = useState('0x00');
+  const { address, connector, isConnected } = useAccount();
+  const [loading, setLoading] = useState(false);
+  const [flag, setFlag] = useState(0);
   useEffect(() => {
-    isConnected ? setWalletAddress(address) : console.log('needd to connect');
+    isConnected ? setWalletAddress(address) : console.log('need to connect');
   }, []);
 
   const networks = {
@@ -15,13 +20,15 @@ const Collected = () => {
     80001: 'Polygon Mumbai',
     137: 'Polygon Mainnet',
   };
-  const [walletAddress, setWalletAddress] = useState('0x00');
-  const { address, connector, isConnected } = useAccount();
+  // const [walletAddress, setWalletAddress] = useState('0x00');
+  // const { address, connector, isConnected } = useAccount();
 
   useEffect(() => {
     const getNftData = async () => {
       isConnected ? setWalletAddress(address) : console.log('need to connect');
+
       try {
+        setLoading(true);
         const response = await fetch(
           `http://localhost:5000/collections/${address}`,
           {
@@ -37,10 +44,17 @@ const Collected = () => {
         console.log(getnftData.nftData);
       } catch (error) {
         console.log(error);
+      } finally {
+        setLoading(false);
       }
     };
     getNftData();
-  }, []);
+  }, [flag]);
+  window.ethereum.on('accountsChanged', (accounts) => {
+    setFlag(flag + 1);
+    if (accounts.length === 0) {
+    }
+  });
 
   return (
     <div>
@@ -55,7 +69,11 @@ const Collected = () => {
           <div></div>
         </div>
 
-        {nftData &&
+        {loading ? (
+          <div>loader here</div>
+        ) : !nftData ? (
+          <div>No nft data found on your address</div>
+        ) : (
           nftData.map((nftdetail, key) => {
             return (
               <NavLink
@@ -104,7 +122,8 @@ const Collected = () => {
                 </div>
               </NavLink>
             );
-          })}
+          })
+        )}
       </div>
     </div>
   );

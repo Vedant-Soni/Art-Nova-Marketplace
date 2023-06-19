@@ -14,6 +14,13 @@ const NftDetail = () => {
   const [component, setComponent] = useState('Sell');
   const [totalSupply1155, setTotalSupply] = useState(10);
   const [nftData, setNftData] = useState();
+  const [offerAmount, setOfferAmount] = useState(0);
+  const [offererAddress, setOfferer] = useState(
+    '0x00000000000000000000000000000000000',
+  );
+  const offerData = false;
+
+  const [flag, setFlag] = useState(0);
   console.log('hii');
   const networks = {
     1: 'ETH Mainnet',
@@ -43,7 +50,12 @@ const NftDetail = () => {
       // setNftData(response);
     };
     fetchData();
-  }, [address, id]);
+  }, [address, id, flag]);
+  window.ethereum.on('accountsChanged', (accounts) => {
+    setFlag(flag + 1);
+    if (accounts.length === 0) {
+    }
+  });
 
   const tokenStandard = nftData?.nftJsonData.tokenType;
   const priceOfToken = nftData?.listingPrice;
@@ -263,7 +275,20 @@ const NftDetail = () => {
             </div>
             {offerDropdown ? (
               <div className="w-full h-48 border-t  border-gray-300">
-                No offer
+                {!offerData ? (
+                  <p className="m-4 text-gray-400">No Offer Yet..!</p>
+                ) : (
+                  <div className="p-6 flex justify-between text-lg border-b items-center mx-4 border-gray-200 text-left">
+                    <p>
+                      Amount : {offerAmount}{' '}
+                      {chainId === 80001 || chainId === 137 ? 'Matic' : 'ETH'}
+                    </p>
+                    <p>By : {offererAddress}</p>
+                    <button className="bg-blue-400 text-white rounded-xl p-2 hover:bg-blue-500">
+                      Accept
+                    </button>
+                  </div>
+                )}
               </div>
             ) : (
               <></>
