@@ -35,36 +35,45 @@ const Buy721 = (props) => {
   });
 
   const handleBuyNow = async () => {
-    const nftContract = props.nftData?.nftJsonData.contract.address;
-    const tokenId = props.nftData?.tokenId;
-    console.log(nftContract, tokenId);
-    const response = await fetch(
-      `http://localhost:5000/getOrder/${nftContract}/${tokenId}`,
-      {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
+    handleClickOpen();
+    try {
+      setLoading(true);
+      const nftContract = props.nftData?.nftJsonData.contract.address;
+      const tokenId = props.nftData?.tokenId;
+      console.log(nftContract, tokenId);
+      const response = await fetch(
+        `http://localhost:5000/getOrder/${nftContract}/${tokenId}`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
         },
-      },
-    );
-    const order = await response.json();
-    const nftPurchase = await fulfillorder({
-      order,
-      fulfiller: address,
-      signer: walletClient,
-    });
-    if (nftPurchase) {
-      const updatedData = { nftOwner: address, nftContract, tokenId };
-      await fetch(`http://localhost:5000/orderfulfill`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(updatedData),
+      );
+      const order = await response.json();
+      const nftPurchase = await fulfillorder({
+        order,
+        fulfiller: address,
+        signer: walletClient,
       });
-      console.log('Success');
+      if (nftPurchase) {
+        const updatedData = { nftOwner: address, nftContract, tokenId };
+        await fetch(`http://localhost:5000/orderfulfill`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(updatedData),
+        });
+        console.log('Success');
+      }
+      console.log('Finallyyyyyyyy:----');
+    } catch (e) {
+      console.log('Buy now error:', e);
+    } finally {
+      setLoading(false);
+      handleClose();
     }
-    console.log('Finallyyyyyyyy:----');
   };
 
   const handleClickOpen = () => {
@@ -168,23 +177,31 @@ const Buy721 = (props) => {
     }
   };
   const handleMakeOffer = async () => {
-    console.log(offerAmount);
-    console.log('signer', walletClient);
-    isConnected ? setWalletAddress(address) : console.log('need to connect');
+    try {
+      setLoading(true);
 
-    const nftOwner = props.nftData?.nftOwnerAddress;
-    const nftContract = props.nftData?.nftJsonData.contract.address;
-    const tokenId = props.nftData?.tokenId;
-    const offer = await createOffer({
-      price: offerAmount,
-      tokenAddress: nftContract,
-      signer: walletClient,
-      tokenId,
-      offerer: address,
-    });
+      console.log(offerAmount);
+      console.log('signer', walletClient);
+      isConnected ? setWalletAddress(address) : console.log('need to connect');
 
-    // console.log(props.nftData.network);
-    handleClickOpen();
+      const nftOwner = props.nftData?.nftOwnerAddress;
+      const nftContract = props.nftData?.nftJsonData.contract.address;
+      const tokenId = props.nftData?.tokenId;
+      const offer = await createOffer({
+        price: offerAmount,
+        tokenAddress: nftContract,
+        signer: walletClient,
+        tokenId,
+        offerer: address,
+      });
+
+      // console.log(props.nftData.network);
+    } catch (e) {
+      console.log('Make offer error :', e);
+    } finally {
+      setLoading(false);
+      handleClose();
+    }
   };
 
   const listed = props.nftData?.isListed;
@@ -197,21 +214,19 @@ const Buy721 = (props) => {
             <div className="flex gap-6 text-2xl h-full w-full p-4 px-8 rounded-xl text-center ">
               <button
                 disabled
-                className="flex justify-center gap-4 h-full w-full text-blue-500 border border-gray-300 text-xl p-4 rounded-xl"
+                className="flex justify-center gap-4 h-full w-full text-blue-500 border  transition-all duration-300 hover:bg-blue-600 hover:text-white border-gray-300 text-xl p-4 rounded-xl"
               >
-                <span class="material-symbols-outlined text-3xl">sell</span>
                 Edit list
               </button>
             </div>
             <div className="flex gap-6 text-2xl h-full w-full p-4 px-8 rounded-xl text-center ">
               <button
-                className="flex justify-center gap-4 h-full w-full text-blue-500 border border-gray-300 text-xl p-4 rounded-xl"
+                className="flex justify-center gap-4 h-full w-full text-blue-500 border  transition-all duration-300  hover:bg-blue-600 hover:text-white border-gray-300 text-xl p-4 rounded-xl"
                 onClick={() => {
                   // handleCancelList();
                   handleClickOpen();
                 }}
               >
-                <span class="material-symbols-outlined text-3xl">sell</span>
                 Cancel list
               </button>
               <Dialog
@@ -269,7 +284,7 @@ const Buy721 = (props) => {
           <>
             <div className="flex gap-6 text-2xl h-full w-full p-4 px-8 rounded-xl text-center">
               <button
-                className="flex justify-center gap-4 h-full w-full text-white border bg-blue-500 border-gray-300 text-xl p-4 rounded-xl"
+                className="flex justify-center gap-4 h-full w-full text-white border bg-blue-400 transition-all duration-300 hover:bg-blue-600 border-gray-300 text-xl p-4 rounded-xl"
                 onClick={async () => {
                   handleClickOpen();
                 }}
@@ -333,7 +348,6 @@ const Buy721 = (props) => {
                 disabled
                 className="flex justify-center gap-4 h-full w-full text-blue-500 border border-gray-300 text-xl p-4 rounded-xl"
               >
-                <span class="material-symbols-outlined text-3xl">sell</span>Make
                 Edit item
               </button>
             </div>
@@ -343,22 +357,45 @@ const Buy721 = (props) => {
           <>
             <div className="flex gap-6 text-2xl h-full w-full p-4 px-8 rounded-xl text-center">
               <button
-                className="flex justify-center gap-4 h-full w-full text-white border bg-blue-500 border-gray-300 text-xl p-4 rounded-xl"
+                className="flex justify-center gap-4 h-full w-full text-white border bg-blue-400 hover:bg-blue-600 transition-all duration-300  border-gray-300 text-xl p-4 rounded-xl"
                 onClick={() => {
                   handleBuyNow();
                 }}
               >
                 Buy now
               </button>
-            </div>
-            <div className="flex gap-6 text-2xl h-full w-full p-4 px-8 rounded-xl text-center ">
-              <button
-                disabled
-                className="flex justify-center gap-4 h-full w-full text-blue-500 border border-gray-300 text-xl p-4 rounded-xl"
-              >
-                <span class="material-symbols-outlined text-3xl">sell</span>
-                Make Offer
-              </button>
+              <Dialog open={open} onClose={handleClose}>
+                <DialogTitle>NFT Detail</DialogTitle>
+                <DialogContent>
+                  <div className="text-center  flex flex-col">
+                    <img
+                      src={props.nftData.nftJsonData.tokenUri.raw}
+                      alt="image"
+                      className="border border-gray-200 rounded-xl p-4"
+                    />
+                    <div className="flex justify-between">
+                      <p>{props.nftData.nftJsonData.title}</p>
+                      <p>{props.nftData?.listingPrice}</p>
+                    </div>
+                  </div>
+                </DialogContent>
+                {loading ? (
+                  <div className="flex justify-center">
+                    <ThreeDots
+                      height="80"
+                      width="80"
+                      radius="9"
+                      color="#9DB2BF"
+                      ariaLabel="three-dots-loading"
+                      wrapperStyle={{}}
+                      wrapperClassName=""
+                      visible={true}
+                    />
+                  </div>
+                ) : (
+                  <DialogActions></DialogActions>
+                )}
+              </Dialog>
             </div>
           </>
         ) : props.nftData?.nftOwnerAddress !== userAddress &&
@@ -366,7 +403,7 @@ const Buy721 = (props) => {
           <>
             <div className="flex gap-6 text-2xl h-full w-full p-4 px-8 rounded-xl text-center">
               <button
-                className="flex justify-center gap-4 h-full w-full text-white border bg-blue-500 border-gray-300 text-xl p-4 rounded-xl"
+                className="flex justify-center gap-4 h-full w-full text-white border bg-blue-400 transition-all duration-300 hover:bg-blue-600 border-gray-300 text-xl p-4 rounded-xl"
                 onClick={() => {
                   // setAmountPopup(true);
                   // setPopupOption(3);
@@ -378,6 +415,16 @@ const Buy721 = (props) => {
               <Dialog open={open} onClose={handleClose}>
                 <DialogTitle>Enter Amount</DialogTitle>
                 <DialogContent>
+                  <div className="text-center  flex flex-col">
+                    <img
+                      src={props.nftData.nftJsonData.tokenUri.raw}
+                      alt="image"
+                      className="border border-gray-200 rounded-xl p-4"
+                    />
+                    <div className="flex justify-between">
+                      <p>{props.nftData.nftJsonData.title}</p>
+                    </div>
+                  </div>
                   <TextField
                     autoFocus
                     margin="dense"
@@ -391,12 +438,31 @@ const Buy721 = (props) => {
                     }}
                   />
                 </DialogContent>
-                <DialogActions>
-                  <Button onClick={handleClose}>Cancel</Button>
-                  <Button onClick={() => handleMakeOffer()} variant="contained">
-                    Confirm
-                  </Button>
-                </DialogActions>
+
+                {loading ? (
+                  <div className="flex justify-center">
+                    <ThreeDots
+                      height="80"
+                      width="80"
+                      radius="9"
+                      color="#9DB2BF"
+                      ariaLabel="three-dots-loading"
+                      wrapperStyle={{}}
+                      wrapperClassName=""
+                      visible={true}
+                    />
+                  </div>
+                ) : (
+                  <DialogActions>
+                    <Button onClick={handleClose}>Cancel</Button>
+                    <Button
+                      onClick={() => handleMakeOffer()}
+                      variant="contained"
+                    >
+                      Confirm
+                    </Button>
+                  </DialogActions>
+                )}
               </Dialog>
             </div>
           </>
