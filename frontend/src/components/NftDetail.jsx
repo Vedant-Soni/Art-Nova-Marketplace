@@ -19,6 +19,9 @@ const NftDetail = () => {
   const [totalSupply1155, setTotalSupply] = useState(10000);
   const [nftData, setNftData] = useState();
   const { data: walletClient } = useSigner();
+  const [imageSrc, setImageSrc] = useState(
+    'https://cdn3.iconfinder.com/data/icons/nft/64/nft_non_fungible_token_blockchain_sign_coin-512.png',
+  );
 
   // const [totalListed, settotalListed] = useState();
   const [offerAmount, setOfferAmount] = useState(0);
@@ -69,6 +72,22 @@ const NftDetail = () => {
     if (accounts.length === 0) {
     }
   });
+  const fetchImage = async () => {
+    try {
+      const response = await fetch(
+        nftData && nftData.nftJsonData.rawMetadata.image
+          ? nftData.nftJsonData.rawMetadata.image
+          : 'https://cdn3.iconfinder.com/data/icons/nft/64/nft_non_fungible_token_blockchain_sign_coin-512.png',
+      );
+      if (response.ok) {
+        setImageSrc(response.url);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
+  fetchImage();
   const totalListed = nftData?.totalListed;
   const availableToList = nftData?.availableForListing || amount1155;
   const tokenStandard = nftData?.nftJsonData.tokenType;
@@ -100,23 +119,13 @@ const NftDetail = () => {
               <span class="material-symbols-outlined ">favorite</span>
             </div>
             <div className="p-8">
-              <img
-                src={
-                  nftData
-                    ? nftData.nftJsonData.rawMetadata.image
-                      ? nftData.nftJsonData.rawMetadata.image
-                      : 'https://cdn3.iconfinder.com/data/icons/nft/64/nft_non_fungible_token_blockchain_sign_coin-512.png'
-                    : 'https://cdn3.iconfinder.com/data/icons/nft/64/nft_non_fungible_token_blockchain_sign_coin-512.png'
-                }
-                alt="NFT"
-                className="rounded-xl w-full "
-              />
+              <img src={imageSrc} alt="NFT" className="rounded-xl w-full " />
             </div>
           </div>
 
           {/* details */}
           <div className=" h-fit w-full rounded-xl my-4">
-            <Description c_id={123} />
+            <Description nftdata={nftData} />
           </div>
         </div>
 

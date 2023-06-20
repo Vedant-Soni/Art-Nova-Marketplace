@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useEffect } from 'react';
 
-const Description = ({ c_id }) => {
+const Description = ({ nftData }) => {
   //dropdown hooks
   const [traitsDropdown, setTraitsDropdown] = useState(false);
   const [levelsDropdown, setLevelsDropdown] = useState(false);
@@ -15,6 +15,8 @@ const Description = ({ c_id }) => {
   const tokenId = 123;
   const chain = 'sepolia';
   const tokenStandard = 'ERC721';
+
+  console.log('on description page......', nftData);
   return (
     <div>
       <div className="border-2 border-gray-200 rounded-xl">

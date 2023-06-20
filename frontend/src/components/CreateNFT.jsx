@@ -117,6 +117,7 @@ const CreateNFT = () => {
     const generatedMetadata = await uploadMeta(imageUrl);
     // console.log(generatedMetadata);
 
+
     const contract = new ethers.Contract(
       '0x9EbBF04A84823CE9a3E4B10Bd4880e08aEF9679e',
       ABI721,
