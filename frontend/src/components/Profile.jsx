@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-
+import { useAccount } from 'wagmi';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { NavLink } from 'react-router-dom';
 import Collected from './Collected';
@@ -8,7 +8,7 @@ import Favorited from './Favorited';
 
 const Profile = () => {
   const [component, setComponent] = useState('Collected');
-
+  const { address } = useAccount();
   return (
     <div>
       {/* image part  */}
@@ -30,7 +30,7 @@ const Profile = () => {
           </div>
           <div className="flex">
             <p className="text-xs sm:text-sm md:text-base lg:text-lg text-gray-500">
-              address of user
+              {address}
             </p>
           </div>
         </div>
