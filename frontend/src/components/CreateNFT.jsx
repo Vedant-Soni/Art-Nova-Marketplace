@@ -1,6 +1,11 @@
+import { ethers } from 'ethers';
 import React, { useState } from 'react';
-
+import { useSigner } from 'wagmi';
+import { ABI721 } from '../ABI721';
+import { useAccount } from 'wagmi';
 const CreateNFT = () => {
+  const { data: walletClient } = useSigner();
+  const { address } = useAccount();
   const [traitsDropdown, setTraitsDropdown] = useState(false);
   const [traitsType, setTraitType] = useState('');
   const [traitsValue, setTraitsValue] = useState('');
@@ -103,7 +108,7 @@ const CreateNFT = () => {
       );
       console.log(response);
       const data = await response.json();
-      console.log(data);
+      return data.IpfsHash;
     } catch (error) {
       console.log(error);
     }
@@ -112,7 +117,22 @@ const CreateNFT = () => {
   const handleCreateNFT = async () => {
     const imageIpfsHash = await uploadToIpfs(selectedFile);
     const imageUrl = `https://coffee-different-cat-534.mypinata.cloud/ipfs/${imageIpfsHash}`;
-    const generateMetadata = await uploadMeta(imageUrl);
+    const generatedMetadata = await uploadMeta(imageUrl);
+    // console.log(generatedMetadata);
+
+    const contract = new ethers.Contract(
+      '0x9EbBF04A84823CE9a3E4B10Bd4880e08aEF9679e',
+      ABI721,
+      walletClient,
+    );
+
+    try {
+      const mint = await contract.safeMint(
+        address,
+        `ipfs://${generatedMetadata}`,
+      );
+      console.log(mint);
+    } catch (error) {}
 
     // Here we can Mint NFT with contract
 
@@ -368,6 +388,19 @@ const CreateNFT = () => {
                       className="h-8 bg-gray-300 rounded-full p-2 "
                     />
                     Polygon Mumbai
+                  </div>
+                  <div
+                    className="w-full py-4 px-6 border-t text-left flex item-center  border-gray-300 gap-2 cursor-pointer"
+                    onClick={() => {
+                      handleSelectNetwork('Polygon Mainnet', polygonLogo);
+                    }}
+                  >
+                    <img
+                      src={polygonLogo}
+                      alt=""
+                      className="h-8 bg-gray-300 rounded-full p-2 "
+                    />
+                    Polygon Mainnet
                   </div>
                 </>
               ) : (
