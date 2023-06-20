@@ -1,8 +1,24 @@
 import React from 'react';
 import avatr from '../images/avatr.png';
 import { NavLink } from 'react-router-dom';
+import { useAccount } from 'wagmi';
 
 const Created = () => {
+  const { address } = useAccount();
+  const fetchingNFT = async () => {
+    const getnfts = await fetch(
+      `http://localhost:5000/fetchCreated/${address}`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      },
+    );
+    const nfts = await getnfts.json();
+    console.log(nfts);
+  };
+  fetchingNFT();
   return (
     <div>
       <div className="p-4 grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-6">
@@ -17,7 +33,7 @@ const Created = () => {
           <div className="h-fit flex flex-col justify-end  rounded-3xl  relative drop-shadow-sm hover:drop-shadow-xl">
             <img
               src={avatr}
-              alt="image"
+              alt=" "
               className="rounded-t-xl h-56 object-cover"
             />
             <div className="bg-slate-50 absolute rounded-xl bottom-2 left-2  p-1">

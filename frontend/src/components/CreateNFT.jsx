@@ -58,7 +58,6 @@ const CreateNFT = () => {
   const uploadToIpfs = async (imageFile) => {
     const formData = new FormData();
     formData.append('file', imageFile);
-    console.log(imageFile);
     const requestOptions = {
       method: 'POST',
       body: formData,
@@ -94,7 +93,6 @@ const CreateNFT = () => {
     });
     const formData = new FormData();
     formData.append('file', file);
-    console.log(process.env.REACT_APP_PINATA_JWT);
     try {
       const response = await fetch(
         'https://api.pinata.cloud/pinning/pinFileToIPFS',
@@ -106,7 +104,6 @@ const CreateNFT = () => {
           },
         },
       );
-      console.log(response);
       const data = await response.json();
       return data.IpfsHash;
     } catch (error) {
@@ -120,6 +117,7 @@ const CreateNFT = () => {
     const generatedMetadata = await uploadMeta(imageUrl);
     // console.log(generatedMetadata);
 
+
     const contract = new ethers.Contract(
       '0x9EbBF04A84823CE9a3E4B10Bd4880e08aEF9679e',
       ABI721,
@@ -131,25 +129,21 @@ const CreateNFT = () => {
         address,
         `ipfs://${generatedMetadata}`,
       );
-      console.log(mint);
+      await mint.wait();
+      const params = { owner: address, chainName };
+
+      const response = await fetch('http://localhost:5000/createdNft', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(params),
+      });
+      const success = await response.json();
+      console.log(success);
     } catch (error) {}
 
     // Here we can Mint NFT with contract
-
-    console.log(
-      'file: ',
-      selectedFile,
-      'name: ',
-      name,
-      'Desc: ',
-      description,
-      'properties :',
-      traits,
-      'supply :',
-      supply,
-      'blockchain :',
-      chainName,
-    );
   };
   return (
     <div>

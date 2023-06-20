@@ -56,6 +56,9 @@ module.exports = {
       availableForListing: {
         type: Sequelize.INTEGER,
       },
+      isCreated: {
+        type: Sequelize.BOOLEAN,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
