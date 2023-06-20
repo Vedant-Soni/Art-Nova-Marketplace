@@ -3,6 +3,13 @@ import React, { useState } from 'react';
 import { useSigner } from 'wagmi';
 import { ABI721 } from '../ABI721';
 import { useAccount } from 'wagmi';
+
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+
+import { ThreeDots } from 'react-loader-spinner';
 const CreateNFT = () => {
   const { data: walletClient } = useSigner();
   const { address } = useAccount();
@@ -16,6 +23,7 @@ const CreateNFT = () => {
   const [name, setName] = useState('  ');
   const [description, setDescription] = useState('');
 
+  const [open, setOpen] = React.useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
   const [symbolSrc, setSymbolSrc] = useState(
     'https://ethresear.ch/uploads/default/original/1X/bc9ee6d276a251519dd12dca7202a9e3658a7eb3.png',
@@ -29,6 +37,14 @@ const CreateNFT = () => {
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     setSelectedFile(file);
+  };
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
   };
   const setTrait = () => {
     if (traitsType !== '' && traitsValue !== '') {
@@ -112,38 +128,44 @@ const CreateNFT = () => {
   };
 
   const handleCreateNFT = async () => {
-    const imageIpfsHash = await uploadToIpfs(selectedFile);
-    const imageUrl = `https://coffee-different-cat-534.mypinata.cloud/ipfs/${imageIpfsHash}`;
-    const generatedMetadata = await uploadMeta(imageUrl);
-    // console.log(generatedMetadata);
-
-
-    const contract = new ethers.Contract(
-      '0x9EbBF04A84823CE9a3E4B10Bd4880e08aEF9679e',
-      ABI721,
-      walletClient,
-    );
-
     try {
-      const mint = await contract.safeMint(
-        address,
-        `ipfs://${generatedMetadata}`,
+      handleClickOpen();
+      const imageIpfsHash = await uploadToIpfs(selectedFile);
+      const imageUrl = `https://coffee-different-cat-534.mypinata.cloud/ipfs/${imageIpfsHash}`;
+      const generatedMetadata = await uploadMeta(imageUrl);
+      // console.log(generatedMetadata);
+
+      const contract = new ethers.Contract(
+        '0x9EbBF04A84823CE9a3E4B10Bd4880e08aEF9679e',
+        ABI721,
+        walletClient,
       );
-      await mint.wait();
-      const params = { owner: address, chainName };
 
-      const response = await fetch('http://localhost:5000/createdNft', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(params),
-      });
-      const success = await response.json();
-      console.log(success);
-    } catch (error) {}
+      try {
+        const mint = await contract.safeMint(
+          address,
+          `ipfs://${generatedMetadata}`,
+        );
+        await mint.wait();
+        const params = { owner: address, chainName };
 
-    // Here we can Mint NFT with contract
+        const response = await fetch('http://localhost:5000/createdNft', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(params),
+        });
+        const success = await response.json();
+        console.log(success);
+      } catch (error) {}
+
+      // Here we can Mint NFT with contract
+    } catch (e) {
+      console.log('Create nft error:', e);
+    } finally {
+      handleClose();
+    }
   };
   return (
     <div>
@@ -404,6 +426,35 @@ const CreateNFT = () => {
           </div>
 
           <div className=" p-4">
+            <Dialog
+              open={open}
+              onClose={handleClose}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
+            >
+              <DialogTitle id="alert-dialog-title">
+                Transaction Running...
+              </DialogTitle>
+              <DialogContent>
+                <div className="text-center  flex flex-col">
+                  <div className="flex justify-center">
+                    <p className="text-xl">Nft Creating</p>
+                  </div>
+                </div>
+              </DialogContent>
+              <div className="flex justify-center">
+                <ThreeDots
+                  height="80"
+                  width="80"
+                  radius="9"
+                  color="#9DB2BF"
+                  ariaLabel="three-dots-loading"
+                  wrapperStyle={{}}
+                  wrapperClassName=""
+                  visible={true}
+                />
+              </div>
+            </Dialog>
             <button
               className="bg-blue-500 px-4 py-2 text-2xl text-white rounded-xl"
               onClick={() => {

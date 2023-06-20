@@ -62,7 +62,7 @@ const Home = () => {
                         {item.nftJsonData.rawMetadata.name}
                       </p>
                       <p className="text-xl">
-                        {Number(item.listingPrice).toFixed(5)}
+                        {parseFloat(item.listingPrice)}
                         <br />
                         {item.network == 80001 ? ' MATIC' : ' ETH'}
                       </p>
