@@ -156,6 +156,7 @@ const Buy721 = (props) => {
         offerer: address,
         signer: walletClient,
       });
+      await cancel.wait();
       console.log(cancel);
       if (cancel) {
         const params = { nftContract, tokenId };
@@ -213,14 +214,6 @@ const Buy721 = (props) => {
           <>
             <div className="flex gap-6 text-2xl h-full w-full p-4 px-8 rounded-xl text-center ">
               <button
-                disabled
-                className="flex justify-center gap-4 h-full w-full text-blue-500 border  transition-all duration-300 hover:bg-blue-600 hover:text-white border-gray-300 text-xl p-4 rounded-xl"
-              >
-                Edit list
-              </button>
-            </div>
-            <div className="flex gap-6 text-2xl h-full w-full p-4 px-8 rounded-xl text-center ">
-              <button
                 className="flex justify-center gap-4 h-full w-full text-blue-500 border  transition-all duration-300  hover:bg-blue-600 hover:text-white border-gray-300 text-xl p-4 rounded-xl"
                 onClick={() => {
                   // handleCancelList();
@@ -240,11 +233,11 @@ const Buy721 = (props) => {
                 </DialogTitle>
                 <DialogContent>
                   <div className="text-center  flex flex-col">
-                    <img
+                    {/* <img
                       src={props.nftData.nftJsonData.tokenUri.raw}
                       alt="image"
                       className="border border-gray-200 rounded-xl p-4"
-                    />
+                    /> */}
                     <div className="flex justify-between">
                       <p>Name</p>
                       <p>Price</p>
@@ -295,11 +288,11 @@ const Buy721 = (props) => {
                 <DialogTitle>Enter Amount</DialogTitle>
                 <DialogContent>
                   <div className="text-center  flex flex-col">
-                    <img
+                    {/* <img
                       src={props.nftData.nftJsonData.tokenUri.raw}
                       alt="image"
                       className="border border-gray-200 rounded-xl p-4"
-                    />
+                    /> */}
                     <div className="flex justify-between">
                       <p>{props.nftData.nftJsonData.title}</p>
                     </div>
@@ -343,14 +336,7 @@ const Buy721 = (props) => {
                 )}
               </Dialog>
             </div>
-            <div className="flex gap-6 text-2xl h-full w-full p-4 px-8 rounded-xl text-center ">
-              <button
-                disabled
-                className="flex justify-center gap-4 h-full w-full text-blue-500 border border-gray-300 text-xl p-4 rounded-xl"
-              >
-                Edit item
-              </button>
-            </div>
+            <div className="flex gap-6 text-2xl h-full w-full p-4 px-8 rounded-xl text-center "></div>
           </>
         ) : props.nftData?.nftOwnerAddress !== userAddress &&
           listed === true ? (

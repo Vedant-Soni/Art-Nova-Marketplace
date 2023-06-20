@@ -5,6 +5,8 @@ import { NavLink } from 'react-router-dom';
 import Collected from './Collected';
 import Created from './Created';
 import Favorited from './Favorited';
+import banner from '../images/banner.jpeg';
+import profile from '../images/profile.jpg';
 
 const Profile = () => {
   const [component, setComponent] = useState('Collected');
@@ -13,8 +15,16 @@ const Profile = () => {
     <div>
       {/* image part  */}
       <div className="relative">
-        <div className="lg:h-96 h-36 bg-slate-500 items-center flex md:h-60 sm:h-40 "></div>
-        <div className="rounded-full h-24 w-24 lg:h-48 lg:w-48 md:h-36 md:w-36 sm:h-28 sm:w-28 bg-red-300  absolute  left-2 sm:left-4 md:left-6 lg:left-8 -bottom-10 border-2 border-white"></div>
+        <div className="lg:h-96 h-36 bg-slate-500 items-center flex md:h-60 sm:h-40 ">
+          <img
+            src={banner}
+            alt="Market Place"
+            className="object-cover h-full w-full"
+          />
+        </div>
+        <div className="rounded-full h-24 w-24 lg:h-48 lg:w-48 md:h-36 md:w-36 sm:h-28 sm:w-28 bg-red-300  absolute  left-2 sm:left-4 md:left-6 lg:left-8 -bottom-10 border-4 border-white">
+          <img src={profile} alt="user" className="rounded-full" />
+        </div>
       </div>
 
       <div className="px-2 sm:px-4 md:px-6 lg:px-8 ">
