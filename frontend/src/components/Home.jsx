@@ -36,7 +36,7 @@ const Home = () => {
         <div className="text-left m-2">
           <p className="text-lg">ALL NFT COllection </p>
         </div>
-        <div className="grid lg:grid-cols-5 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-8">
+        <div className="grid lg:grid-cols-5  md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-8">
           {nft &&
             nft.map((item, key) => {
               return (
@@ -47,7 +47,7 @@ const Home = () => {
                 >
                   <div
                     index={key}
-                    className="text-gray-600 hover:text-gray-800 drop-shadow-xl  hover:drop-shadow-2xl my-4 rounded-3xl h-fit p-6 transition-all duration-300 bg-white flex flex-col justify-between"
+                    className="text-gray-600 hover:text-gray-800 drop-shadow-xl  hover:drop-shadow-2xl my-4 rounded-3xl h-fit p-6 transition-all duration-300 bg-gray-50 flex flex-col justify-between"
                   >
                     <div className=" h-fit rounded-xl justify-center flex">
                       <img

@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { useSigner } from 'wagmi';
 import { ABI721 } from '../ABI721';
 import { useAccount } from 'wagmi';
+import { useRef } from 'react';
 
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -30,6 +31,8 @@ const CreateNFT = () => {
   const [name, setName] = useState('  ');
   const [description, setDescription] = useState('');
 
+  const uploadImage = useRef(0);
+
   const [open, setOpen] = React.useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
   const [symbolSrc, setSymbolSrc] = useState(
@@ -43,7 +46,7 @@ const CreateNFT = () => {
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
-    setSelectedFile(file);
+    if (file) setSelectedFile(file);
   };
 
   const handleClickOpen = () => {
@@ -182,45 +185,100 @@ const CreateNFT = () => {
         {/* title */}
         <div className=" w-1/3">
           <p className="text-3xl my-4 p-4">Create New Item</p>
+
           {/* image upload */}
           <div className=" p-4">
             <div>
-              <h1>File Input</h1>
+              <h1>Upload Your Art Here</h1>
+              <div
+                className="bg-gray-200 border border-gray-400 h-56 relative rounded-xl cursor-pointer group "
+                onClick={() => {
+                  uploadImage.current.click();
+                }}
+              >
+                {selectedFile && (
+                  <div className="h-full justify-center flex object-cover ">
+                    {selectedFile.type.startsWith('image/') && (
+                      <img
+                        className="h-full "
+                        src={URL.createObjectURL(selectedFile)}
+                        alt="Selected File"
+                      />
+                    )}
+                    {selectedFile.type.startsWith('audio/') && (
+                      <audio controls>
+                        <source
+                          src={URL.createObjectURL(selectedFile)}
+                          type={selectedFile.type}
+                        />
+                      </audio>
+                    )}
+                    {selectedFile.type.startsWith('video/') && (
+                      <video controls>
+                        <source
+                          src={URL.createObjectURL(selectedFile)}
+                          type={selectedFile.type}
+                        />
+                      </video>
+                    )}
+                  </div>
+                )}
+                <div className="h-full w-full group-hover:backdrop-blur-sm absolute top-0 left-0 rounded-xl">
+                  <p className="absolute  left-1/2 top-1/2 text-center  opacity-0  transition-opacity duration-300  group-hover:opacity-100 group-hover:flex ">
+                    <span class="material-symbols-outlined left-1/2 top-1/2  transform -translate-x-1/2 -translate-y-1/2 text-7xl ">
+                      add
+                    </span>
+                  </p>
+                  {selectedFile && (
+                    <span
+                      class="material-symbols-outlined absolute right-1 top-1 opacity-0  transition-opacity duration-300  group-hover:opacity-100 group-hover:flex"
+                      onClick={(event) => {
+                        setSelectedFile(null);
+                        event.stopPropagation();
+                      }}
+                    >
+                      close
+                    </span>
+                  )}
+                </div>
+              </div>
               <input
                 type="file"
                 accept="image/*, audio/*, video/*"
                 onChange={handleFileChange}
+                hidden
+                ref={uploadImage}
               />
-              {selectedFile && (
-                <div>
-                  <h2>Selected File:</h2>
-                  <p>Name: {selectedFile.name}</p>
-                  <p>Size: {selectedFile.size} bytes</p>
-                  <p>Type: {selectedFile.type}</p>
-                  {selectedFile.type.startsWith('image/') && (
-                    <img
-                      src={URL.createObjectURL(selectedFile)}
-                      alt="Selected File"
-                    />
-                  )}
-                  {selectedFile.type.startsWith('audio/') && (
-                    <audio controls>
-                      <source
-                        src={URL.createObjectURL(selectedFile)}
-                        type={selectedFile.type}
-                      />
-                    </audio>
-                  )}
-                  {selectedFile.type.startsWith('video/') && (
-                    <video controls>
-                      <source
-                        src={URL.createObjectURL(selectedFile)}
-                        type={selectedFile.type}
-                      />
-                    </video>
-                  )}
-                </div>
-              )}
+              {/* {selectedFile && (
+                // <div>
+                //   <h2>Selected File:</h2>
+                //   <p>Name: {selectedFile.name}</p>
+                //   <p>Size: {selectedFile.size} bytes</p>
+                //   <p>Type: {selectedFile.type}</p>
+                //   {selectedFile.type.startsWith('image/') && (
+                //     <img
+                //       src={URL.createObjectURL(selectedFile)}
+                //       alt="Selected File"
+                //     />
+                //   )}
+                //   {selectedFile.type.startsWith('audio/') && (
+                //     <audio controls>
+                //       <source
+                //         src={URL.createObjectURL(selectedFile)}
+                //         type={selectedFile.type}
+                //       />
+                //     </audio>
+                //   )}
+                //   {selectedFile.type.startsWith('video/') && (
+                //     <video controls>
+                //       <source
+                //         src={URL.createObjectURL(selectedFile)}
+                //         type={selectedFile.type}
+                //       />
+                //     </video>
+                //   )}
+                // </div>
+              )} */}
             </div>
           </div>
 
@@ -433,6 +491,7 @@ const CreateNFT = () => {
               )}
             </div>
           </div>
+
           {/* create button */}
           <div className=" p-4">
             <Dialog

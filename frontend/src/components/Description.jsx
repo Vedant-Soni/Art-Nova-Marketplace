@@ -1,14 +1,26 @@
 import React, { useState } from 'react';
 import { useEffect } from 'react';
 
-const Description = ({ nftData }) => {
+const Description = (nftData) => {
   //dropdown hooks
   const [traitsDropdown, setTraitsDropdown] = useState(false);
   const [levelsDropdown, setLevelsDropdown] = useState(false);
   const [detailsDropdown, setDetailsDropdown] = useState(false);
 
-  const descriptionString = 'this is description of nft';
-  const traitsAvailable = true;
+  //setdata hooks
+  const [descriptionData, setDescription] = useState(
+    'This is description of your NFT.',
+  );
+  const [traitsData, setTraits] = useState([]);
+  console.log(
+    'on description page......',
+    nftData.nftdata.nftJsonData.rawMetadata,
+  );
+
+  useEffect(() => {
+    setDescription(nftData.nftdata.nftJsonData.description);
+    setTraits(nftData.nftdata.nftJsonData.rawMetadata.attributes);
+  }, []);
   const levelsAvailable = true;
   //detail's variable
   const contractAddress = '0x00';
@@ -16,7 +28,6 @@ const Description = ({ nftData }) => {
   const chain = 'sepolia';
   const tokenStandard = 'ERC721';
 
-  console.log('on description page......', nftData);
   return (
     <div>
       <div className="border-2 border-gray-200 rounded-xl">
@@ -29,10 +40,10 @@ const Description = ({ nftData }) => {
             </div>
           </div>
           <div className="w-full h-fit border-t text-left p-6 border-gray-300">
-            <p className="text-gray-500">{descriptionString}</p>
+            <p className="text-gray-500">{descriptionData}</p>
           </div>
           {/* Traits */}
-          {traitsAvailable ? (
+          {traitsData.length > 0 ? (
             <div className="border-t border-gray-200  text-xl gap-2 text-left ">
               <div className="flex justify-between p-6">
                 <div className="flex gap-2">
@@ -49,8 +60,21 @@ const Description = ({ nftData }) => {
                 </span>
               </div>
               {traitsDropdown ? (
-                <div className="w-full h-fit border-t p-6 text-gray-500 border-gray-300">
-                  this is traits
+                <div className="w-full grid grid-cols-3 h-fit border-t p-6 text-gray-500 border-gray-300">
+                  {/* {traitsData[0].value} */}
+                  {traitsData.map((e, index) => {
+                    return (
+                      <div
+                        key={index}
+                        className="bg-gray-100 p-2 rounded-md text-center flex items-center justify-center"
+                      >
+                        <div>
+                          <p className="text-gray-800">{e.trait_type}</p>
+                          <p className="text-gray-600 text-base">{e.value}</p>
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
               ) : (
                 <></>

@@ -53,10 +53,10 @@ const NftDetail = () => {
         const getnftData = await response.json();
         setNftData(getnftData.nft);
         // console.log(getnftData.nft.balance);
-        console.log(getnftData);
+        console.log(getnftData.nft);
         const contract = new ethers.Contract(address, ABI1155, walletClient);
-        const balance = await contract.balanceOf(walletAddress, id);
-        setAmount1155(balance);
+        // const balance = await contract.balanceOf(walletAddress, id); commet by vivek
+        // setAmount1155(balance);
       } catch (error) {
         console.log(error);
       }
@@ -125,7 +125,7 @@ const NftDetail = () => {
 
           {/* details */}
           <div className=" h-fit w-full rounded-xl my-4">
-            <Description nftdata={nftData} />
+            {nftData && <Description nftdata={nftData} />}
           </div>
         </div>
 
