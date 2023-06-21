@@ -30,8 +30,10 @@ const createdNft = async (req, res) => {
 
       return res.status(200).json({ message: 'Data Updated Successfully' });
     } else if (chainName === 'Sepolia Testnet') {
+      console.log('hii ---->       Inside sep');
       const nftdetail =
         nftsForOwnerSepolia.ownedNfts[nftsForOwnerSepolia.ownedNfts.length - 1];
+      console.log(nftdetail);
       await nftdetails.create({
         walletAddress: owner,
         nftOwnerAddress: owner,

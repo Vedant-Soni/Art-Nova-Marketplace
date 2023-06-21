@@ -225,7 +225,7 @@ const NftDetail = () => {
                 <div className="p-6 text-xl text-left flex justify-between  ">
                   <div className="flex gap-2 align-bottom">
                     <p className="text-3xl">
-                      {priceOfToken} {chainCrypto}
+                      {parseFloat(priceOfToken)} {chainCrypto}
                     </p>
                   </div>
                 </div>
