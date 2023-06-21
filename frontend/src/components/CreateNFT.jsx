@@ -8,9 +8,16 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
+import { useSwitchNetwork } from 'wagmi';
 
 import { ThreeDots } from 'react-loader-spinner';
 const CreateNFT = () => {
+  const { chains, error, isLoading, pendingChainId, switchNetwork } =
+    useSwitchNetwork({
+      onSuccess(data) {
+        console.log('Success', data);
+      },
+    });
   const { data: walletClient } = useSigner();
   const { address } = useAccount();
   const [traitsDropdown, setTraitsDropdown] = useState(false);
@@ -65,7 +72,9 @@ const CreateNFT = () => {
     }
   };
   //chain selection in creation form
-  const handleSelectNetwork = (chain, logo) => {
+  const handleSelectNetwork = async (chain, logo, networkId) => {
+    console.log(networkId);
+    await switchNetwork(networkId);
     setChainName(chain);
     setSymbolSrc(logo);
     setBlockchainDropdown(false);
@@ -369,7 +378,7 @@ const CreateNFT = () => {
                   <div
                     className="w-full py-4 px-6 border-t text-left border-gray-300 flex items-center gap-2 cursor-pointer"
                     onClick={() => {
-                      handleSelectNetwork('Ethereum', ethLogo);
+                      handleSelectNetwork('Ethereum', ethLogo, 1);
                     }}
                   >
                     <img
@@ -382,7 +391,7 @@ const CreateNFT = () => {
                   <div
                     className="w-full py-4 px-6 border-t text-left border-gray-300 flex items-center gap-2 cursor-pointer"
                     onClick={() => {
-                      handleSelectNetwork('Sepolia Testnet', ethLogo);
+                      handleSelectNetwork('Sepolia Testnet', ethLogo, 11155111);
                     }}
                   >
                     <img
@@ -395,7 +404,7 @@ const CreateNFT = () => {
                   <div
                     className="w-full py-4 px-6 border-t text-left flex item-center  border-gray-300 gap-2 cursor-pointer"
                     onClick={() => {
-                      handleSelectNetwork('Polygon Mumbai', polygonLogo);
+                      handleSelectNetwork('Polygon Mumbai', polygonLogo, 80001);
                     }}
                   >
                     <img
@@ -408,7 +417,7 @@ const CreateNFT = () => {
                   <div
                     className="w-full py-4 px-6 border-t text-left flex item-center  border-gray-300 gap-2 cursor-pointer"
                     onClick={() => {
-                      handleSelectNetwork('Polygon Mainnet', polygonLogo);
+                      handleSelectNetwork('Polygon Mainnet', polygonLogo, 137);
                     }}
                   >
                     <img
@@ -424,7 +433,7 @@ const CreateNFT = () => {
               )}
             </div>
           </div>
-
+          {/* create button */}
           <div className=" p-4">
             <Dialog
               open={open}

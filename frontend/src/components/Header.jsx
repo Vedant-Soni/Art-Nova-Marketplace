@@ -9,6 +9,8 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
+import { useSwitchNetwork } from 'wagmi';
+
 import {
   useAccount,
   useConnect,
@@ -41,17 +43,13 @@ const Header = () => {
   const handleClose = () => {
     setOpen(false);
   };
-  console.log(isConnected, ':isConnected');
-  window.ethereum.on('chainChanged', (accounts) => {
-    !isConnected &&
-      connect({
-        connector: connectors[0],
-      });
-    // setFlag(flag + 1);
-    console.log('changed chain event ');
-    if (accounts.length === 0) {
-    }
-  });
+
+  // window.ethereum.on('chainChanged', (accounts) => {
+  //   // setFlag(flag + 1);
+  //   console.log('changed chain event ');
+  //   if (accounts.length === 0) {
+  //   }
+  // });
   return (
     <>
       {menuToggle ? (
@@ -179,7 +177,9 @@ const Header = () => {
                   <div
                     className="lg:flex hidden text-gray-700 cursor-pointer"
                     onClick={() => {
-                      !isConnected ? handleClickOpen() : console.log('connect');
+                      !isConnected
+                        ? handleClickOpen()
+                        : console.log('connected');
                     }}
                   >
                     <span class="mx-2 material-symbols-outlined">wallet</span>
