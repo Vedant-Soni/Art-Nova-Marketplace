@@ -41,8 +41,6 @@ const Collected = () => {
         );
         const getnftData = await response.json();
         setNftData(getnftData.nftData);
-        console.log('inside try block............');
-        console.log(getnftData.nftData);
       } catch (error) {
         console.log('get Nft error', error);
       } finally {
@@ -83,6 +81,7 @@ const Collected = () => {
               nftData.map((nftdetail, key) => {
                 return (
                   <NavLink
+                    index={key}
                     to={{
                       pathname: `/nftdetail/${nftdetail.nftContractAddress}/${nftdetail.tokenId}`,
                     }}
@@ -91,27 +90,37 @@ const Collected = () => {
                       <div className="col-span-2 pl-2 relative image  items-center">
                         <div className="flex items-center">
                           <img
-                            src={nftdetail.nftJsonData.rawMetadata.image}
+                            src={
+                              nftdetail?.nftJsonData.rawMetadata.image.includes(
+                                'ipfs',
+                              )
+                                ? `https://ipfs.io/ipfs/` +
+                                  nftdetail?.nftJsonData.rawMetadata.image.match(
+                                    /(ipfs:\/\/|\/ipfs\/)([^/]+)$/,
+                                  )[2]
+                                : nftdetail?.nftJsonData.rawMetadata.image
+                            }
                             alt="NFT"
                             className="h-10 w-10 m-2"
-                            onError={(event) =>
-                              (event.target.src =
-                                'https://cdn3.iconfinder.com/data/icons/nft/64/nft_non_fungible_token_blockchain_sign_coin-512.png')
-                            }
                           />
                           {nftdetail.nftJsonData.title === ''
                             ? '#untitled'
                             : nftdetail.nftJsonData.title}
                         </div>
-                        <div class="absolute left-0  mt-0 w-40 bg-gray-200 z-10 border border-gray-200 p-4 rounded-md transition-all duration-300 shadow-lg h-40 hidden group-hover:block">
+                        <div class="absolute left-0  mt-0 w-40 bg-gray-200 z-10 border border-gray-200 p-4 rounded-md opacity-0 group-hover:opacity-100 transition-all duration-300 shadow-lg h-40  group-hover:block">
                           <img
-                            src={nftdetail.nftJsonData.rawMetadata.image}
+                            src={
+                              nftdetail?.nftJsonData.rawMetadata.image.includes(
+                                'ipfs',
+                              )
+                                ? `https://ipfs.io/ipfs/` +
+                                  nftdetail?.nftJsonData.rawMetadata.image.match(
+                                    /(ipfs:\/\/|\/ipfs\/)([^/]+)$/,
+                                  )[2]
+                                : nftdetail?.nftJsonData.rawMetadata.image
+                            }
                             alt="NFT"
                             className="h-fit "
-                            onError={(event) =>
-                              (event.target.src =
-                                'https://cdn3.iconfinder.com/data/icons/nft/64/nft_non_fungible_token_blockchain_sign_coin-512.png')
-                            }
                           />
                         </div>
                       </div>

@@ -16,7 +16,6 @@ const Home = () => {
         },
       });
       const response = await nft.json();
-      console.log(response);
       setNft(response);
     };
     fetchNft();
@@ -41,14 +40,12 @@ const Home = () => {
             nft.map((item, key) => {
               return (
                 <NavLink
+                  index={key}
                   to={{
                     pathname: `/nftdetail/${item.nftContractAddress}/${item.tokenId}`,
                   }}
                 >
-                  <div
-                    index={key}
-                    className="text-gray-600 hover:text-gray-800 drop-shadow-xl  hover:drop-shadow-2xl my-4 rounded-3xl h-fit p-6 transition-all duration-300 bg-gray-50 flex flex-col justify-between"
-                  >
+                  <div className="transition-transform duration-300 transform-gpu hover:scale-110 text-gray-600 hover:text-gray-800 drop-shadow-xl  hover:drop-shadow-2xl my-4 rounded-3xl h-fit p-6 transition-all duration-300 bg-gray-50 flex flex-col justify-between">
                     <div className=" h-fit rounded-xl justify-center flex">
                       <img
                         src={item.nftJsonData.rawMetadata.image}

@@ -17,7 +17,6 @@ import { ThreeDots } from 'react-loader-spinner';
 import { useNetwork, useSwitchNetwork } from 'wagmi';
 
 const Buy721 = (props) => {
-  console.log('props :', props);
   const { isSuccess, switchNetwork } = useSwitchNetwork();
   const [open, setOpen] = React.useState(false);
   const [offerAmount, setOfferAmount] = useState(0);

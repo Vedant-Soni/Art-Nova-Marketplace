@@ -31,7 +31,6 @@ const NftDetail = () => {
   const offerData = false;
 
   const [flag, setFlag] = useState(0);
-  console.log('hii');
   const networks = {
     1: 'ETH Mainnet',
     11155111: 'ETH Sepolia',
@@ -53,7 +52,6 @@ const NftDetail = () => {
         const getnftData = await response.json();
         setNftData(getnftData.nft);
         // console.log(getnftData.nft.balance);
-        console.log(getnftData.nft);
         const contract = new ethers.Contract(address, ABI1155, walletClient);
         // const balance = await contract.balanceOf(walletAddress, id); commet by vivek
         // setAmount1155(balance);
@@ -74,20 +72,20 @@ const NftDetail = () => {
   });
   const fetchImage = async () => {
     try {
-      const response = await fetch(
-        nftData && nftData.nftJsonData.rawMetadata.image
-          ? nftData.nftJsonData.rawMetadata.image
-          : 'https://cdn3.iconfinder.com/data/icons/nft/64/nft_non_fungible_token_blockchain_sign_coin-512.png',
-      );
-      if (response.ok) {
-        setImageSrc(response.url);
-      }
+      const url = nftData.nftJsonData.rawMetadata.image;
+      const regex = /(ipfs:\/\/|\/ipfs\/)([^/]+)$/;
+      const match = url.match(regex);
+      const hashValue = match ? match[2] : null;
+
+      console.log(hashValue);
+
+      setImageSrc(`https://ipfs.io/ipfs/${hashValue}`);
     } catch (error) {
       console.error('Error:', error);
     }
   };
 
-  fetchImage();
+  // fetchImage();
   const totalListed = nftData?.totalListed;
   const availableToList = nftData?.availableForListing || amount1155;
   const tokenStandard = nftData?.nftJsonData.tokenType;
@@ -96,7 +94,6 @@ const NftDetail = () => {
   const chainId = nftData?.network;
   const ownerOfNft = nftData?.nftOwnerAddress;
   const buyLimit = totalSupply1155 - amount1155;
-  console.log(buyLimit);
   return (
     <div>
       <div className="grid grid-cols-5 px-8">
@@ -119,7 +116,18 @@ const NftDetail = () => {
               <span class="material-symbols-outlined ">favorite</span>
             </div>
             <div className="p-8">
-              <img src={imageSrc} alt="NFT" className="rounded-xl w-full " />
+              <img
+                src={
+                  nftData?.nftJsonData.rawMetadata.image.includes('ipfs')
+                    ? `https://ipfs.io/ipfs/` +
+                      nftData?.nftJsonData.rawMetadata.image.match(
+                        /(ipfs:\/\/|\/ipfs\/)([^/]+)$/,
+                      )[2]
+                    : nftData?.nftJsonData.rawMetadata.image
+                }
+                alt="NFT"
+                className="rounded-xl w-full "
+              />
             </div>
           </div>
 
@@ -225,7 +233,8 @@ const NftDetail = () => {
                 <div className="p-6 text-xl text-left flex justify-between  ">
                   <div className="flex gap-2 align-bottom">
                     <p className="text-3xl">
-                      {parseFloat(priceOfToken)} {chainCrypto}
+                      {nftData.isListed && parseFloat(priceOfToken)}{' '}
+                      {chainCrypto}
                     </p>
                   </div>
                 </div>

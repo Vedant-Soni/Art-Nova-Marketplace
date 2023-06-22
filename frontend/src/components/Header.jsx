@@ -262,7 +262,7 @@ const Header = () => {
                   <div
                     onMouseOver={() => setDropdown(true)}
                     onMouseLeave={() => setDropdown(false)}
-                    className="h-full"
+                    className="h-full profileGroup"
                   >
                     <div className=" text-gray-600 border-solid border-gray-400 justify-end lg:border lg:border-y-0 lg:border-r-0 h-full hidden md:flex lg:flex items-center border-opacity-100 mx-2 px-4 cursor-pointer">
                       <span class="material-symbols-outlined">
@@ -273,44 +273,59 @@ const Header = () => {
                     <div class="relative">
                       <div class="cursor-pointer"></div>
                       {profileDropdown ? (
-                        <div class="absolute right-0 mt-0 w-40 bg-white border border-gray-200 rounded-md shadow-lg z-10">
+                        <div class="absolute transition-all right-0 mt-0 w-40 bg-white border border-gray-200 rounded-md shadow-lg z-10">
                           {isConnected ? (
                             <NavLink to="/profile">
-                              <p class="block px-4 py-2 text-gray-800 hover:bg-gray-200">
+                              <p class="flex gap-2 px-4 py-2 text-gray-800 hover:bg-gray-200 ">
+                                <span class="material-symbols-outlined">
+                                  account_circle
+                                </span>
                                 Profile
                               </p>
                             </NavLink>
                           ) : (
                             <p
-                              class="block px-4 py-2 text-gray-800 hover:bg-gray-200"
+                              class="flex gap-2 px-4 py-2 text-gray-800 hover:bg-gray-200"
                               onClick={() => {
                                 handleClickOpen();
                               }}
                             >
+                              <span class="material-symbols-outlined">
+                                account_circle
+                              </span>{' '}
                               Profile
                             </p>
                           )}
                           {isConnected ? (
                             <NavLink to="/create">
-                              <p class="block px-4 py-2 text-gray-800 hover:bg-gray-200">
+                              <p class="flex gap-2 px-4 py-2 text-gray-800 hover:bg-gray-200">
+                                <span class="material-symbols-outlined">
+                                  edit
+                                </span>{' '}
                                 Create
                               </p>
                             </NavLink>
                           ) : (
                             <p
-                              class="block px-4 py-2 text-gray-800 hover:bg-gray-200"
+                              class="flex gap-2 px-4 py-2 text-gray-800 hover:bg-gray-200"
                               onClick={() => {
                                 handleClickOpen();
                               }}
                             >
+                              <span class="material-symbols-outlined">
+                                edit
+                              </span>
                               Create
                             </p>
                           )}
                           <p
-                            class="block px-4 py-2 text-gray-800 hover:bg-gray-200"
+                            class="flex gap-2 px-4 py-2 text-gray-800 hover:bg-gray-200"
                             href="#"
                           >
-                            Option 3
+                            <span class="material-symbols-outlined">
+                              more_horiz
+                            </span>
+                            Other
                           </p>
                         </div>
                       ) : (
