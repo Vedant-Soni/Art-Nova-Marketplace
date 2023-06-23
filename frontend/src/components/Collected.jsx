@@ -7,12 +7,8 @@ import { InjectedConnector } from 'wagmi/connectors/injected';
 import { ThreeDots } from 'react-loader-spinner';
 const Collected = () => {
   const [nftData, setNftData] = useState(null);
-  const [walletAddress, setWalletAddress] = useState('0x00');
   const { address, connector, isConnected } = useAccount();
   const [loading, setLoading] = useState(false);
-  useEffect(() => {
-    isConnected ? setWalletAddress(address) : console.log('needd to connect');
-  }, []);
 
   const networks = {
     1: 'Ethereum Mainnet',
@@ -27,20 +23,19 @@ const Collected = () => {
     const getNftData = async () => {
       try {
         setLoading(true);
-        isConnected
-          ? setWalletAddress(address)
-          : console.log('need to connect');
-        const response = await fetch(
-          `http://localhost:5000/collections/${address}`,
-          {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
+        if (isConnected) {
+          const response = await fetch(
+            `http://localhost:5000/collections/${address}`,
+            {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+              },
             },
-          },
-        );
-        const getnftData = await response.json();
-        setNftData(getnftData.nftData);
+          );
+          const getnftData = await response.json();
+          setNftData(getnftData.nftData);
+        }
       } catch (error) {
         console.log('get Nft error', error);
       } finally {
@@ -77,16 +72,19 @@ const Collected = () => {
           </div>
         ) : (
           <>
-            {nftData &&
+            {isConnected &&
+              nftData &&
               nftData.map((nftdetail, key) => {
                 return (
                   <NavLink
-                    index={key}
                     to={{
                       pathname: `/nftdetail/${nftdetail.nftContractAddress}/${nftdetail.tokenId}`,
                     }}
                   >
-                    <div className="grid grid-cols-8 py-2 border-b-2 border-gray-200 group cursor-pointer text-left items-center">
+                    <div
+                      index={key}
+                      className="grid grid-cols-8 py-2 border-b-2 border-gray-200 group cursor-pointer text-left items-center"
+                    >
                       <div className="col-span-2 pl-2 relative image  items-center">
                         <div className="flex items-center">
                           <img

@@ -90,7 +90,7 @@ const Created = () => {
                   />
 
                   <div className="overflow-hidden z-10 bg-slate-50 h-12 flex items-center pl-16 rounded-b-xl">
-                    Name
+                    {nftdetail?.nftJsonData.rawMetadata.name}
                   </div>
                 </div>
               </NavLink>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
@@ -12,11 +12,19 @@ import { fulfillorder } from '../../fulfillOrder';
 import { cancelOrder } from '../../cancelOrder';
 import { createOffer } from '../../createOffer';
 
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/material/styles';
+
 import { ThreeDots } from 'react-loader-spinner';
 
 import { useNetwork, useSwitchNetwork } from 'wagmi';
 
+import { AppContext } from '../../App';
+import WalletConnect from '../WalletConnect';
 const Buy721 = (props) => {
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
+  const { walletopen, setWalletOpen } = useContext(AppContext);
   const { isSuccess, switchNetwork } = useSwitchNetwork();
   const [open, setOpen] = React.useState(false);
   const [offerAmount, setOfferAmount] = useState(0);
@@ -32,7 +40,12 @@ const Buy721 = (props) => {
     if (accounts.length === 0) {
     }
   });
-
+  const handleCloseWallet = () => {
+    setWalletOpen(false);
+  };
+  const handlewalletOpen = () => {
+    setWalletOpen(true);
+  };
   const handleBuyNow = async () => {
     handleClickOpen();
     try {
@@ -344,7 +357,7 @@ const Buy721 = (props) => {
               <button
                 className="flex justify-center gap-4 h-full w-full text-white border bg-blue-400 hover:bg-blue-600 transition-all duration-300  border-gray-300 text-xl p-4 rounded-xl"
                 onClick={() => {
-                  handleBuyNow();
+                  isConnected ? handleBuyNow() : handlewalletOpen();
                 }}
               >
                 Buy now
@@ -380,6 +393,14 @@ const Buy721 = (props) => {
                 ) : (
                   <DialogActions></DialogActions>
                 )}
+              </Dialog>
+              <Dialog
+                fullScreen={fullScreen}
+                open={walletopen}
+                onClose={handleCloseWallet}
+                aria-labelledby="responsive-dialog-title"
+              >
+                <WalletConnect />
               </Dialog>
             </div>
           </>

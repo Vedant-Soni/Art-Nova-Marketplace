@@ -180,7 +180,7 @@ const CreateNFT = () => {
     }
   };
   return (
-    <div>
+    <div className="pt-16">
       <div className="justify-center flex pt-8 text-left">
         {/* title */}
         <div className=" w-1/3">

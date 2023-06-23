@@ -40,7 +40,7 @@ const Profile = () => {
           </div>
           <div className="flex">
             <p className="text-xs sm:text-sm md:text-base lg:text-lg text-gray-500">
-              {address.slice(0, 8) + '...' + address.slice(-6)}
+              {address && address.slice(0, 8) + '...' + address.slice(-6)}
             </p>
           </div>
         </div>

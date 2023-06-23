@@ -9,7 +9,7 @@ import Buy721 from './721/Buy721';
 import Description from './Description';
 
 const NftDetail = () => {
-  const { address, id } = useParams();
+  const { nftaddress, id } = useParams();
   const { address: walletAddress } = useAccount();
   const [historyDropdown, setHistoryDropdown] = useState(false);
   const [listDropdown, setListDropdown] = useState(false);
@@ -41,7 +41,7 @@ const NftDetail = () => {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `http://localhost:5000/detailsPage/${address}/${id}`,
+          `http://localhost:5000/detailsPage/${nftaddress}/${id}`,
           {
             method: 'GET',
             headers: {
@@ -51,8 +51,7 @@ const NftDetail = () => {
         );
         const getnftData = await response.json();
         setNftData(getnftData.nft);
-        // console.log(getnftData.nft.balance);
-        const contract = new ethers.Contract(address, ABI1155, walletClient);
+        // const contract = new ethers.Contract(address, ABI1155, walletClient);
         // const balance = await contract.balanceOf(walletAddress, id); commet by vivek
         // setAmount1155(balance);
       } catch (error) {
@@ -60,32 +59,17 @@ const NftDetail = () => {
       }
       // setNftData(response);
     };
-    if (walletClient) {
-      fetchData();
-    }
-  }, [address, id, flag, walletAddress, walletClient]);
+    // if (walletClient) {
+    fetchData();
+    // }
+  }, [nftaddress, id, flag, walletAddress, walletClient]);
 
   window.ethereum.on('accountsChanged', (accounts) => {
-    setFlag(flag + 1);
+    // setFlag(flag + 1);
     if (accounts.length === 0) {
     }
   });
-  const fetchImage = async () => {
-    try {
-      const url = nftData.nftJsonData.rawMetadata.image;
-      const regex = /(ipfs:\/\/|\/ipfs\/)([^/]+)$/;
-      const match = url.match(regex);
-      const hashValue = match ? match[2] : null;
 
-      console.log(hashValue);
-
-      setImageSrc(`https://ipfs.io/ipfs/${hashValue}`);
-    } catch (error) {
-      console.error('Error:', error);
-    }
-  };
-
-  // fetchImage();
   const totalListed = nftData?.totalListed;
   const availableToList = nftData?.availableForListing || amount1155;
   const tokenStandard = nftData?.nftJsonData.tokenType;
@@ -95,7 +79,7 @@ const NftDetail = () => {
   const ownerOfNft = nftData?.nftOwnerAddress;
   const buyLimit = totalSupply1155 - amount1155;
   return (
-    <div>
+    <div className="pt-24">
       <div className="grid grid-cols-5 px-8">
         <div className=" p-4 w-full  col-span-2">
           <div className="border-2 border-gray-200 h-fit w-full rounded-xl">
