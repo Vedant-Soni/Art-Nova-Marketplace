@@ -38,6 +38,7 @@ const verifySignature = async (req, res) => {
     //generate jwt token
     else res.status(200).json({ status: false });
   } catch (e) {
+    console.log(e);
     res.status(400).json(e);
   }
 };

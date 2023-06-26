@@ -3,6 +3,8 @@ import { useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import { useAccount, useConnect, useEnsName } from 'wagmi';
 import { InjectedConnector } from 'wagmi/connectors/injected';
+//images
+import DefaultNFT from '../images/DefaultNFT.png';
 
 import { ThreeDots } from 'react-loader-spinner';
 const Collected = () => {
@@ -89,14 +91,16 @@ const Collected = () => {
                         <div className="flex items-center">
                           <img
                             src={
-                              nftdetail?.nftJsonData.rawMetadata.image.includes(
-                                'ipfs',
-                              )
-                                ? `https://ipfs.io/ipfs/` +
-                                  nftdetail?.nftJsonData.rawMetadata.image.match(
-                                    /(ipfs:\/\/|\/ipfs\/)([^/]+)$/,
-                                  )[2]
-                                : nftdetail?.nftJsonData.rawMetadata.image
+                              nftdetail?.nftJsonData.rawMetadata.image
+                                ? nftdetail?.nftJsonData.rawMetadata.image.includes(
+                                    'ipfs://',
+                                  )
+                                  ? `https://ipfs.io/ipfs/` +
+                                    nftdetail?.nftJsonData.rawMetadata.image.match(
+                                      /ipfs:\/\/(.+)/,
+                                    )[1]
+                                  : nftdetail?.nftJsonData.rawMetadata.image
+                                : { DefaultNFT }
                             }
                             alt="NFT"
                             className="h-10 w-10 m-2"
@@ -108,14 +112,16 @@ const Collected = () => {
                         <div class="absolute left-0  mt-0 w-40 bg-gray-200 z-10 border border-gray-200 p-4 rounded-md opacity-0 group-hover:opacity-100 transition-all duration-300 shadow-lg h-40  group-hover:block">
                           <img
                             src={
-                              nftdetail?.nftJsonData.rawMetadata.image.includes(
-                                'ipfs',
-                              )
-                                ? `https://ipfs.io/ipfs/` +
-                                  nftdetail?.nftJsonData.rawMetadata.image.match(
-                                    /(ipfs:\/\/|\/ipfs\/)([^/]+)$/,
-                                  )[2]
-                                : nftdetail?.nftJsonData.rawMetadata.image
+                              nftdetail?.nftJsonData.rawMetadata.image
+                                ? nftdetail?.nftJsonData.rawMetadata.image.includes(
+                                    'ipfs://',
+                                  )
+                                  ? `https://ipfs.io/ipfs/` +
+                                    nftdetail?.nftJsonData.rawMetadata.image.match(
+                                      /ipfs:\/\/(.+)/,
+                                    )[1]
+                                  : nftdetail?.nftJsonData.rawMetadata.image
+                                : { DefaultNFT }
                             }
                             alt="NFT"
                             className="h-fit "

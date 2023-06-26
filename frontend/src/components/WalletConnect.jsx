@@ -34,25 +34,20 @@ const WalletConnect = () => {
   useEffect(() => {
     if (isConnected) {
       console.log('yes it is working ');
+      handleWalletConnect();
     } else {
       console.log('isConnect is not true');
     }
     console.log('inside useeffect : ', isConnected);
   }, [isConnected]);
-  function test() {
+
+  function connectWallet() {
     const connectrespo = connect({
       connector: connectors[0],
-      onSuccess: () => {
-        console.log('after connect ');
-      },
     });
   }
 
   const handleWalletConnect = async () => {
-    // test();
-    console.log(status, '============');
-
-    // await window.ethereum.enable();
     try {
       console.log(address);
       if (isConnected) {
@@ -115,6 +110,7 @@ const WalletConnect = () => {
             const status = await authenticate.json();
 
             if (status) {
+              console.log(process.env.REACT_APP_JWT_SECRET_KEY);
               //generate jwt token
               const accsesstoken = await fetch(
                 'http://localhost:5000/jwtauth',
@@ -124,7 +120,7 @@ const WalletConnect = () => {
                   },
                   method: 'POST',
                   body: JSON.stringify({
-                    secretkey: process.env.JWT_SECRET_KEY,
+                    secretkey: process.env.REACT_APP_JWT_SECRET_KEY,
                     account: address,
                   }),
                 },
@@ -153,7 +149,7 @@ const WalletConnect = () => {
                 },
                 body: JSON.stringify({
                   accsessToken: accsessToken,
-                  secretkey: process.env.JWT_SECRET_KEY,
+                  secretkey: process.env.REACT_APP_JWT_SECRET_KEY,
                 }),
               },
             );
@@ -215,7 +211,7 @@ const WalletConnect = () => {
                     },
                     method: 'POST',
                     body: JSON.stringify({
-                      secretkey: process.env.JWT_SECRET_KEY,
+                      secretkey: process.env.REACT_APP_JWT_SECRET_KEY,
                       account: address,
                     }),
                   },
@@ -252,7 +248,7 @@ const WalletConnect = () => {
           <div
             className="h-16 border bg-gray-100 m-2 p-2 rounded-xl flex items-center hover:bg-gray-300 transition-all duration-300  "
             onClick={() => {
-              handleWalletConnect();
+              connectWallet();
             }}
           >
             <img src={MetaMask} alt="wallet" className="h-full mx-6" />
@@ -263,10 +259,8 @@ const WalletConnect = () => {
           <div
             className="h-16 border bg-gray-100 m-2 p-2 rounded-xl flex items-center hover:bg-gray-300 transition-all duration-300"
             onClick={async () => {
-              connect({ connector: connectors[0] });
-              test();
-              if (isConnected) handleWalletConnect();
-              handleClose();
+              // connect({ connector: connectors[0] });
+              connectWallet();
             }}
           >
             <img src={TrustWallet} alt="wallet" className="h-full mx-6" />
@@ -277,8 +271,7 @@ const WalletConnect = () => {
           <div
             className="h-16 border bg-gray-100 hover:bg-gray-300 transition-all duration-300 m-2 p-2 rounded-xl flex items-center "
             onClick={() => {
-              connect({ connector: connectors[0] });
-              handleClose();
+              connectWallet();
             }}
           >
             <img src={CoinbaseWallet} alt="wallet" className="h-full mx-6" />
