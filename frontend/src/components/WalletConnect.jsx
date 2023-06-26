@@ -60,7 +60,7 @@ const WalletConnect = () => {
           body: JSON.stringify({ address: address }),
         });
         const loginStatus = await checkLoginDetail.json();
-        console.log('this is loginStatus', checkLoginDetail.status);
+        console.log('this is loginStatus', loginStatus);
 
         if (loginStatus == null) {
           try {
@@ -82,6 +82,10 @@ const WalletConnect = () => {
 
             //GET inserted data as response
             const createdUserData = await createlogin.json();
+            console.log(
+              'after creating data in table return it : ',
+              createdUserData,
+            );
 
             //make msg object and sign it with metamask
             const message = JSON.stringify({
@@ -108,6 +112,7 @@ const WalletConnect = () => {
               },
             );
             const status = await authenticate.json();
+            console.log('signature verification status : ', status);
 
             if (status) {
               console.log(process.env.REACT_APP_JWT_SECRET_KEY);
@@ -127,6 +132,7 @@ const WalletConnect = () => {
               );
 
               const jwt = await accsesstoken.json();
+              console.log('this is jwt token :', jwt.accsessToken);
               localStorage.setItem('ArtNovaJwt', jwt.accsessToken);
             } else {
               //toast
@@ -218,6 +224,7 @@ const WalletConnect = () => {
                 );
 
                 const jwt = await accsesstoken.json();
+                console.log(jwt.accsessToken);
                 localStorage.setItem('ArtNovaJwt', jwt.accsessToken);
               } else {
                 //toast
