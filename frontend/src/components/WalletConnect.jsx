@@ -125,7 +125,6 @@ const WalletConnect = () => {
                   },
                   method: 'POST',
                   body: JSON.stringify({
-                    secretkey: process.env.REACT_APP_JWT_SECRET_KEY,
                     account: address,
                   }),
                 },
@@ -152,11 +151,8 @@ const WalletConnect = () => {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json ;charset=utf-8',
+                  Authorization: `Bearer ${accsessToken}`,
                 },
-                body: JSON.stringify({
-                  accsessToken: accsessToken,
-                  secretkey: process.env.REACT_APP_JWT_SECRET_KEY,
-                }),
               },
             );
 
