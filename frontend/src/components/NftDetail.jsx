@@ -100,14 +100,7 @@ const NftDetail = () => {
             </div>
             <div className="p-8">
               <img
-                src={
-                  nftData?.nftJsonData.rawMetadata.image.includes('ipfs')
-                    ? `https://ipfs.io/ipfs/` +
-                      nftData?.nftJsonData.rawMetadata.image.match(
-                        /(ipfs:\/\/|\/ipfs\/)([^/]+)$/,
-                      )[2]
-                    : nftData?.nftJsonData.rawMetadata.image
-                }
+                src={nftData?.nftJsonData.rawMetadata.image}
                 alt="NFT"
                 className="rounded-xl w-full "
               />

@@ -49,7 +49,7 @@ const WalletConnect = () => {
   }
 
   const handleWalletConnect = async () => {
-    // test();
+    test();
     console.log(status, '============');
 
     // await window.ethereum.enable();

@@ -149,7 +149,7 @@ const CreateNFT = () => {
       // console.log(generatedMetadata);
 
       const contract = new ethers.Contract(
-        '0x9EbBF04A84823CE9a3E4B10Bd4880e08aEF9679e',
+        '0xA2Cb357ea1BbB90f62A6DFcBe8bFD0D2F5980F22 ',
         ABI721,
         walletClient,
       );
