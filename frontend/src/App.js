@@ -12,6 +12,7 @@ import { WagmiConfig } from 'wagmi';
 
 // import { ToastContainer, toast } from 'react-toastify';
 import { client } from './utils/wagmiConfigFile';
+import ScrollToTop from './components/ScrollToTop';
 
 export const AppContext = createContext();
 
@@ -22,6 +23,7 @@ function App() {
       <AppContext.Provider value={{ walletopen, setWalletOpen }}>
         {/* <ToastContainer /> */}
         <Router>
+          <ScrollToTop />
           <Header />
           <Routes>
             <Route path="/">

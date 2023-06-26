@@ -1,48 +1,51 @@
 import { ethers } from 'ethers';
-import React, { useState } from 'react';
-import { useSigner } from 'wagmi';
-import { ABI721 } from '../ABI721';
-import { useAccount } from 'wagmi';
 import { useRef } from 'react';
-
+import React, { useState } from 'react';
+import { ABI721 } from '../ABI721';
+//MUI components
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
+//Wagmi component
+import { useSigner } from 'wagmi';
+import { useAccount } from 'wagmi';
 import { useSwitchNetwork } from 'wagmi';
-
+//loader
 import { ThreeDots } from 'react-loader-spinner';
+//images
+import EtherLogo from '../images/Ether.png';
+import PolygonLogo from '../images/polygon.png';
+
 const CreateNFT = () => {
+  //Wagmi
+  const { data: walletClient } = useSigner();
+  const { address } = useAccount();
+  //dropdown
+  const [traitsDropdown, setTraitsDropdown] = useState(false);
+  const [blockchainDropdown, setBlockchainDropdown] = useState(false);
+  //traits adjustment
+  const [traitsType, setTraitType] = useState('');
+  const [traitsValue, setTraitsValue] = useState('');
+  const [traits, setTraitData] = useState([]);
+  //chain selection
+  const [chainName, setChainName] = useState('Ethereum');
+  const [supply, setSupply] = useState(1);
+  //useref hook
+  const uploadImage = useRef(0);
+  const [selectedFile, setSelectedFile] = useState(null);
+
+  const [description, setDescription] = useState('');
+  const [name, setName] = useState('  ');
+  const [open, setOpen] = React.useState(false);
+
+  //wagmi swith network event
   const { chains, error, isLoading, pendingChainId, switchNetwork } =
     useSwitchNetwork({
       onSuccess(data) {
         console.log('Success', data);
       },
     });
-  const { data: walletClient } = useSigner();
-  const { address } = useAccount();
-  const [traitsDropdown, setTraitsDropdown] = useState(false);
-  const [traitsType, setTraitType] = useState('');
-  const [traitsValue, setTraitsValue] = useState('');
-  const [traits, setTraitData] = useState([]);
-  const [supply, setSupply] = useState(1);
-  const [blockchainDropdown, setBlockchainDropdown] = useState(false);
-  const [chainName, setChainName] = useState('Ethereum');
-  const [name, setName] = useState('  ');
-  const [description, setDescription] = useState('');
-
-  const uploadImage = useRef(0);
-
-  const [open, setOpen] = React.useState(false);
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [symbolSrc, setSymbolSrc] = useState(
-    'https://ethresear.ch/uploads/default/original/1X/bc9ee6d276a251519dd12dca7202a9e3658a7eb3.png',
-  );
-
-  const ethLogo =
-    'https://ethresear.ch/uploads/default/original/1X/bc9ee6d276a251519dd12dca7202a9e3658a7eb3.png';
-  const polygonLogo =
-    'https://w7.pngwing.com/pngs/659/334/png-transparent-polygon-matic-coin-cryptocoin-exchange-coins-crypto-blockchain-cryptocurrency-logo-glyph-icon-thumbnail.png';
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -75,11 +78,9 @@ const CreateNFT = () => {
     }
   };
   //chain selection in creation form
-  const handleSelectNetwork = async (chain, logo, networkId) => {
-    console.log(networkId);
-    await switchNetwork(networkId);
+  const handleSelectNetwork = (chain, networkId) => {
+    switchNetwork(networkId);
     setChainName(chain);
-    setSymbolSrc(logo);
     setBlockchainDropdown(false);
   };
 
@@ -416,7 +417,11 @@ const CreateNFT = () => {
               <div className="p-6 text-xl text-left flex justify-between  ">
                 <div className="flex gap-2 ">
                   <img
-                    src={symbolSrc}
+                    src={
+                      chainName === ('Ethereum' || 'Sepolia Testnet')
+                        ? EtherLogo
+                        : PolygonLogo
+                    }
                     alt=""
                     className="h-8 bg-gray-300 rounded-full p-2 "
                   />
@@ -436,11 +441,11 @@ const CreateNFT = () => {
                   <div
                     className="w-full py-4 px-6 border-t text-left border-gray-300 flex items-center gap-2 cursor-pointer"
                     onClick={() => {
-                      handleSelectNetwork('Ethereum', ethLogo, 1);
+                      handleSelectNetwork('Ethereum', 1);
                     }}
                   >
                     <img
-                      src={ethLogo}
+                      src={EtherLogo}
                       alt=""
                       className="h-8 bg-gray-300 rounded-full p-2 "
                     />
@@ -449,11 +454,11 @@ const CreateNFT = () => {
                   <div
                     className="w-full py-4 px-6 border-t text-left border-gray-300 flex items-center gap-2 cursor-pointer"
                     onClick={() => {
-                      handleSelectNetwork('Sepolia Testnet', ethLogo, 11155111);
+                      handleSelectNetwork('Sepolia Testnet', 11155111);
                     }}
                   >
                     <img
-                      src={ethLogo}
+                      src={EtherLogo}
                       alt=""
                       className="h-8 bg-gray-300 rounded-full p-2 "
                     />
@@ -462,11 +467,11 @@ const CreateNFT = () => {
                   <div
                     className="w-full py-4 px-6 border-t text-left flex item-center  border-gray-300 gap-2 cursor-pointer"
                     onClick={() => {
-                      handleSelectNetwork('Polygon Mumbai', polygonLogo, 80001);
+                      handleSelectNetwork('Polygon Mumbai', 80001);
                     }}
                   >
                     <img
-                      src={polygonLogo}
+                      src={PolygonLogo}
                       alt=""
                       className="h-8 bg-gray-300 rounded-full p-2 "
                     />
@@ -475,11 +480,11 @@ const CreateNFT = () => {
                   <div
                     className="w-full py-4 px-6 border-t text-left flex item-center  border-gray-300 gap-2 cursor-pointer"
                     onClick={() => {
-                      handleSelectNetwork('Polygon Mainnet', polygonLogo, 137);
+                      handleSelectNetwork('Polygon Mainnet', 137);
                     }}
                   >
                     <img
-                      src={polygonLogo}
+                      src={PolygonLogo}
                       alt=""
                       className="h-8 bg-gray-300 rounded-full p-2 "
                     />

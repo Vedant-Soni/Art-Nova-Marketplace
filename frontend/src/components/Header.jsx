@@ -1,6 +1,7 @@
 import React, { useContext, useState } from 'react';
+import { AppContext } from '../App';
 import { NavLink } from 'react-router-dom';
-import openseaLogo from '../images/openseaLogo.png';
+//MUI components
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -9,8 +10,10 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
+//images
+import openseaLogo from '../images/openseaLogo.png';
+//Wagmi
 import { useSwitchNetwork } from 'wagmi';
-import { AppContext } from '../App';
 import {
   useAccount,
   useConnect,
@@ -18,16 +21,13 @@ import {
   useEnsAvatar,
   useDisconnect,
 } from 'wagmi';
-import { InjectedConnector } from 'wagmi/connectors/injected';
+//Child Component
 import WalletConnect from './WalletConnect';
-//Styling
 
 const Header = () => {
   //appcontext
   const { walletopen, setWalletOpen } = useContext(AppContext);
-
-  const { connectors, connect } = useConnect();
-  const [open, setOpen] = React.useState(false);
+  //MUI
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
   const [menuToggle, setMenuToggle] = useState(false);

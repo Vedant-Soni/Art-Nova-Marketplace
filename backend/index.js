@@ -16,6 +16,7 @@ const list1155 = require('./src/routes/list1155/list1155');
 const orderfulfill1155 = require('./src/routes/orderfulfill1155/orderfulfill1155');
 const createdNft = require('./src/routes/createdNft/createdNft');
 const fetchCreated = require('./src/routes/fetchCreated/fetchCreated');
+const loginRoutes = require('./src/routes/login/loginRoutes');
 app.use(express.json());
 app.use(cors());
 
@@ -30,6 +31,7 @@ app.use(getOrder);
 app.use(list721);
 app.use(collection);
 app.use(detailsPage);
+app.use(loginRoutes);
 
 const server = app.listen(port, () => {
   console.log('Server Running on port: ', port);

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
+import { NavLink } from 'react-router-dom';
+//images
 import cover from '../../src/images/cover.jpg';
 import polygon from '../../src/images/polygon.png';
-
 import eth from '../../src/images/eth.png';
-import { NavLink } from 'react-router-dom';
 
 const Home = () => {
   const [nft, setNft] = useState();

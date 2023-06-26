@@ -1,8 +1,15 @@
 import { ethers } from 'ethers';
+//react imports
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { useAccount, useSigner } from 'wagmi';
 import { ABI1155 } from '../ABI1155';
+//wagmi imports
+import { useAccount, useSigner } from 'wagmi';
+//images
+import PolygonLogo from '../images/polygon.png';
+import EtherLogo from '../images/Ether.png';
+import DefaultNFT from '../images/DefaultNFT.png';
+//child component
 import Buy from './1155/Buy';
 import Sell from './1155/Sell';
 import Buy721 from './721/Buy721';
@@ -10,33 +17,33 @@ import Description from './Description';
 
 const NftDetail = () => {
   const { nftaddress, id } = useParams();
+  //wagmi
   const { address: walletAddress } = useAccount();
+  const { data: walletClient } = useSigner();
+  //dropdown states
   const [historyDropdown, setHistoryDropdown] = useState(false);
   const [listDropdown, setListDropdown] = useState(false);
   const [offerDropdown, setOfferDropdown] = useState(false);
-  const [amount1155, setAmount1155] = useState(10);
+
   const [component, setComponent] = useState('Sell');
-  const [totalSupply1155, setTotalSupply] = useState(10000);
   const [nftData, setNftData] = useState();
-  const { data: walletClient } = useSigner();
-  const [imageSrc, setImageSrc] = useState(
-    'https://cdn3.iconfinder.com/data/icons/nft/64/nft_non_fungible_token_blockchain_sign_coin-512.png',
-  );
-
-  // const [totalListed, settotalListed] = useState();
+  //1155 States
+  const [totalSupply1155, setTotalSupply] = useState(10000);
+  const [amount1155, setAmount1155] = useState(10);
+  //offer states
   const [offerAmount, setOfferAmount] = useState(0);
-  const [offererAddress, setOfferer] = useState(
-    '0x00000000000000000000000000000000000',
-  );
+  const [offererAddress, setOfferer] = useState('0x0000000000000000000');
   const offerData = false;
-
+  //hard relode flag
   const [flag, setFlag] = useState(0);
+
   const networks = {
     1: 'ETH Mainnet',
     11155111: 'ETH Sepolia',
     80001: 'MATIC Mumbai',
     137: 'MATIC Mainnet',
   };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -85,17 +92,9 @@ const NftDetail = () => {
           <div className="border-2 border-gray-200 h-fit w-full rounded-xl">
             <div className="flex w-full justify-between p-2">
               {chainId === 80001 ? (
-                <img
-                  src=" https://w7.pngwing.com/pngs/659/334/png-transparent-polygon-matic-coin-cryptocoin-exchange-coins-crypto-blockchain-cryptocurrency-logo-glyph-icon-thumbnail.png"
-                  alt="eth"
-                  className="h-6"
-                />
+                <img src={PolygonLogo} alt="eth" className="h-6" />
               ) : (
-                <img
-                  src="https://ethresear.ch/uploads/default/original/1X/bc9ee6d276a251519dd12dca7202a9e3658a7eb3.png"
-                  alt="eth"
-                  className="h-6"
-                />
+                <img src={EtherLogo} alt="eth" className="h-6" />
               )}
               <span class="material-symbols-outlined ">favorite</span>
             </div>
