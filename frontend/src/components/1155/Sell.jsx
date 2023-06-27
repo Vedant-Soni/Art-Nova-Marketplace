@@ -7,12 +7,17 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { createOrder1155 } from '../../createOrder1155';
 import { useAccount, useSigner } from 'wagmi';
+import { ThreeDots } from 'react-loader-spinner';
+import { useNavigate } from 'react-router-dom';
 
 const Sell = (props) => {
+  //navigation
+  const navigate = useNavigate();
+  const accsessToken = localStorage.getItem('ArtNovaJwt');
   const { address } = useAccount();
   const { data: walletClient } = useSigner();
   const [open, setOpen] = React.useState(false);
-
+  const [loading, setLoading] = useState(false);
   const [sellValue, setSellValue] = useState(0);
   const [tokenAmount, setTokenAmount] = useState(1);
   const handleClose = () => {
@@ -22,45 +27,49 @@ const Sell = (props) => {
     setOpen(true);
   };
   const handleListItem = async () => {
-    const nftOwner = props.own1155.nftData?.nftOwnerAddress;
-    const nftContract = props.own1155.nftData?.nftJsonData.contract.address;
-    const tokenId = props.own1155.nftData?.tokenId;
-    // const order = { sell: 'yes' };
-    const order = await createOrder1155({
-      price: sellValue,
-      tokenId,
-      tokenAddress: nftContract,
-      signer: walletClient,
-      offerer: address,
-      tokenAmount,
-    });
-    if (order) {
-      const availableForListing = props.own1155.availableToList - tokenAmount;
-      const listedNftData = {
-        nftOwner,
-        nftContract,
+    try {
+      setLoading(true);
+      const nftOwner = props.own1155.nftData?.nftOwnerAddress;
+      const nftContract = props.own1155.nftData?.nftJsonData.contract.address;
+      const tokenId = props.own1155.nftData?.tokenId;
+      // const order = { sell: 'yes' };
+      const order = await createOrder1155({
+        price: sellValue,
         tokenId,
-        order,
-        listprice: sellValue,
-        totalListed: tokenAmount,
-        availableForListing,
-      };
-      const response = await fetch(`http://localhost:5000/list1155`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(listedNftData),
+        tokenAddress: nftContract,
+        signer: walletClient,
+        offerer: address,
+        tokenAmount,
       });
-      const responseData = await response.json();
-      console.log(responseData);
+      if (order) {
+        const availableForListing = props.own1155.availableToList - tokenAmount;
+        const listedNftData = {
+          nftOwner,
+          nftContract,
+          tokenId,
+          order,
+          listprice: sellValue,
+          totalListed: tokenAmount,
+          availableForListing,
+        };
+        const response = await fetch(`http://localhost:5000/list1155`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${accsessToken}`,
+          },
+          body: JSON.stringify(listedNftData),
+        });
+        const responseData = await response.json();
+        console.log(responseData);
+        navigate('/home');
+      }
+    } catch (e) {
+      console.log('List 1155 error : ', e);
+    } finally {
+      setLoading(false);
+      handleClose();
     }
-
-    // tokenAmount
-    //listing value accsessible here
-    //code logic
-    //wait till transaction complete
-    handleClose();
   };
   function increase() {
     if (tokenAmount < props.own1155.availableToList)
@@ -97,12 +106,27 @@ const Sell = (props) => {
                 }}
               />
             </DialogContent>
-            <DialogActions>
-              <Button onClick={handleClose}>Cancel</Button>
-              <Button onClick={() => handleListItem()} variant="contained">
-                Confirm
-              </Button>
-            </DialogActions>
+            {loading ? (
+              <div className="flex justify-center">
+                <ThreeDots
+                  height="80"
+                  width="80"
+                  radius="9"
+                  color="#9DB2BF"
+                  ariaLabel="three-dots-loading"
+                  wrapperStyle={{}}
+                  wrapperClassName=""
+                  visible={true}
+                />
+              </div>
+            ) : (
+              <DialogActions>
+                <Button onClick={handleClose}>Cancel</Button>
+                <Button onClick={() => handleListItem()} variant="contained">
+                  Confirm
+                </Button>
+              </DialogActions>
+            )}
           </Dialog>
         </div>
         <div className="flex gap-6 text-2xl h-full w-fit p-4 px-8 rounded-xl text-center border border-gray-300">

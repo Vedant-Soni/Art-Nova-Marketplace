@@ -6,6 +6,7 @@ import polygon from '../../src/images/polygon.png';
 import eth from '../../src/images/eth.png';
 
 const Home = () => {
+  const accsessToken = localStorage.getItem('ArtNovaJwt');
   const [nft, setNft] = useState();
   useEffect(() => {
     const fetchNft = async () => {
@@ -13,6 +14,7 @@ const Home = () => {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${accsessToken}`,
         },
       });
       const response = await nft.json();

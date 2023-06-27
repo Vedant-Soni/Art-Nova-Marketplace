@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
 import { fulfillorder } from '../../fulfillOrder';
 import { useAccount, useConnect, useEnsName, useSigner } from 'wagmi';
+import { useNavigate } from 'react-router-dom';
 
 const Buy = (props) => {
+  //navigation
+  const navigate = useNavigate();
+  const accsessToken = localStorage.getItem('ArtNovaJwt');
   const { address, connector, isConnected } = useAccount();
 
   const { data: walletClient } = useSigner();
@@ -30,6 +34,7 @@ const Buy = (props) => {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${accsessToken}`,
         },
       },
     );
@@ -53,10 +58,12 @@ const Buy = (props) => {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            Authorization: `Bearer ${accsessToken}`,
           },
           body: JSON.stringify(updatedData),
         });
         console.log('Success');
+        navigate('/profile');
       }
     }
   }

@@ -38,12 +38,14 @@ const verifySignature = async (req, res) => {
     //generate jwt token
     else res.status(200).json({ status: false });
   } catch (e) {
+    console.log(e);
     res.status(400).json(e);
   }
 };
 
 const generateNewAccessToken = (req, res) => {
-  const { secretkey, account } = req.body;
+  const { account } = req.body;
+  const secretkey = process.env.JWT_SECRET_KEY;
   const accsessToken = jwt.sign({ account }, secretkey, {
     expiresIn: '86400s',
   });

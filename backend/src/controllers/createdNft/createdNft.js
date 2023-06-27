@@ -3,6 +3,7 @@ const { nftdetails } = require('../../../models/');
 
 const createdNft = async (req, res) => {
   const { owner, chainName } = req.body;
+  console.log(chainName);
   const {
     nftsForOwnerMumbai,
     nftsForOwnerSepolia,
@@ -12,73 +13,117 @@ const createdNft = async (req, res) => {
   console.log('hii ---->      createdNft');
   try {
     if (chainName === 'Polygon Mumbai') {
-      console.log('hii ---->       Inside');
-      const nftdetail =
-        nftsForOwnerMumbai.ownedNfts[nftsForOwnerMumbai.ownedNfts.length - 1];
-      console.log(nftdetail);
-      await nftdetails.create({
-        walletAddress: owner,
-        nftOwnerAddress: owner,
-        nftContractAddress: nftdetail.contract.address,
-        tokenId: nftdetail.tokenId,
-        network: nftsForOwnerMumbai.network,
-        nftJsonData: nftdetail,
-        balance: nftdetail.balance,
-        isListed: false,
-        isCreated: true,
-      });
+      console.log(
+        'hii ---------------------------------------------->       Inside Mumbai',
+      );
+      let latestNFT = null;
+      let mintedNFTs = nftsForOwnerMumbai.ownedNfts;
+      if (mintedNFTs.length > 0) {
+        const lastMintedNFT = mintedNFTs[mintedNFTs.length - 1];
+        latestNFT = lastMintedNFT;
 
-      return res.status(200).json({ message: 'Data Updated Successfully' });
+        if (latestNFT) {
+          await nftdetails.create({
+            walletAddress: owner,
+            nftOwnerAddress: owner,
+            nftContractAddress: latestNFT.contract.address,
+            tokenId: latestNFT.tokenId,
+            network: nftsForOwnerMumbai.network,
+            nftJsonData: latestNFT,
+            balance: latestNFT.balance,
+            isListed: false,
+            isCreated: true,
+          });
+        } else {
+          throw new Error('Error in latest nft data fetching');
+        }
+
+        return res.status(200).json({ message: 'Data Updated Successfully' });
+      } else {
+        throw new Error('Error in latest nft data fetching');
+      }
     } else if (chainName === 'Sepolia Testnet') {
       console.log('hii ---->       Inside sep');
-      const nftdetail =
-        nftsForOwnerSepolia.ownedNfts[nftsForOwnerSepolia.ownedNfts.length - 1];
-      console.log(nftdetail);
-      await nftdetails.create({
-        walletAddress: owner,
-        nftOwnerAddress: owner,
-        nftContractAddress: nftdetail.contract.address,
-        tokenId: nftdetail.tokenId,
-        network: nftsForOwnerSepolia.network,
-        nftJsonData: nftdetail,
-        balance: nftdetail.balance,
-        isListed: false,
-        isCreated: true,
-      });
+      let latestNFT = null;
+      let mintedNFTs = nftsForOwnerSepolia.ownedNfts;
+      if (mintedNFTs.length > 0) {
+        const lastMintedNFT = mintedNFTs[mintedNFTs.length - 1];
+        latestNFT = lastMintedNFT;
 
-      return res.status(200).json({ message: 'Data Updated Successfully' });
+        if (latestNFT) {
+          await nftdetails.create({
+            walletAddress: owner,
+            nftOwnerAddress: owner,
+            nftContractAddress: latestNFT.contract.address,
+            tokenId: latestNFT.tokenId,
+            network: nftsForOwnerMumbai.network,
+            nftJsonData: latestNFT,
+            balance: latestNFT.balance,
+            isListed: false,
+            isCreated: true,
+          });
+        } else {
+          throw new Error('Error in latest nft data fetching');
+        }
+
+        return res.status(200).json({ message: 'Data Updated Successfully' });
+      } else {
+        throw new Error('Error in latest nft data fetching');
+      }
     } else if (chainName === 'Polygon Mainnet') {
-      const nftdetail =
-        nftsForOwnerPolygon.ownedNfts[nftsForOwnerPolygon.ownedNfts.length - 1];
-      await nftdetails.create({
-        walletAddress: owner,
-        nftOwnerAddress: owner,
-        nftContractAddress: nftdetail.contract.address,
-        tokenId: nftdetail.tokenId,
-        network: nftsForOwnerPolygon.network,
-        nftJsonData: nftdetail,
-        balance: nftdetail.balance,
-        isListed: false,
-        isCreated: true,
-      });
+      let latestNFT = null;
+      let mintedNFTs = nftsForOwnerPolygon.ownedNfts;
+      if (mintedNFTs.length > 0) {
+        const lastMintedNFT = mintedNFTs[mintedNFTs.length - 1];
+        latestNFT = lastMintedNFT;
 
-      return res.status(200).json({ message: 'Data Updated Successfully' });
+        if (latestNFT) {
+          await nftdetails.create({
+            walletAddress: owner,
+            nftOwnerAddress: owner,
+            nftContractAddress: latestNFT.contract.address,
+            tokenId: latestNFT.tokenId,
+            network: nftsForOwnerMumbai.network,
+            nftJsonData: latestNFT,
+            balance: latestNFT.balance,
+            isListed: false,
+            isCreated: true,
+          });
+        } else {
+          throw new Error('Error in latest nft data fetching');
+        }
+
+        return res.status(200).json({ message: 'Data Updated Successfully' });
+      } else {
+        throw new Error('Error in latest nft data fetching');
+      }
     } else {
-      const nftdetail =
-        nftsForOwnerMainnet.ownedNfts[nftsForOwnerMainnet.ownedNfts.length - 1];
-      await nftdetails.create({
-        walletAddress: owner,
-        nftOwnerAddress: owner,
-        nftContractAddress: nftdetail.contract.address,
-        tokenId: nftdetail.tokenId,
-        network: nftsForOwnerMainnet.network,
-        nftJsonData: nftdetail,
-        balance: nftdetail.balance,
-        isListed: false,
-        isCreated: true,
-      });
+      let latestNFT = null;
+      let mintedNFTs = nftsForOwnerMainnet.ownedNfts;
+      if (mintedNFTs.length > 0) {
+        const lastMintedNFT = mintedNFTs[mintedNFTs.length - 1];
+        latestNFT = lastMintedNFT;
 
-      return res.status(200).json({ message: 'Data Updated Successfully' });
+        if (latestNFT) {
+          await nftdetails.create({
+            walletAddress: owner,
+            nftOwnerAddress: owner,
+            nftContractAddress: latestNFT.contract.address,
+            tokenId: latestNFT.tokenId,
+            network: nftsForOwnerMumbai.network,
+            nftJsonData: latestNFT,
+            balance: latestNFT.balance,
+            isListed: false,
+            isCreated: true,
+          });
+        } else {
+          throw new Error('Error in latest nft data fetching');
+        }
+
+        return res.status(200).json({ message: 'Data Updated Successfully' });
+      } else {
+        throw new Error('Error in latest nft data fetching');
+      }
     }
   } catch (error) {
     console.log(error);

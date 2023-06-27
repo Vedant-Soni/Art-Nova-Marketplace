@@ -4,6 +4,7 @@ import { NavLink } from 'react-router-dom';
 import { useAccount } from 'wagmi';
 
 const Created = () => {
+  const accsessToken = localStorage.getItem('ArtNovaJwt');
   const [nftData, setnftData] = useState(null);
   const { address } = useAccount();
   useEffect(() => {
@@ -14,6 +15,7 @@ const Created = () => {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
+            Authorization: `Bearer ${accsessToken}`,
           },
         },
       );

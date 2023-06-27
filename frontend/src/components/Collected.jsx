@@ -29,6 +29,7 @@ const Collected = () => {
               method: 'GET',
               headers: {
                 'Content-Type': 'application/json',
+                Authorization: `Bearer ${localStorage.getItem('ArtNovaJwt')}`,
               },
             },
           );
@@ -86,7 +87,6 @@ const Collected = () => {
                     >
                       <div className="col-span-2 pl-2 relative image  items-center">
                         <div className="flex items-center">
-                          {console.log(nftdetail)}
                           <img
                             src={
                               nftdetail?.nftJsonData.rawMetadata.image
@@ -94,7 +94,7 @@ const Collected = () => {
                                     'ipfs://',
                                   )
                                   ? `https://ipfs.io/ipfs/` +
-                                    nftdetail?.nftJsonData?.rawMetadata?.image.match(
+                                    nftdetail?.nftJsonData.rawMetadata.image.match(
                                       /ipfs:\/\/(.+)/,
                                     )[1]
                                   : nftdetail?.nftJsonData.rawMetadata.image
@@ -115,7 +115,7 @@ const Collected = () => {
                                     'ipfs://',
                                   )
                                   ? `https://ipfs.io/ipfs/` +
-                                    nftdetail?.nftJsonData.rawMetadata?.image.match(
+                                    nftdetail?.nftJsonData.rawMetadata.image.match(
                                       /ipfs:\/\/(.+)/,
                                     )[1]
                                   : nftdetail?.nftJsonData.rawMetadata.image

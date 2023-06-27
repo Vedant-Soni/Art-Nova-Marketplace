@@ -2,6 +2,7 @@ import { ethers } from 'ethers';
 import { useRef } from 'react';
 import React, { useState } from 'react';
 import { ABI721 } from '../ABI721';
+import { ABI1155 } from '../ABI1155';
 //MUI components
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -16,6 +17,7 @@ import { ThreeDots } from 'react-loader-spinner';
 //images
 import EtherLogo from '../images/Ether.png';
 import PolygonLogo from '../images/polygon.png';
+import { useNavigate } from 'react-router-dom';
 
 const CreateNFT = () => {
   //Wagmi
@@ -34,6 +36,8 @@ const CreateNFT = () => {
   //useref hook
   const uploadImage = useRef(0);
   const [selectedFile, setSelectedFile] = useState(null);
+  //navigation
+  const navigate = useNavigate();
 
   const [description, setDescription] = useState('');
   const [name, setName] = useState('  ');
@@ -147,31 +151,67 @@ const CreateNFT = () => {
       const imageUrl = `https://coffee-different-cat-534.mypinata.cloud/ipfs/${imageIpfsHash}`;
       const generatedMetadata = await uploadMeta(imageUrl);
       // console.log(generatedMetadata);
-
-      const contract = new ethers.Contract(
-        '0xcABBAC8855Eb60F11f95f08c8aC39a3F1E6D4fdb',
-        ABI721,
-        walletClient,
-      );
-
-      try {
-        const mint = await contract.safeMint(
-          address,
-          `ipfs://${generatedMetadata}`,
+      //partition
+      //1155
+      if (supply > 1) {
+        const contract = new ethers.Contract(
+          '0x6Cc5b2173fAc93477F759ee02B0D907E40840a18',
+          ABI1155,
+          walletClient,
         );
-        await mint.wait();
-        const params = { owner: address, chainName };
+        try {
+          const mint = await contract.mintToken(
+            `ipfs://${generatedMetadata}`,
+            supply,
+          );
+          await mint.wait();
+          const params = { owner: address, chainName };
 
-        const response = await fetch('http://localhost:5000/createdNft', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(params),
-        });
-        const success = await response.json();
-        console.log(success);
-      } catch (error) {}
+          const response = await fetch('http://localhost:5000/createdNft', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${localStorage.getItem('ArtNovaJwt')}`,
+            },
+            body: JSON.stringify(params),
+          });
+          const success = await response.json();
+          console.log(success);
+          navigate('/profile');
+        } catch (error) {
+          console.log('ERC1155 creation error : ', error);
+        }
+      } else {
+        //721
+        const contract = new ethers.Contract(
+          '0xcABBAC8855Eb60F11f95f08c8aC39a3F1E6D4fdb',
+          ABI721,
+          walletClient,
+        );
+
+        try {
+          const mint = await contract.safeMint(
+            address,
+            `ipfs://${generatedMetadata}`,
+          );
+          await mint.wait();
+          const params = { owner: address, chainName };
+
+          const response = await fetch('http://localhost:5000/createdNft', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${localStorage.getItem('ArtNovaJwt')}`,
+            },
+            body: JSON.stringify(params),
+          });
+          const success = await response.json();
+          console.log(success);
+          navigate('/profile');
+        } catch (error) {
+          console.log('ERC721 creation error:', error);
+        }
+      }
 
       // Here we can Mint NFT with contract
     } catch (e) {
