@@ -83,7 +83,7 @@ const Collected = () => {
                   >
                     <div
                       index={key}
-                      className="grid grid-cols-8 py-2 border-b-2 border-gray-200 group cursor-pointer text-left items-center"
+                      className="grid grid-cols-8 py-2 border-b-2 border-gray-200 group hover:bg-gray-100 cursor-pointer text-left items-center"
                     >
                       <div className="col-span-2 pl-2 relative image  items-center">
                         <div className="flex items-center">

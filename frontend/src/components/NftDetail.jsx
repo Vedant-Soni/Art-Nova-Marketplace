@@ -312,7 +312,7 @@ const NftDetail = () => {
             </div>
             {offerDropdown ? (
               <div className="w-full h-fit border-t  border-gray-300">
-                {!offerData ? (
+                {offerData.length === 0 ? (
                   <p className="m-4 text-gray-400">No Offer Yet..!</p>
                 ) : (
                   <>
@@ -335,10 +335,19 @@ const NftDetail = () => {
                               offerdata.offerer.slice(-6)}
                           </p>
                           <button
-                            className="bg-blue-400 text-white rounded-xl p-2 hover:bg-blue-500"
+                            className={
+                              offerdata.nftOwnerAddress == walletAddress
+                                ? 'bg-blue-400 text-white rounded-xl p-2 hover:bg-blue-500'
+                                : 'hidden'
+                            }
                             onClick={() => {
                               accseptOffer(offerdata);
                             }}
+                            // disabled={
+                            //   offerdata.nftOwnerAddress == walletAddress
+                            //     ? false
+                            //     : true
+                            // }
                           >
                             Accept
                           </button>

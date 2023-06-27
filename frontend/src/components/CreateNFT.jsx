@@ -154,11 +154,21 @@ const CreateNFT = () => {
       //partition
       //1155
       if (supply > 1) {
-        const contract = new ethers.Contract(
-          '0x6Cc5b2173fAc93477F759ee02B0D907E40840a18',
-          ABI1155,
-          walletClient,
-        );
+        let contract;
+        if (chainName === 'Sepolia Testnet') {
+          contract = new ethers.Contract(
+            '0x50dab8350e72d388bEeCF92d2Ea5c342aEaB274E', //sepolia
+            ABI1155,
+            walletClient,
+          );
+        } else if (chainName === 'Polygon Mumbai') {
+          contract = new ethers.Contract(
+            '0x6Cc5b2173fAc93477F759ee02B0D907E40840a18', //mumbai
+            ABI1155,
+            walletClient,
+          );
+        }
+
         try {
           const mint = await contract.mintToken(
             `ipfs://${generatedMetadata}`,
@@ -183,11 +193,20 @@ const CreateNFT = () => {
         }
       } else {
         //721
-        const contract = new ethers.Contract(
-          '0xcABBAC8855Eb60F11f95f08c8aC39a3F1E6D4fdb',
-          ABI721,
-          walletClient,
-        );
+        let contract;
+        if (chainName === 'Sepolia Testnet') {
+          contract = new ethers.Contract(
+            '0x2cdAb3c976164dcF9f5930BaA82b287a7170748c', //sepolia
+            ABI721,
+            walletClient,
+          );
+        } else if (chainName === 'Polygon Mumbai') {
+          contract = new ethers.Contract(
+            '0xcABBAC8855Eb60F11f95f08c8aC39a3F1E6D4fdb', //mumbai
+            ABI721,
+            walletClient,
+          );
+        }
 
         try {
           const mint = await contract.safeMint(

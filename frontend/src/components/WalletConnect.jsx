@@ -47,8 +47,7 @@ const WalletConnect = () => {
     });
   }
   window.ethereum.on('accountsChanged', (accounts) => {
-    connectWallet();
-    handleWalletConnect();
+    console.log('Accoount changed _________________________');
   });
   const handleWalletConnect = async () => {
     try {
@@ -133,9 +132,20 @@ const WalletConnect = () => {
                 },
               );
 
+              //insert it into localstorage
               const jwt = await accsesstoken.json();
+
               console.log('this is jwt token :', jwt.accsessToken);
-              localStorage.setItem('ArtNovaJwt', jwt.accsessToken);
+
+              const currentJwtObjectString = localStorage.getItem('ArtNovaJwt');
+              const currentJwtObject = currentJwtObjectString
+                ? JSON.parse(currentJwtObjectString)
+                : {};
+              currentJwtObject[address] = jwt.accsessToken;
+
+              const updatedJWTObject = JSON.stringify(currentJwtObject);
+
+              localStorage.setItem('ArtNovaJwt', updatedJWTObject);
             } else {
               //toast
               console.log('error');
@@ -146,9 +156,32 @@ const WalletConnect = () => {
           }
         } else {
           try {
-            //verify jwt
-            const accsessToken = localStorage.getItem('ArtNovaJwt');
+            //get data from localstorage
+            // Retrieve the data from the local storage
+            let accsessToken;
+            const storedDataString = localStorage.getItem('ArtNovaJwt');
 
+            if (storedDataString) {
+              // Convert the JSON string to an object
+              const storedData = JSON.parse(storedDataString);
+
+              // Specify the address you want to retrieve the token for
+              const targetAddress = address;
+
+              // Check if the target address exists in the stored data
+              if (targetAddress in storedData) {
+                accsessToken = storedData[targetAddress];
+                console.log(`Token for ${targetAddress}: ${accsessToken}`);
+              } else {
+                console.log(`No token found for ${targetAddress}`);
+              }
+            } else {
+              // No data found in the local storage
+              console.log('No data found');
+            }
+            console.log(accsessToken);
+
+            //verify jwt
             const verifyStatus = await fetch(
               'http://localhost:5000/verifyJWT',
               {
@@ -225,7 +258,16 @@ const WalletConnect = () => {
 
                 const jwt = await accsesstoken.json();
                 console.log(jwt.accsessToken);
-                localStorage.setItem('ArtNovaJwt', jwt.accsessToken);
+                const currentJwtObjectString =
+                  localStorage.getItem('ArtNovaJwt');
+                const currentJwtObject = currentJwtObjectString
+                  ? JSON.parse(currentJwtObjectString)
+                  : {};
+                currentJwtObject[address] = jwt.accsessToken;
+
+                const updatedJWTObject = JSON.stringify(currentJwtObject);
+
+                localStorage.setItem('ArtNovaJwt', updatedJWTObject);
               } else {
                 //toast
                 console.log('error');
