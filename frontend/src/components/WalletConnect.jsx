@@ -46,7 +46,10 @@ const WalletConnect = () => {
       connector: connectors[0],
     });
   }
-
+  window.ethereum.on('accountsChanged', (accounts) => {
+    connectWallet();
+    handleWalletConnect();
+  });
   const handleWalletConnect = async () => {
     try {
       console.log(address);

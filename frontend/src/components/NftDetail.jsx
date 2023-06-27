@@ -34,7 +34,7 @@ const NftDetail = () => {
   //offer states
   const [offerAmount, setOfferAmount] = useState(0);
   const [offererAddress, setOfferer] = useState('0x0000000000000000000');
-  const offerData = false;
+  const [offerData, setOfferData] = useState('');
   //hard relode flag
   const [flag, setFlag] = useState(0);
 
@@ -60,16 +60,23 @@ const NftDetail = () => {
         );
         const getnftData = await response.json();
         setNftData(getnftData.nft);
-        const getOffers = await fetch(
-          `http://localhost:5000/fetchOffers/${nftaddress}/${id}`,
-          {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
+
+        try {
+          const getOffers = await fetch(
+            `http://localhost:5000/fetchOffers/${nftaddress}/${id}`,
+            {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${accsessToken}`,
+              },
             },
-          },
-        );
-        const offers = await getOffers.json();
+          );
+          const offers = await getOffers.json();
+          setOfferData(offers);
+        } catch (e) {
+          console.log('Offer fetching error : ', e);
+        }
 
         // const contract = new ethers.Contract(address, ABI1155, walletClient);
         // const balance = await contract.balanceOf(walletAddress, id); commet by vivek
@@ -84,6 +91,9 @@ const NftDetail = () => {
     // }
   }, [nftaddress, id, flag, walletAddress, walletClient]);
 
+  const accseptOffer = (offerdata) => {
+    console.log(offerdata);
+  };
   window.ethereum.on('accountsChanged', (accounts) => {
     // setFlag(flag + 1);
     if (accounts.length === 0) {
@@ -240,7 +250,9 @@ const NftDetail = () => {
           <div className="border-2 border-gray-200 h-full w-full text-center rounded-xl my-4">
             <div className="p-6 text-xl text-left flex justify-between  ">
               <div className="flex gap-2 ">
-                <span class="material-symbols-outlined text-3xl">timeline</span>
+                <span class="material-symbols-outlined text-3xl items-center">
+                  timeline
+                </span>
                 Price History
               </div>
               <span
@@ -262,7 +274,7 @@ const NftDetail = () => {
           {/* Listing */}
           <div className="border-2 border-gray-200 h-full w-full text-center rounded-xl my-4">
             <div className="p-6 text-xl text-left flex justify-between  ">
-              <div className="flex gap-2 ">
+              <div className="flex gap-2 items-center">
                 <span class="material-symbols-outlined text-3xl">sell</span>
                 Listings
               </div>
@@ -285,7 +297,7 @@ const NftDetail = () => {
           {/* Offers */}
           <div className="border-2 border-gray-200 h-full w-full text-center rounded-xl my-4">
             <div className="p-6 text-xl text-left flex justify-between  ">
-              <div className="flex gap-2 ">
+              <div className="flex gap-2 items-center">
                 <span class="material-symbols-outlined text-3xl">list</span>
                 Offers
               </div>
@@ -299,20 +311,41 @@ const NftDetail = () => {
               </span>
             </div>
             {offerDropdown ? (
-              <div className="w-full h-48 border-t  border-gray-300">
+              <div className="w-full h-fit border-t  border-gray-300">
                 {!offerData ? (
                   <p className="m-4 text-gray-400">No Offer Yet..!</p>
                 ) : (
-                  <div className="p-6 flex justify-between text-lg border-b items-center mx-4 border-gray-200 text-left">
-                    <p>
-                      Amount : {offerAmount}{' '}
-                      {chainId === 80001 || chainId === 137 ? 'Matic' : 'ETH'}
-                    </p>
-                    <p>By : {offererAddress}</p>
-                    <button className="bg-blue-400 text-white rounded-xl p-2 hover:bg-blue-500">
-                      Accept
-                    </button>
-                  </div>
+                  <>
+                    {offerData.map((offerdata, key) => {
+                      return (
+                        <div
+                          index={key}
+                          className="p-6 flex justify-between text-lg border-b items-center mx-4 border-gray-200 text-left"
+                        >
+                          <p>
+                            Amount : {parseFloat(offerdata.amount)}{' '}
+                            {chainId === 80001 || chainId === 137
+                              ? 'Matic'
+                              : 'ETH'}
+                          </p>
+                          <p>
+                            By :{' '}
+                            {offerdata.offerer.slice(0, 8) +
+                              '...' +
+                              offerdata.offerer.slice(-6)}
+                          </p>
+                          <button
+                            className="bg-blue-400 text-white rounded-xl p-2 hover:bg-blue-500"
+                            onClick={() => {
+                              accseptOffer(offerdata);
+                            }}
+                          >
+                            Accept
+                          </button>
+                        </div>
+                      );
+                    })}
+                  </>
                 )}
               </div>
             ) : (
