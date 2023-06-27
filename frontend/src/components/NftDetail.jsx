@@ -15,6 +15,8 @@ import Sell from './1155/Sell';
 import Buy721 from './721/Buy721';
 import Description from './Description';
 
+import { fulfillorder } from '../fulfillOrder';
+
 const NftDetail = () => {
   const accsessToken = localStorage.getItem('ArtNovaJwt');
   const { nftaddress, id } = useParams();
@@ -91,8 +93,42 @@ const NftDetail = () => {
     // }
   }, [nftaddress, id, flag, walletAddress, walletClient]);
 
-  const accseptOffer = (offerdata) => {
-    console.log(offerdata);
+  const acceptOffer = async (offer) => {
+    const order = offer.order;
+    console.log(offer);
+    console.log(order);
+    const nftPurchase = await fulfillorder({
+      order,
+      fulfiller: walletAddress,
+      signer: walletClient,
+    });
+    if (nftPurchase) {
+      const updatedData = {
+        nftOwner: offer.nftOwnerAddress,
+        nftContract: offer.nftContractAddress,
+        tokenId: offer.tokenId,
+      };
+      await fetch(`http://localhost:5000/orderfulfill`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accsessToken}`,
+        },
+        body: JSON.stringify(updatedData),
+      });
+      await fetch(
+        `http://localhost:5000/fulfillOffer/${offer.nftContractAddress}/${offer.tokenId}`,
+        {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        },
+      );
+      console.log('Success');
+    }
+
+    console.log(offer);
   };
   window.ethereum.on('accountsChanged', (accounts) => {
     // setFlag(flag + 1);
@@ -316,28 +352,28 @@ const NftDetail = () => {
                   <p className="m-4 text-gray-400">No Offer Yet..!</p>
                 ) : (
                   <>
-                    {offerData.map((offerdata, key) => {
+                    {offerData.map((offer, key) => {
                       return (
                         <div
                           index={key}
                           className="p-6 flex justify-between text-lg border-b items-center mx-4 border-gray-200 text-left"
                         >
                           <p>
-                            Amount : {parseFloat(offerdata.amount)}{' '}
+                            Amount : {parseFloat(offer.amount)}{' '}
                             {chainId === 80001 || chainId === 137
                               ? 'Matic'
                               : 'ETH'}
                           </p>
                           <p>
                             By :{' '}
-                            {offerdata.offerer.slice(0, 8) +
+                            {offer.offerer.slice(0, 8) +
                               '...' +
-                              offerdata.offerer.slice(-6)}
+                              offer.offerer.slice(-6)}
                           </p>
                           <button
                             className="bg-blue-400 text-white rounded-xl p-2 hover:bg-blue-500"
                             onClick={() => {
-                              accseptOffer(offerdata);
+                              acceptOffer(offer);
                             }}
                           >
                             Accept

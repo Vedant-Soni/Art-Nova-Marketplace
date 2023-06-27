@@ -19,10 +19,12 @@ const fetchCreated = require('./src/routes/fetchCreated/fetchCreated');
 const loginRoutes = require('./src/routes/login/loginRoutes');
 const createOffer = require('./src/routes/createOffer/createOffer');
 const fetchOffers = require('./src/routes/fetchOffers/fetchOffers');
+const fulfillOffer = require('./src/routes/fulfillOffer/fulfillOffer');
 
 app.use(express.json());
 app.use(cors());
 
+app.use(fulfillOffer);
 app.use(fetchOffers);
 app.use(createOffer);
 app.use(fetchCreated);

@@ -11,7 +11,6 @@ const orderfulfill = async (req, res) => {
         {
           isListed: false,
           order: null,
-          floorPrice: null,
           listingPrice: null,
           nftOwnerAddress: nftOwner,
         },
