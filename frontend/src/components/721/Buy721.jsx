@@ -21,7 +21,12 @@ import { useNetwork, useSwitchNetwork } from 'wagmi';
 
 import { AppContext } from '../../App';
 import WalletConnect from '../WalletConnect';
+import { useNavigate } from 'react-router-dom';
+
 const Buy721 = (props) => {
+  const accsessToken = localStorage.getItem('ArtNovaJwt');
+  //navigation
+  const navigate = useNavigate();
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
   const { walletopen, setWalletOpen } = useContext(AppContext);
@@ -59,6 +64,7 @@ const Buy721 = (props) => {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
+            Authorization: `Bearer ${accsessToken}`,
           },
         },
       );
@@ -74,6 +80,7 @@ const Buy721 = (props) => {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            Authorization: `Bearer ${accsessToken}`,
           },
           body: JSON.stringify(updatedData),
         });
@@ -84,7 +91,9 @@ const Buy721 = (props) => {
       console.log('Buy now error:', e);
     } finally {
       setLoading(false);
+
       handleClose();
+      navigate('/profile');
     }
   };
 
@@ -128,6 +137,7 @@ const Buy721 = (props) => {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            Authorization: `Bearer ${accsessToken}`,
           },
           body: JSON.stringify(listedNftData),
         });
@@ -141,6 +151,7 @@ const Buy721 = (props) => {
     } finally {
       setLoading(false);
       handleClose();
+      navigate('/home');
     }
     // window.location.reload();
   };
@@ -158,6 +169,7 @@ const Buy721 = (props) => {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
+            Authorization: `Bearer ${accsessToken}`,
           },
         },
       );
@@ -172,10 +184,12 @@ const Buy721 = (props) => {
       console.log(cancel);
       if (cancel) {
         const params = { nftContract, tokenId };
+
         const updateDB = await fetch(`http://localhost:5000/cancelOrder`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            Authorization: `Bearer ${accsessToken}`,
           },
           body: JSON.stringify(params),
         });

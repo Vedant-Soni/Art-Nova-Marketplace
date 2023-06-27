@@ -16,6 +16,7 @@ import Buy721 from './721/Buy721';
 import Description from './Description';
 
 const NftDetail = () => {
+  const accsessToken = localStorage.getItem('ArtNovaJwt');
   const { nftaddress, id } = useParams();
   //wagmi
   const { address: walletAddress } = useAccount();
@@ -53,6 +54,7 @@ const NftDetail = () => {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
+              Authorization: `Bearer ${accsessToken}`,
             },
           },
         );

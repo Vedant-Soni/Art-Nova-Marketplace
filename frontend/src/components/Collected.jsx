@@ -7,7 +7,6 @@ import DefaultNFT from '../images/DefaultNFT.png';
 
 import { ThreeDots } from 'react-loader-spinner';
 const Collected = () => {
-  const accsessToken = localStorage.getItem('ArtNovaJwt');
   const [nftData, setNftData] = useState(null);
   const { address, connector, isConnected } = useAccount();
   const [loading, setLoading] = useState(false);
@@ -30,7 +29,7 @@ const Collected = () => {
               method: 'GET',
               headers: {
                 'Content-Type': 'application/json',
-                Authorization: `Bearer ${accsessToken}`,
+                Authorization: `Bearer ${localStorage.getItem('ArtNovaJwt')}`,
               },
             },
           );
@@ -88,15 +87,6 @@ const Collected = () => {
                     >
                       <div className="col-span-2 pl-2 relative image  items-center">
                         <div className="flex items-center">
-                          {console.log(
-                            key,
-                            ':',
-                            nftdetail.nftJsonData.title,
-                            ':',
-                            nftdetail?.nftJsonData?.rawMetadata?.image,
-                            ':',
-                            nftdetail,
-                          )}
                           <img
                             src={
                               nftdetail?.nftJsonData.rawMetadata.image

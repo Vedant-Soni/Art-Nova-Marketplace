@@ -145,6 +145,7 @@ const WalletConnect = () => {
           try {
             //verify jwt
             const accsessToken = localStorage.getItem('ArtNovaJwt');
+
             const verifyStatus = await fetch(
               'http://localhost:5000/verifyJWT',
               {
