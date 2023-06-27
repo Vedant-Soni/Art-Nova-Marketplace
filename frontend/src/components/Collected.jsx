@@ -86,15 +86,7 @@ const Collected = () => {
                     >
                       <div className="col-span-2 pl-2 relative image  items-center">
                         <div className="flex items-center">
-                          {console.log(
-                            key,
-                            ':',
-                            nftdetail.nftJsonData.title,
-                            ':',
-                            nftdetail?.nftJsonData?.rawMetadata?.image,
-                            ':',
-                            nftdetail,
-                          )}
+                          {console.log(nftdetail)}
                           <img
                             src={
                               nftdetail?.nftJsonData.rawMetadata.image
@@ -111,7 +103,6 @@ const Collected = () => {
                             alt="NFT"
                             className="h-10 w-10 m-2"
                           />
-
                           {nftdetail.nftJsonData.title === ''
                             ? '#untitled'
                             : nftdetail.nftJsonData.title}
@@ -135,9 +126,18 @@ const Collected = () => {
                           />
                         </div>
                       </div>
-                      <div>-- -- </div>
+                      <div>
+                        {nftdetail.floorPrice === null
+                          ? '-- --'
+                          : nftdetail.floorPrice.slice(0, 7)}
+                      </div>
                       <div>-- --</div>
-                      <div>-- --</div>
+                      <div>
+                        {' '}
+                        {nftdetail.listingPrice === null
+                          ? '-- --'
+                          : nftdetail.listingPrice.slice(0, 7)}
+                      </div>
                       <div>{nftdetail.nftJsonData.contract.tokenType}</div>
                       <div>{networks[nftdetail.network]}</div>
                       <div className=" justify-center hidden group-hover:flex">

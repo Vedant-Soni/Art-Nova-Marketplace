@@ -58,6 +58,17 @@ const NftDetail = () => {
         );
         const getnftData = await response.json();
         setNftData(getnftData.nft);
+        const getOffers = await fetch(
+          `http://localhost:5000/fetchOffers/${nftaddress}/${id}`,
+          {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          },
+        );
+        const offers = await getOffers.json();
+
         // const contract = new ethers.Contract(address, ABI1155, walletClient);
         // const balance = await contract.balanceOf(walletAddress, id); commet by vivek
         // setAmount1155(balance);

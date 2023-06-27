@@ -17,9 +17,14 @@ const orderfulfill1155 = require('./src/routes/orderfulfill1155/orderfulfill1155
 const createdNft = require('./src/routes/createdNft/createdNft');
 const fetchCreated = require('./src/routes/fetchCreated/fetchCreated');
 const loginRoutes = require('./src/routes/login/loginRoutes');
+const createOffer = require('./src/routes/createOffer/createOffer');
+const fetchOffers = require('./src/routes/fetchOffers/fetchOffers');
+
 app.use(express.json());
 app.use(cors());
 
+app.use(fetchOffers);
+app.use(createOffer);
 app.use(fetchCreated);
 app.use(createdNft);
 app.use(fetchNft);

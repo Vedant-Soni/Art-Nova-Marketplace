@@ -15,8 +15,10 @@ module.exports = (sequelize, DataTypes) => {
     {
       nftOwnerAddress: DataTypes.STRING,
       nftContractAddress: DataTypes.STRING,
-      tokenId: DataTypes.NUMERIC,
+      tokenId: DataTypes.INTEGER,
       offerer: DataTypes.STRING,
+      amount: DataTypes.DECIMAL(38, 18),
+      order: DataTypes.JSON,
     },
     {
       sequelize,

@@ -7,6 +7,7 @@ const collections = async (req, res) => {
     const owner = req.params.ownerAddress;
     let nftData = await nftdetails.findAll({
       where: { nftOwnerAddress: owner },
+      order: [['id', 'DESC']],
     });
     if (nftData.length === 0) {
       const {
@@ -76,6 +77,7 @@ const collections = async (req, res) => {
       }
       nftData = await nftdetails.findAll({
         where: { nftOwnerAddress: owner },
+        order: [['id', 'DESC']],
       });
       res.status(200).json({ nftData });
     } else {

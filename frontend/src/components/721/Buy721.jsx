@@ -207,6 +207,24 @@ const Buy721 = (props) => {
         tokenId,
         offerer: address,
       });
+      const params = {
+        nftOwner,
+        nftContract,
+        tokenId,
+        offer,
+        offerAmount,
+        offerer: address,
+      };
+      if (offer) {
+        const dbUpdate = await fetch(`http://localhost:5000/createOffer`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(params),
+        });
+        console.log(dbUpdate);
+      }
 
       // console.log(props.nftData.network);
     } catch (e) {
