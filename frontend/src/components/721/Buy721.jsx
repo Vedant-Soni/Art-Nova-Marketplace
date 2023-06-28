@@ -454,11 +454,6 @@ const Buy721 = (props) => {
                 <DialogTitle>Enter Amount</DialogTitle>
                 <DialogContent>
                   <div className="text-center  flex flex-col">
-                    <img
-                      src={props.nftData.nftJsonData.tokenUri.raw}
-                      alt="image"
-                      className="border border-gray-200 rounded-xl p-4"
-                    />
                     <div className="flex justify-between">
                       <p>{props.nftData.nftJsonData.title}</p>
                     </div>

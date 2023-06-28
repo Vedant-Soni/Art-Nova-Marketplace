@@ -23,6 +23,8 @@ import {
 } from 'wagmi';
 //Child Component
 import WalletConnect from './WalletConnect';
+//functions
+import { handleWalletConnectFunction } from '../utils/Constants';
 
 const Header = () => {
   //appcontext
@@ -46,7 +48,11 @@ const Header = () => {
   const handleCloseWallet = () => {
     setWalletOpen(false);
   };
-
+  window.ethereum.on('accountsChanged', (accounts) => {
+    // setFlag(flag + 1);
+    console.log('Accoount changed _________________________');
+    handleWalletConnectFunction(address);
+  });
   // window.ethereum.on('chainChanged', (accounts) => {
   //   // setFlag(flag + 1);
   //   console.log('changed chain event ');
@@ -164,7 +170,7 @@ const Header = () => {
               </div>
 
               {/* search bar section  */}
-              <div className=" p-2 rounded-xl md:flex lg:flex items-center bg-white bg-opacity-10 bg-blur-xl hidden border-2 border-gray-400">
+              <div className=" p-2 rounded-xl md:hidden lg:flex items-center bg-white bg-opacity-10 bg-blur-xl hidden border-2 border-gray-400">
                 <div className="mt-2 pr-2 text-gray-600">
                   <span class="material-symbols-outlined">search</span>
                 </div>
@@ -178,7 +184,7 @@ const Header = () => {
               <div className="flex justify-self-end">
                 <div className=" bg-opacity-10 rounded-xl flex items-center bg-white bg-blur-xl border-2 border-gray-400">
                   <div
-                    className="lg:flex hidden text-gray-700 cursor-pointer"
+                    className="lg:flex md:flex  hidden text-gray-700 cursor-pointer"
                     onClick={() => {
                       !isConnected
                         ? handleClickOpen()
@@ -207,7 +213,7 @@ const Header = () => {
                     onMouseLeave={() => setDropdown(false)}
                     className="h-full profileGroup"
                   >
-                    <div className=" text-gray-600 border-solid border-gray-400 justify-end lg:border lg:border-y-0 lg:border-r-0 h-full hidden md:flex lg:flex items-center border-opacity-100 mx-2 px-4 cursor-pointer">
+                    <div className=" text-gray-600 border-solid border-gray-400 justify-end lg:border md:border lg:border-y-0 md:border-y-0 lg:border-r-0 md:border-r-0 h-full hidden md:flex lg:flex items-center border-opacity-100 mx-2 px-4 cursor-pointer">
                       <span class="material-symbols-outlined">
                         account_circle
                       </span>

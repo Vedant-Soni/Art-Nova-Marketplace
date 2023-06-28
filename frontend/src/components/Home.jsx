@@ -40,6 +40,7 @@ const Home = () => {
           <div className="text-left m-2 ">
             <p className="text-lg">ALL NFT COllection </p>
           </div>
+          {/* loop all nft */}
           <div className="grid lg:grid-cols-5  md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-8">
             {nft &&
               nft.map((item, key) => {
@@ -55,7 +56,7 @@ const Home = () => {
                         <img
                           src={item.nftJsonData.rawMetadata.image}
                           alt="img"
-                          className="rounded-t-xl h-56 self-center"
+                          className="rounded-t-xl h-fit self-center"
                         />
                         {/* this is image area */}
                       </div>
@@ -65,7 +66,7 @@ const Home = () => {
                         </p>
                         <p className="text-xl">
                           {parseFloat(item.listingPrice)}
-                          <br />
+
                           {item.network == 80001 ? ' MATIC' : ' ETH'}
                         </p>
                       </div>
