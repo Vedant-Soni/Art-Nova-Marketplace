@@ -107,7 +107,7 @@ const Collected = () => {
                             ? '#untitled'
                             : nftdetail.nftJsonData.title}
                         </div>
-                        <div class="absolute left-0  mt-0 w-40 bg-gray-200 z-10 border border-gray-200 p-4 rounded-md opacity-0 group-hover:opacity-100 transition-all duration-300 shadow-lg h-40  group-hover:block">
+                        <div className="absolute left-0  mt-0 w-40 bg-gray-200 z-10 border border-gray-200 p-4 rounded-md opacity-0 group-hover:opacity-100 transition-all duration-300 shadow-lg h-40  group-hover:block">
                           <img
                             src={
                               nftdetail?.nftJsonData.rawMetadata.image
@@ -141,7 +141,7 @@ const Collected = () => {
                       <div>{nftdetail.nftJsonData.contract.tokenType}</div>
                       <div>{networks[nftdetail.network]}</div>
                       <div className=" justify-center hidden group-hover:flex">
-                        <span class="material-symbols-outlined text-center">
+                        <span className="material-symbols-outlined text-center">
                           sell
                         </span>
                       </div>

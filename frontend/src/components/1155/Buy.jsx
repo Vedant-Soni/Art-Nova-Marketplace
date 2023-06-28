@@ -1,14 +1,24 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { fulfillorder } from '../../fulfillOrder';
 import { useAccount, useConnect, useEnsName, useSigner } from 'wagmi';
 import { useNavigate } from 'react-router-dom';
+
+import { AppContext } from '../../App';
 
 const Buy = (props) => {
   //navigation
   const navigate = useNavigate();
   const accsessToken = localStorage.getItem('ArtNovaJwt');
   const { address, connector, isConnected } = useAccount();
+  //wallet action
 
+  const { walletopen, setWalletOpen } = useContext(AppContext);
+  const handleCloseWallet = () => {
+    setWalletOpen(false);
+  };
+  const handlewalletOpen = () => {
+    setWalletOpen(true);
+  };
   const { data: walletClient } = useSigner();
   const [tokenAmount, setTokenAmount] = useState(1);
   console.log(props.total1155.totalListed);
@@ -77,7 +87,9 @@ const Buy = (props) => {
           <button
             className="flex justify-center gap-4 h-full w-full text-blue-500 border border-gray-300 text-xl p-4 rounded-xl"
             disabled={isButtonDisabled}
-            onClick={handleBuyer}
+            onClick={() => {
+              isConnected ? handleBuyer() : handlewalletOpen();
+            }}
           >
             <span className="material-symbols-outlined text-3xl">sell</span>
             Buy {tokenAmount} item

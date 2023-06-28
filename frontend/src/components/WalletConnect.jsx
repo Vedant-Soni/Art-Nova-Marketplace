@@ -33,12 +33,10 @@ const WalletConnect = () => {
 
   useEffect(() => {
     if (isConnected) {
-      console.log('yes it is working ');
       handleWalletConnect();
     } else {
       console.log('isConnect is not true');
     }
-    console.log('inside useeffect : ', isConnected);
   }, [isConnected]);
 
   function connectWallet() {
@@ -49,7 +47,6 @@ const WalletConnect = () => {
 
   const handleWalletConnect = async () => {
     try {
-      console.log(address);
       if (isConnected) {
         //check for address is in table or not : null or object
         const checkLoginDetail = await fetch('http://localhost:5000/login', {
@@ -60,7 +57,6 @@ const WalletConnect = () => {
           body: JSON.stringify({ address: address }),
         });
         const loginStatus = await checkLoginDetail.json();
-        console.log('this is loginStatus', loginStatus);
 
         if (loginStatus == null) {
           try {
@@ -82,10 +78,7 @@ const WalletConnect = () => {
 
             //GET inserted data as response
             const createdUserData = await createlogin.json();
-            console.log(
-              'after creating data in table return it : ',
-              createdUserData,
-            );
+           
 
             //make msg object and sign it with metamask
             const message = JSON.stringify({
@@ -112,10 +105,8 @@ const WalletConnect = () => {
               },
             );
             const status = await authenticate.json();
-            console.log('signature verification status : ', status);
 
             if (status) {
-              console.log(process.env.REACT_APP_JWT_SECRET_KEY);
               //generate jwt token
               const accsesstoken = await fetch(
                 'http://localhost:5000/jwtauth',
@@ -133,17 +124,8 @@ const WalletConnect = () => {
               //insert it into localstorage
               const jwt = await accsesstoken.json();
 
-              console.log('this is jwt token :', jwt.accsessToken);
 
-              const currentJwtObjectString = localStorage.getItem('ArtNovaJwt');
-              const currentJwtObject = currentJwtObjectString
-                ? JSON.parse(currentJwtObjectString)
-                : {};
-              currentJwtObject[address] = jwt.accsessToken;
-
-              const updatedJWTObject = JSON.stringify(currentJwtObject);
-
-              localStorage.setItem('ArtNovaJwt', updatedJWTObject);
+              localStorage.setItem('ArtNovaJwt', jwt.accsessToken);
             } else {
               //toast
               console.log('error');
@@ -156,27 +138,8 @@ const WalletConnect = () => {
           try {
             //get data from localstorage
             // Retrieve the data from the local storage
-            let accsessToken;
-            const storedDataString = localStorage.getItem('ArtNovaJwt');
+            const accsessToken = localStorage.getItem('ArtNovaJwt');
 
-            if (storedDataString) {
-              // Convert the JSON string to an object
-              const storedData = JSON.parse(storedDataString);
-
-              // Specify the address you want to retrieve the token for
-              const targetAddress = address;
-
-              // Check if the target address exists in the stored data
-              if (targetAddress in storedData) {
-                accsessToken = storedData[targetAddress];
-                console.log(`Token for ${targetAddress}: ${accsessToken}`);
-              } else {
-                console.log(`No token found for ${targetAddress}`);
-              }
-            } else {
-              // No data found in the local storage
-              console.log('No data found');
-            }
             console.log(accsessToken);
 
             //verify jwt
@@ -195,7 +158,6 @@ const WalletConnect = () => {
             const verify = verifyResult.verify;
             console.log(verify);
             if (!verify) {
-              console.log('inside false block');
 
               //get user address and nounce from backend
               const userDetail = await fetch('http://localhost:5000/login', {
@@ -207,7 +169,6 @@ const WalletConnect = () => {
               });
               const userDetailObject = await userDetail.json();
               const { address, nounce } = userDetailObject;
-              console.log('new data', address, nounce);
 
               //sign message drom frontend using metamask
               const message = JSON.stringify({
@@ -255,20 +216,7 @@ const WalletConnect = () => {
                 );
 
                 const jwt = await accsesstoken.json();
-                console.log(jwt.accsessToken);
-                const currentJwtObjectString =
-                  localStorage.getItem('ArtNovaJwt');
-                const currentJwtObject = currentJwtObjectString
-                  ? JSON.parse(currentJwtObjectString)
-                  : {};
-                currentJwtObject[address] = jwt.accsessToken;
-
-                const updatedJWTObject = JSON.stringify(currentJwtObject);
-
-                localStorage.setItem('ArtNovaJwt', updatedJWTObject);
-              } else {
-                //toast
-                console.log('error');
+                localStorage.setItem('ArtNovaJwt', jwt.accsessToken);
               }
             }
           } catch (e) {

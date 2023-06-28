@@ -47,7 +47,7 @@ const CreateNFT = () => {
   const { chains, error, isLoading, pendingChainId, switchNetwork } =
     useSwitchNetwork({
       onSuccess(data) {
-        console.log('Success', data);
+        // console.log('Success', data);
       },
     });
 
@@ -243,7 +243,7 @@ const CreateNFT = () => {
     <div className="pt-16">
       <div className="justify-center flex pt-8 text-left">
         {/* title */}
-        <div className=" w-1/3">
+        <div className=" w-160">
           <p className="text-3xl my-4 p-4">Create New Item</p>
 
           {/* image upload */}
@@ -285,13 +285,13 @@ const CreateNFT = () => {
                 )}
                 <div className="h-full w-full group-hover:backdrop-blur-sm absolute top-0 left-0 rounded-xl">
                   <p className="absolute  left-1/2 top-1/2 text-center  opacity-0  transition-opacity duration-300  group-hover:opacity-100 group-hover:flex ">
-                    <span class="material-symbols-outlined left-1/2 top-1/2  transform -translate-x-1/2 -translate-y-1/2 text-7xl ">
+                    <span className="material-symbols-outlined left-1/2 top-1/2  transform -translate-x-1/2 -translate-y-1/2 text-7xl ">
                       add
                     </span>
                   </p>
                   {selectedFile && (
                     <span
-                      class="material-symbols-outlined absolute right-1 top-1 opacity-0  transition-opacity duration-300  group-hover:opacity-100 group-hover:flex"
+                      className="material-symbols-outlined absolute right-1 top-1 opacity-0  transition-opacity duration-300  group-hover:opacity-100 group-hover:flex"
                       onClick={(event) => {
                         setSelectedFile(null);
                         event.stopPropagation();
@@ -309,36 +309,7 @@ const CreateNFT = () => {
                 hidden
                 ref={uploadImage}
               />
-              {/* {selectedFile && (
-                // <div>
-                //   <h2>Selected File:</h2>
-                //   <p>Name: {selectedFile.name}</p>
-                //   <p>Size: {selectedFile.size} bytes</p>
-                //   <p>Type: {selectedFile.type}</p>
-                //   {selectedFile.type.startsWith('image/') && (
-                //     <img
-                //       src={URL.createObjectURL(selectedFile)}
-                //       alt="Selected File"
-                //     />
-                //   )}
-                //   {selectedFile.type.startsWith('audio/') && (
-                //     <audio controls>
-                //       <source
-                //         src={URL.createObjectURL(selectedFile)}
-                //         type={selectedFile.type}
-                //       />
-                //     </audio>
-                //   )}
-                //   {selectedFile.type.startsWith('video/') && (
-                //     <video controls>
-                //       <source
-                //         src={URL.createObjectURL(selectedFile)}
-                //         type={selectedFile.type}
-                //       />
-                //     </video>
-                //   )}
-                // </div>
-              )} */}
+        
             </div>
           </div>
 
@@ -375,7 +346,7 @@ const CreateNFT = () => {
               <p>Properties</p>
               <div>
                 <span
-                  class="material-symbols-outlined  bg-gray-200 rounded-xl p-2 cursor-pointer"
+                  className="material-symbols-outlined  bg-gray-200 rounded-xl p-2 cursor-pointer"
                   onClick={() => setTraitsDropdown(!traitsDropdown)}
                 >
                   {!traitsDropdown ? 'add' : 'close'}
@@ -398,7 +369,7 @@ const CreateNFT = () => {
                       </div>
                       <div>
                         <span
-                          class="material-symbols-outlined cursor-pointer"
+                          className="material-symbols-outlined cursor-pointer"
                           onClick={() => {
                             console.log(index);
                             removeTraits(index);
@@ -487,7 +458,7 @@ const CreateNFT = () => {
                   {chainName}
                 </div>
                 <span
-                  class="material-symbols-outlined cursor-pointer"
+                  className="material-symbols-outlined cursor-pointer"
                   onClick={() => {
                     setBlockchainDropdown(!blockchainDropdown);
                   }}
@@ -557,7 +528,7 @@ const CreateNFT = () => {
           </div>
 
           {/* create button */}
-          <div className=" p-4">
+          <div className="justify-center w-full p-4">
             <Dialog
               open={open}
               onClose={handleClose}
@@ -588,7 +559,7 @@ const CreateNFT = () => {
               </div>
             </Dialog>
             <button
-              className="bg-blue-500 px-4 py-2 text-2xl text-white rounded-xl"
+              className="bg-blue-400 hover:bg-blue-500 transition-all duration-300 px-4 py-2 text-2xl text-white rounded-xl w-full"
               onClick={() => {
                 handleCreateNFT();
               }}

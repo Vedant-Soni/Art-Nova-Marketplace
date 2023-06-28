@@ -444,7 +444,7 @@ const Buy721 = (props) => {
                 onClick={() => {
                   // setAmountPopup(true);
                   // setPopupOption(3);
-                  handleClickOpen();
+                  isConnected ? handleClickOpen() : handlewalletOpen();
                 }}
               >
                 Make Offer

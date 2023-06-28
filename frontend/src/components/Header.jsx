@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { AppContext } from '../App';
 import { NavLink } from 'react-router-dom';
 //MUI components
@@ -23,8 +23,6 @@ import {
 } from 'wagmi';
 //Child Component
 import WalletConnect from './WalletConnect';
-//functions
-import { handleWalletConnectFunction } from '../utils/Constants';
 
 const Header = () => {
   //appcontext
@@ -48,17 +46,16 @@ const Header = () => {
   const handleCloseWallet = () => {
     setWalletOpen(false);
   };
-  window.ethereum.on('accountsChanged', (accounts) => {
-    // setFlag(flag + 1);
-    console.log('Accoount changed _________________________');
-    handleWalletConnectFunction(address);
-  });
+  // window.ethereum.on('accountsChanged', (accounts) => {
+  //   // setFlag(flag + 1);
+  // });
   // window.ethereum.on('chainChanged', (accounts) => {
   //   // setFlag(flag + 1);
   //   console.log('changed chain event ');
   //   if (accounts.length === 0) {
   //   }
   // });
+
   return (
     <>
       {menuToggle ? (
@@ -71,7 +68,7 @@ const Header = () => {
                   <div className="text-black pt-2 mr-3  md:hidden lg:hidden">
                     <button onClick={() => setMenuToggle(!menuToggle)}>
                       <span
-                        class="material-symbols-outlined"
+                        className="material-symbols-outlined"
                         onClick={() => setMenuToggle(!menuToggle)}
                       >
                         close
@@ -91,39 +88,39 @@ const Header = () => {
                 <div className="flex justify-self-end">
                   <div className=" bg-opacity-10 rounded-xl flex items-center bg-white bg-blur-xl text-white">
                     <div className="lg:flex hidden">
-                      <span class="mx-2 material-symbols-outlined">wallet</span>
+                      <span className="mx-2 material-symbols-outlined">wallet</span>
                       <p className="px-2">Connect Wallet</p>
                     </div>
                     <div className="border-solid border-white justify-end lg:border lg:border-y-0 lg:border-r-0 h-full hidden md:flex lg:flex items-center border-opacity-20 mx-2 px-4 ">
-                      <span class="material-symbols-outlined">
+                      <span className="material-symbols-outlined">
                         account_circle
                       </span>
                     </div>
                     <div className="border-solid border-gray-400 border-2 text-black justify-end  h-full  rounded-xl flex items-center border-opacity-20 mx-2 px-2 ">
-                      <span class="material-symbols-outlined">search</span>
+                      <span className="material-symbols-outlined">search</span>
                     </div>
                   </div>
                   <div className="border-solid border-gray-400 border-2 text-black justify-end  h-full  rounded-xl flex items-center border-opacity-20 mx-2 px-2">
-                    <span class="material-symbols-outlined">shopping_cart</span>
+                    <span className="material-symbols-outlined">shopping_cart</span>
                   </div>
                 </div>
               </nav>
             </div>
             <div className="h-full py-6">
               <div className=" flex justify-start h-12 my-4 mx-4 text-xl font-bold items-center">
-                <span class="material-symbols-outlined">edit</span>
+                <span className="material-symbols-outlined">edit</span>
                 <p className="mx-4">menus</p>
               </div>
               <div className=" flex justify-start h-12 my-4 mx-4 text-xl font-bold items-center">
-                <span class="material-symbols-outlined">edit</span>
+                <span className="material-symbols-outlined">edit</span>
                 <p className="mx-4">menus</p>
               </div>
               <div className=" flex justify-start h-12 my-4 mx-4 text-xl font-bold items-center">
-                <span class="material-symbols-outlined">edit</span>
+                <span className="material-symbols-outlined">edit</span>
                 <p className="mx-4">menus</p>
               </div>
               <div className=" flex justify-start h-12 my-4 mx-4 text-xl font-bold items-center">
-                <span class="material-symbols-outlined">edit</span>
+                <span className="material-symbols-outlined">edit</span>
                 <p className="mx-4">menus</p>
               </div>
             </div>
@@ -142,7 +139,7 @@ const Header = () => {
               <div className="justify-self-start  flex items-center">
                 <div className="text-black pt-2 mx-2  md:hidden lg:hidden">
                   <button onClick={() => setMenuToggle(!menuToggle)}>
-                    <span class="material-symbols-outlined">menu</span>
+                    <span className="material-symbols-outlined">menu</span>
                   </button>
                 </div>
 
@@ -172,7 +169,7 @@ const Header = () => {
               {/* search bar section  */}
               <div className=" p-2 rounded-xl md:hidden lg:flex items-center bg-white bg-opacity-10 bg-blur-xl hidden border-2 border-gray-400">
                 <div className="mt-2 pr-2 text-gray-600">
-                  <span class="material-symbols-outlined">search</span>
+                  <span className="material-symbols-outlined">search</span>
                 </div>
                 <input
                   className="bg-transparent border-0 outline-0 text-gray-600"
@@ -191,7 +188,7 @@ const Header = () => {
                         : console.log('connected');
                     }}
                   >
-                    <span class="mx-2 material-symbols-outlined">wallet</span>
+                    <span className="mx-2 material-symbols-outlined">wallet</span>
                     <p className="px-2">
                       {isConnected
                         ? address.slice(0, 6) + '...' + address.slice(-4)
@@ -214,19 +211,19 @@ const Header = () => {
                     className="h-full profileGroup"
                   >
                     <div className=" text-gray-600 border-solid border-gray-400 justify-end lg:border md:border lg:border-y-0 md:border-y-0 lg:border-r-0 md:border-r-0 h-full hidden md:flex lg:flex items-center border-opacity-100 mx-2 px-4 cursor-pointer">
-                      <span class="material-symbols-outlined">
+                      <span className="material-symbols-outlined">
                         account_circle
                       </span>
                     </div>
 
-                    <div class="relative">
-                      <div class="cursor-pointer"></div>
+                    <div className="relative">
+                      <div className="cursor-pointer"></div>
                       {profileDropdown ? (
-                        <div class="absolute transition-all right-0 mt-0 w-40 bg-white border border-gray-200 rounded-md shadow-lg z-10">
+                        <div className="absolute transition-all right-0 mt-0 w-40 bg-white border border-gray-200 rounded-md shadow-lg z-10">
                           {isConnected ? (
                             <NavLink to="/profile">
-                              <p class="flex gap-2 px-4 py-2 text-gray-800 hover:bg-gray-200 ">
-                                <span class="material-symbols-outlined">
+                              <p className="flex gap-2 px-4 py-2 text-gray-800 hover:bg-gray-200 ">
+                                <span className="material-symbols-outlined">
                                   account_circle
                                 </span>
                                 Profile
@@ -234,12 +231,12 @@ const Header = () => {
                             </NavLink>
                           ) : (
                             <p
-                              class="flex gap-2 px-4 py-2 text-gray-800 hover:bg-gray-200"
+                              className="flex gap-2 px-4 py-2 text-gray-800 hover:bg-gray-200"
                               onClick={() => {
                                 handleClickOpen();
                               }}
                             >
-                              <span class="material-symbols-outlined">
+                              <span className="material-symbols-outlined">
                                 account_circle
                               </span>{' '}
                               Profile
@@ -247,8 +244,8 @@ const Header = () => {
                           )}
                           {isConnected ? (
                             <NavLink to="/create">
-                              <p class="flex gap-2 px-4 py-2 text-gray-800 hover:bg-gray-200">
-                                <span class="material-symbols-outlined">
+                              <p className="flex gap-2 px-4 py-2 text-gray-800 hover:bg-gray-200">
+                                <span className="material-symbols-outlined">
                                   edit
                                 </span>{' '}
                                 Create
@@ -256,22 +253,22 @@ const Header = () => {
                             </NavLink>
                           ) : (
                             <p
-                              class="flex gap-2 px-4 py-2 text-gray-800 hover:bg-gray-200"
+                              className="flex gap-2 px-4 py-2 text-gray-800 hover:bg-gray-200"
                               onClick={() => {
                                 handleClickOpen();
                               }}
                             >
-                              <span class="material-symbols-outlined">
+                              <span className="material-symbols-outlined">
                                 edit
                               </span>
                               Create
                             </p>
                           )}
                           <p
-                            class="flex gap-2 px-4 py-2 text-gray-800 hover:bg-gray-200"
+                            className="flex gap-2 px-4 py-2 text-gray-800 hover:bg-gray-200"
                             href="#"
                           >
-                            <span class="material-symbols-outlined">
+                            <span className="material-symbols-outlined">
                               more_horiz
                             </span>
                             Other
@@ -283,11 +280,11 @@ const Header = () => {
                     </div>
                   </div>
                   <div className="border-solid text-gray-600 border-gray-400 justify-end lg:border border-y-0 border-r-0 h-full lg:hidden md:hidden flex items-center border-opacity-20 mx-2 px-4 ">
-                    <span class="material-symbols-outlined">search</span>
+                    <span className="material-symbols-outlined">search</span>
                   </div>
                 </div>
                 <div className="cursor-pointer ml-2 px-4 bg-opacity-10  text-gray-600 rounded-xl flex items-center bg-white bg-blur-xl border-2 border-gray-400">
-                  <span class="material-symbols-outlined">shopping_cart</span>
+                  <span className="material-symbols-outlined">shopping_cart</span>
                 </div>
               </div>
             </nav>

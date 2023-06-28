@@ -20,7 +20,6 @@ const Created = () => {
         },
       );
       const nfts = await getnfts.json();
-      console.log(nfts);
       setnftData(nfts);
     };
     fetchingNFT();
@@ -31,46 +30,7 @@ const Created = () => {
         {nftData &&
           nftData.map((nftdetail, key) => {
             return (
-              // <NavLink
-              //   index={key}
-              //   to={{
-              //     pathname: `/nftdetail/${nftdetail.nftContractAddress}/${nftdetail.tokenId}`,
-              //   }}
-              // >
-              //   <div className="h-fit flex flex-col justify-end  rounded-3xl  relative drop-shadow-sm hover:drop-shadow-xl">
-              //     <img
-              //       src={
-              //         nftdetail?.nftJsonData.rawMetadata.image.includes('ipfs')
-              //           ? `https://ipfs.io/ipfs/` +
-              //             nftdetail?.nftJsonData.rawMetadata.image.match(
-              //               /(ipfs:\/\/|\/ipfs\/)([^/]+)$/,
-              //             )[2]
-              //           : nftdetail?.nftJsonData.rawMetadata.image
-              //       }
-              //       alt=" "
-              //       className="rounded-t-xl h-56 object-cover"
-              //     />
-              //     <div className="bg-slate-50 absolute rounded-xl bottom-2 left-2  p-1">
-              //       <img
-              //         className="w-12 rounded-lg "
-              //         src={
-              //           nftdetail?.nftJsonData.rawMetadata.image.includes(
-              //             'ipfs',
-              //           )
-              //             ? `https://ipfs.io/ipfs/` +
-              //               nftdetail?.nftJsonData.rawMetadata.image.match(
-              //                 /(ipfs:\/\/|\/ipfs\/)([^/]+)$/,
-              //               )[2]
-              //             : nftdetail?.nftJsonData.rawMetadata.image
-              //         }
-              //         alt="img"
-              //       />
-              //     </div>
-              //     <div className="bg-slate-50 h-12 flex items-center pl-16 rounded-b-xl">
-              //       Name
-              //     </div>
-              //   </div>
-              // </NavLink>
+             
               <NavLink
                 index={key}
                 to={{
@@ -88,7 +48,7 @@ const Created = () => {
                         : nftdetail?.nftJsonData.rawMetadata.image
                     }
                     alt=" "
-                    className="object-cover transition-transform duration-300 transform-gpu hover:scale-110 rounded-t-xl -full"
+                    className="object-cover transition-transform duration-300 transform-gpu hover:scale-110 rounded-t-xl "
                   />
 
                   <div className="overflow-hidden z-10 bg-slate-50 h-12 flex items-center pl-16 rounded-b-xl">

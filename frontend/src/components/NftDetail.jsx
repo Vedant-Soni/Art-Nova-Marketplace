@@ -156,11 +156,20 @@ const NftDetail = () => {
               ) : (
                 <img src={EtherLogo} alt="eth" className="h-6" />
               )}
-              <span class="material-symbols-outlined ">favorite</span>
+              <span className="material-symbols-outlined ">favorite</span>
             </div>
             <div className="p-8">
               <img
-                src={nftData?.nftJsonData.rawMetadata.image}
+                src={
+                  nftData?.nftJsonData.rawMetadata.image
+                    ? nftData?.nftJsonData.rawMetadata.image.includes('ipfs://')
+                      ? `https://ipfs.io/ipfs/` +
+                        nftData?.nftJsonData.rawMetadata.image.match(
+                          /ipfs:\/\/(.+)/,
+                        )[1]
+                      : nftData?.nftJsonData.rawMetadata.image
+                    : { DefaultNFT }
+                }
                 alt="NFT"
                 className="rounded-xl w-full "
               />
@@ -184,9 +193,9 @@ const NftDetail = () => {
                   : 'Untitled'}
               </div>
               <div className="cursor-pointer">
-                <span class="material-symbols-outlined m-2">send</span>
-                <span class="material-symbols-outlined m-2">share</span>
-                <span class="material-symbols-outlined m-2">more_horiz</span>
+                <span className="material-symbols-outlined m-2">send</span>
+                <span className="material-symbols-outlined m-2">share</span>
+                <span className="material-symbols-outlined m-2">more_horiz</span>
               </div>
             </div>
 
@@ -213,7 +222,7 @@ const NftDetail = () => {
               <div className=" h-fit w-full rounded-xl">
                 <div className="flex justify-between text-center">
                   <div className="flex justify-between text-center">
-                    <span class="material-symbols-outlined">view_module</span>
+                    <span className="material-symbols-outlined">view_module</span>
                     <p>{totalSupply1155} items</p>
                   </div>
                 </div>
@@ -287,13 +296,13 @@ const NftDetail = () => {
           <div className="border-2 border-gray-200 h-full w-full text-center rounded-xl my-4">
             <div className="p-6 text-xl text-left flex justify-between  ">
               <div className="flex gap-2 ">
-                <span class="material-symbols-outlined text-3xl items-center">
+                <span className="material-symbols-outlined text-3xl items-center">
                   timeline
                 </span>
                 Price History
               </div>
               <span
-                class="material-symbols-outlined cursor-pointer"
+                className="material-symbols-outlined cursor-pointer"
                 onClick={() => {
                   setHistoryDropdown(!historyDropdown);
                 }}
@@ -312,11 +321,11 @@ const NftDetail = () => {
           <div className="border-2 border-gray-200 h-full w-full text-center rounded-xl my-4">
             <div className="p-6 text-xl text-left flex justify-between  ">
               <div className="flex gap-2 items-center">
-                <span class="material-symbols-outlined text-3xl">sell</span>
+                <span className="material-symbols-outlined text-3xl">sell</span>
                 Listings
               </div>
               <span
-                class="material-symbols-outlined cursor-pointer"
+                className="material-symbols-outlined cursor-pointer"
                 onClick={() => {
                   setListDropdown(!listDropdown);
                 }}
@@ -335,11 +344,11 @@ const NftDetail = () => {
           <div className="border-2 border-gray-200 h-full w-full text-center rounded-xl my-4">
             <div className="p-6 text-xl text-left flex justify-between  ">
               <div className="flex gap-2 items-center">
-                <span class="material-symbols-outlined text-3xl">list</span>
+                <span className="material-symbols-outlined text-3xl">list</span>
                 Offers
               </div>
               <span
-                class="material-symbols-outlined cursor-pointer"
+                className="material-symbols-outlined cursor-pointer"
                 onClick={() => {
                   setOfferDropdown(!offerDropdown);
                 }}

@@ -35,7 +35,7 @@ const Profile = () => {
               Unnamed
             </p>{' '}
             <p className="bg-gray-100 rounded-xl p-2 px-3 cursor-pointer">
-              <span class="material-symbols-outlined">edit</span>
+              <span className="material-symbols-outlined">edit</span>
             </p>
           </div>
           <div className="flex">

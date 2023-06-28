@@ -92,5 +92,15 @@ const collections = async (req, res) => {
     res.status(400).json({ error });
   }
 };
-
-module.exports = { collections };
+const allCollection = async (req, res) => {
+  try {
+    const nftData = await nftdetails.findAll({
+      order: [['id', 'DESC']],
+    });
+    res.status(200).json({ nftData });
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ error });
+  }
+};
+module.exports = { collections, allCollection };

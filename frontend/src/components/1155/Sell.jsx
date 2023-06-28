@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
@@ -9,17 +9,24 @@ import { createOrder1155 } from '../../createOrder1155';
 import { useAccount, useSigner } from 'wagmi';
 import { ThreeDots } from 'react-loader-spinner';
 import { useNavigate } from 'react-router-dom';
-
+import { AppContext } from '../../App';
 const Sell = (props) => {
+  const { address, connector, isConnected } = useAccount();
   //navigation
   const navigate = useNavigate();
   const accsessToken = localStorage.getItem('ArtNovaJwt');
-  const { address } = useAccount();
   const { data: walletClient } = useSigner();
   const [open, setOpen] = React.useState(false);
   const [loading, setLoading] = useState(false);
   const [sellValue, setSellValue] = useState(0);
   const [tokenAmount, setTokenAmount] = useState(1);
+  const { walletopen, setWalletOpen } = useContext(AppContext);
+  const handleCloseWallet = () => {
+    setWalletOpen(false);
+  };
+  const handlewalletOpen = () => {
+    setWalletOpen(true);
+  };
   const handleClose = () => {
     setOpen(false);
   };
@@ -85,7 +92,7 @@ const Sell = (props) => {
           <button
             className="bg-blue-500 h-full w-full text-white text-xl p-4 rounded-xl"
             onClick={() => {
-              handleClickOpen();
+              isConnected ? handleClickOpen() : handlewalletOpen();
             }}
           >
             List {tokenAmount} item{' '}

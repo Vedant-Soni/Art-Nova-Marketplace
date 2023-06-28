@@ -36,7 +36,7 @@ const Description = (nftData) => {
           {/* description */}
           <div className="p-6 text-xl text-left flex justify-between  ">
             <div className="flex gap-2 items-center">
-              <span class="material-symbols-outlined">view_headline</span>
+              <span className="material-symbols-outlined">view_headline</span>
               <p className="text-xl">Description</p>
             </div>
           </div>
@@ -48,11 +48,11 @@ const Description = (nftData) => {
             <div className="border-t border-gray-200  text-xl gap-2 text-left ">
               <div className="flex justify-between p-6">
                 <div className="flex gap-2">
-                  <span class="material-symbols-outlined">label</span>
+                  <span className="material-symbols-outlined">label</span>
                   <p className="text-xl ">Traits</p>
                 </div>
                 <span
-                  class="material-symbols-outlined cursor-pointer"
+                  className="material-symbols-outlined cursor-pointer"
                   onClick={() => {
                     setTraitsDropdown(!traitsDropdown);
                   }}
@@ -89,11 +89,11 @@ const Description = (nftData) => {
             <div className="border-t border-gray-200  text-xl gap-2 text-left ">
               <div className="flex justify-between p-6">
                 <div className="flex gap-2 items-center">
-                  <span class="material-symbols-outlined">stars</span>
+                  <span className="material-symbols-outlined">stars</span>
                   <p className="text-xl ">Levels</p>
                 </div>
                 <span
-                  class="material-symbols-outlined cursor-pointer"
+                  className="material-symbols-outlined cursor-pointer"
                   onClick={() => {
                     setLevelsDropdown(!levelsDropdown);
                   }}
@@ -117,11 +117,11 @@ const Description = (nftData) => {
           <div className="border-t border-gray-200  text-xl gap-2 text-left ">
             <div className="flex justify-between p-6">
               <div className="flex gap-2 items-center">
-                <span class="material-symbols-outlined">full_coverage</span>
+                <span className="material-symbols-outlined">full_coverage</span>
                 <p className="text-xl ">Details</p>
               </div>
               <span
-                class="material-symbols-outlined cursor-pointer"
+                className="material-symbols-outlined cursor-pointer"
                 onClick={() => {
                   setDetailsDropdown(!detailsDropdown);
                 }}
