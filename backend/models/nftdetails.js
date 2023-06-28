@@ -27,6 +27,7 @@ module.exports = (sequelize, DataTypes) => {
       totalListed: DataTypes.INTEGER,
       availableForListing: DataTypes.INTEGER,
       isCreated: DataTypes.BOOLEAN,
+      totalSupply: DataTypes.INTEGER,
     },
     {
       sequelize,

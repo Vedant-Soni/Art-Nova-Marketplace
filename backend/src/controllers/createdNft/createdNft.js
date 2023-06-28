@@ -10,12 +10,9 @@ const createdNft = async (req, res) => {
     nftsForOwnerMainnet,
     nftsForOwnerPolygon,
   } = await alchemyClient(owner);
-  console.log('hii ---->      createdNft');
+
   try {
     if (chainName === 'Polygon Mumbai') {
-      console.log(
-        'hii ---------------------------------------------->       Inside Mumbai',
-      );
       let latestNFT = null;
       let mintedNFTs = nftsForOwnerMumbai.ownedNfts;
       if (mintedNFTs.length > 0) {
@@ -33,6 +30,7 @@ const createdNft = async (req, res) => {
             balance: latestNFT.balance,
             isListed: false,
             isCreated: true,
+            totalSupply: latestNFT.balance,
           });
         } else {
           throw new Error('Error in latest nft data fetching');
@@ -43,7 +41,6 @@ const createdNft = async (req, res) => {
         throw new Error('Error in latest nft data fetching');
       }
     } else if (chainName === 'Sepolia Testnet') {
-      console.log('hii ---->       Inside sep');
       let latestNFT = null;
       let mintedNFTs = nftsForOwnerSepolia.ownedNfts;
       if (mintedNFTs.length > 0) {
@@ -61,6 +58,7 @@ const createdNft = async (req, res) => {
             balance: latestNFT.balance,
             isListed: false,
             isCreated: true,
+            totalSupply: latestNFT.balance,
           });
         } else {
           throw new Error('Error in latest nft data fetching');
@@ -88,6 +86,7 @@ const createdNft = async (req, res) => {
             balance: latestNFT.balance,
             isListed: false,
             isCreated: true,
+            totalSupply: latestNFT.balance,
           });
         } else {
           throw new Error('Error in latest nft data fetching');
@@ -115,6 +114,7 @@ const createdNft = async (req, res) => {
             balance: latestNFT.balance,
             isListed: false,
             isCreated: true,
+            totalSupply: latestNFT.balance,
           });
         } else {
           throw new Error('Error in latest nft data fetching');

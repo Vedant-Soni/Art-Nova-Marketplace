@@ -31,7 +31,7 @@ const NftDetail = () => {
   const [component, setComponent] = useState('Sell');
   const [nftData, setNftData] = useState();
   //1155 States
-  const [totalSupply1155, setTotalSupply] = useState(10000);
+  const [totalSupply1155, setTotalSupply] = useState(10);
   const [amount1155, setAmount1155] = useState(10);
   //offer states
   const [offerAmount, setOfferAmount] = useState(0);
@@ -62,7 +62,8 @@ const NftDetail = () => {
         );
         const getnftData = await response.json();
         setNftData(getnftData.nft);
-
+        setAmount1155(nftData.balance);
+        setTotalSupply(nftData.totalSupply);
         try {
           const getOffers = await fetch(
             `http://localhost:5000/fetchOffers/${nftaddress}/${id}`,
@@ -372,7 +373,7 @@ const NftDetail = () => {
                           </p>
                           <button
                             className={
-                              offerdata.nftOwnerAddress == walletAddress
+                              offer.nftOwnerAddress === walletAddress
                                 ? 'bg-blue-400 text-white rounded-xl p-2 hover:bg-blue-500'
                                 : 'hidden'
                             }

@@ -28,6 +28,7 @@ const collections = async (req, res) => {
             nftJsonData: nftdetail,
             balance: nftdetail.balance,
             isListed: false,
+            totalSupply: nftdetail.balance,
           });
         });
       }
@@ -42,6 +43,7 @@ const collections = async (req, res) => {
             nftJsonData: nftdetail,
             balance: nftdetail.balance,
             isListed: false,
+            totalSupply: nftdetail.balance,
           });
         });
       }
@@ -57,6 +59,7 @@ const collections = async (req, res) => {
             nftJsonData: nftdetail,
             balance: nftdetail.balance,
             isListed: false,
+            totalSupply: nftdetail.balance,
           });
         });
       }
@@ -72,6 +75,7 @@ const collections = async (req, res) => {
             nftJsonData: nftdetail,
             balance: nftdetail.balance,
             isListed: false,
+            totalSupply: nftdetail.balance,
           });
         });
       }

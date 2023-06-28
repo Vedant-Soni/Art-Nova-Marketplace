@@ -180,7 +180,6 @@ const Buy721 = (props) => {
         offerer: address,
         signer: walletClient,
       });
-      await cancel.wait();
       console.log(cancel);
       if (cancel) {
         const params = { nftContract, tokenId };
