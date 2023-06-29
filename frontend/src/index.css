@@ -1,7 +1,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
+@import url('https://fonts.googleapis.com/css2?family=Goldman&family=Inter+Tight&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Goldman&family=Inter+Tight&family=Varela+Round&display=swap');
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -9,6 +10,9 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  font-family: 'Goldman', cursive;
+  font-family: 'Inter Tight', sans-serif;
+  font-family: 'Varela Round', sans-serif;
 }
 
 code {
