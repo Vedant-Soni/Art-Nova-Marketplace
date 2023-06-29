@@ -1,70 +1,174 @@
+import { ethers } from 'ethers';
+//react imports
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import avtar from '../images/avatr.png';
+import { ABI1155 } from '../ABI1155';
+//wagmi imports
+import { useAccount, useSigner } from 'wagmi';
+//images
+import PolygonLogo from '../images/polygon.png';
+import EtherLogo from '../images/Ether.png';
+import DefaultNFT from '../images/DefaultNFT.png';
+//child component
 import Buy from './1155/Buy';
 import Sell from './1155/Sell';
 import Buy721 from './721/Buy721';
 import Description from './Description';
-const { Network, Alchemy } = require('alchemy-sdk');
+
+import { fulfillorder } from '../fulfillOrder';
 
 const NftDetail = () => {
-  const { address, id } = useParams();
+  const accsessToken = localStorage.getItem('ArtNovaJwt');
+  const { nftaddress, id } = useParams();
+  //wagmi
+  const { address: walletAddress } = useAccount();
+  const { data: walletClient } = useSigner();
+  //dropdown states
   const [historyDropdown, setHistoryDropdown] = useState(false);
   const [listDropdown, setListDropdown] = useState(false);
   const [offerDropdown, setOfferDropdown] = useState(false);
-  const [amount1155, setAmount1155] = useState(10);
+
   const [component, setComponent] = useState('Sell');
-  const [totalSupply1155, setTotalSupply] = useState(10);
   const [nftData, setNftData] = useState();
+  //1155 States
+  const [totalSupply1155, setTotalSupply] = useState(10);
+  const [amount1155, setAmount1155] = useState(10);
+  //offer states
+  const [offerAmount, setOfferAmount] = useState(0);
+  const [offererAddress, setOfferer] = useState('0x0000000000000000000');
+  const [offerData, setOfferData] = useState('');
+  //hard relode flag
+  const [flag, setFlag] = useState(0);
+
+  const networks = {
+    1: 'ETH Mainnet',
+    11155111: 'ETH Sepolia',
+    80001: 'MATIC Mumbai',
+    137: 'MATIC Mainnet',
+  };
 
   useEffect(() => {
     const fetchData = async () => {
-      const alchemyMumbai = new Alchemy({
-        apiKey: `${process.env.REACT_APP_ALCHEMY_API}`,
-        network: Network.MATIC_MUMBAI,
-      });
-      const response = await alchemyMumbai.nft.getNftMetadata(address, id);
-      setNftData(response);
-    };
-    fetchData();
-  }, [address, id]);
+      try {
+        const response = await fetch(
+          `http://localhost:5000/detailsPage/${nftaddress}/${id}`,
+          {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${accsessToken}`,
+            },
+          },
+        );
+        const getnftData = await response.json();
+        setNftData(getnftData.nft);
+        setAmount1155(nftData.balance);
+        setTotalSupply(nftData.totalSupply);
+        try {
+          const getOffers = await fetch(
+            `http://localhost:5000/fetchOffers/${nftaddress}/${id}`,
+            {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${accsessToken}`,
+              },
+            },
+          );
+          const offers = await getOffers.json();
+          setOfferData(offers);
+        } catch (e) {
+          console.log('Offer fetching error : ', e);
+        }
 
-  console.log(nftData);
-  const tokenStandard = nftData?.tokenType;
-  const priceOfToken = 0.04;
-  const chainCrypto = 'ETH';
-  const chainCryptoPrice = 1243;
-  const chainId = 80001;
-  const ownerOfNft = 0x00;
+        // const contract = new ethers.Contract(address, ABI1155, walletClient);
+        // const balance = await contract.balanceOf(walletAddress, id); commet by vivek
+        // setAmount1155(balance);
+      } catch (error) {
+        console.log(error);
+      }
+      // setNftData(response);
+    };
+    // if (walletClient) {
+    fetchData();
+    // }
+  }, [nftaddress, id, flag, walletAddress, walletClient]);
+
+  const acceptOffer = async (offer) => {
+    const order = offer.order;
+    console.log(offer);
+    console.log(order);
+    const nftPurchase = await fulfillorder({
+      order,
+      fulfiller: walletAddress,
+      signer: walletClient,
+    });
+    if (nftPurchase) {
+      const updatedData = {
+        nftOwner: offer.nftOwnerAddress,
+        nftContract: offer.nftContractAddress,
+        tokenId: offer.tokenId,
+      };
+      await fetch(`http://localhost:5000/orderfulfill`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accsessToken}`,
+        },
+        body: JSON.stringify(updatedData),
+      });
+      await fetch(
+        `http://localhost:5000/fulfillOffer/${offer.nftContractAddress}/${offer.tokenId}`,
+        {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        },
+      );
+      console.log('Success');
+    }
+
+    console.log(offer);
+  };
+  window.ethereum.on('accountsChanged', (accounts) => {
+    // setFlag(flag + 1);
+    if (accounts.length === 0) {
+    }
+  });
+
+  const totalListed = nftData?.totalListed;
+  const availableToList = nftData?.availableForListing || amount1155;
+  const tokenStandard = nftData?.nftJsonData.tokenType;
+  const priceOfToken = nftData?.listingPrice;
+  const chainCrypto = networks[nftData?.network];
+  const chainId = nftData?.network;
+  const ownerOfNft = nftData?.nftOwnerAddress;
+  const buyLimit = totalSupply1155 - amount1155;
   return (
-    <div>
+    <div className="pt-24">
       <div className="grid grid-cols-5 px-8">
         <div className=" p-4 w-full  col-span-2">
           <div className="border-2 border-gray-200 h-fit w-full rounded-xl">
             <div className="flex w-full justify-between p-2">
               {chainId === 80001 ? (
-                <img
-                  src=" https://w7.pngwing.com/pngs/659/334/png-transparent-polygon-matic-coin-cryptocoin-exchange-coins-crypto-blockchain-cryptocurrency-logo-glyph-icon-thumbnail.png"
-                  alt="eth"
-                  className="h-6"
-                />
+                <img src={PolygonLogo} alt="eth" className="h-6" />
               ) : (
-                <img
-                  src="https://ethresear.ch/uploads/default/original/1X/bc9ee6d276a251519dd12dca7202a9e3658a7eb3.png"
-                  alt="eth"
-                  className="h-6"
-                />
+                <img src={EtherLogo} alt="eth" className="h-6" />
               )}
-              <span class="material-symbols-outlined ">favorite</span>
+              <span className="material-symbols-outlined ">favorite</span>
             </div>
             <div className="p-8">
               <img
                 src={
-                  nftData
-                    ? nftData.rawMetadata.image
-                      ? nftData.rawMetadata.image
-                      : 'https://cdn3.iconfinder.com/data/icons/nft/64/nft_non_fungible_token_blockchain_sign_coin-512.png'
-                    : 'https://cdn3.iconfinder.com/data/icons/nft/64/nft_non_fungible_token_blockchain_sign_coin-512.png'
+                  nftData?.nftJsonData.rawMetadata.image
+                    ? nftData?.nftJsonData.rawMetadata.image.includes('ipfs://')
+                      ? `https://ipfs.io/ipfs/` +
+                        nftData?.nftJsonData.rawMetadata.image.match(
+                          /ipfs:\/\/(.+)/,
+                        )[1]
+                      : nftData?.nftJsonData.rawMetadata.image
+                    : { DefaultNFT }
                 }
                 alt="NFT"
                 className="rounded-xl w-full "
@@ -73,8 +177,8 @@ const NftDetail = () => {
           </div>
 
           {/* details */}
-          <div className=" h-full w-full rounded-xl my-4">
-            <Description nftdata={nftData} />
+          <div className=" h-fit w-full rounded-xl my-4">
+            {nftData && <Description nftdata={nftData} />}
           </div>
         </div>
 
@@ -83,15 +187,15 @@ const NftDetail = () => {
             <div className="flex justify-between">
               <div>
                 {nftData
-                  ? nftData.contract.name
-                    ? nftData.contract.name
+                  ? nftData.nftJsonData.contract.name
+                    ? nftData.nftJsonData.contract.name
                     : 'Untitled'
                   : 'Untitled'}
               </div>
               <div className="cursor-pointer">
-                <span class="material-symbols-outlined m-2">send</span>
-                <span class="material-symbols-outlined m-2">share</span>
-                <span class="material-symbols-outlined m-2">more_horiz</span>
+                <span className="material-symbols-outlined m-2">send</span>
+                <span className="material-symbols-outlined m-2">share</span>
+                <span className="material-symbols-outlined m-2">more_horiz</span>
               </div>
             </div>
 
@@ -99,12 +203,14 @@ const NftDetail = () => {
             <div>
               <p className="text-4xl text-left my-2">
                 {nftData
-                  ? nftData.title === ''
+                  ? nftData.nftJsonData.title === ''
                     ? '#untitled'
-                    : nftData.title
+                    : nftData.nftJsonData.title
                   : 'Untitled'}
               </p>
-              <p className="text-base text-left my-4">Owned by You </p>{' '}
+              <p className="text-base text-left my-4">
+                Owned by {ownerOfNft === walletAddress ? 'You' : ownerOfNft}{' '}
+              </p>{' '}
               {/* Fetch from DB */}
             </div>
           </div>
@@ -116,7 +222,7 @@ const NftDetail = () => {
               <div className=" h-fit w-full rounded-xl">
                 <div className="flex justify-between text-center">
                   <div className="flex justify-between text-center">
-                    <span class="material-symbols-outlined">view_module</span>
+                    <span className="material-symbols-outlined">view_module</span>
                     <p>{totalSupply1155} items</p>
                   </div>
                 </div>
@@ -153,13 +259,13 @@ const NftDetail = () => {
                       </div>
                     </div>
                   </div>
-                  <div>You own {amount1155}</div>
+                  <div>You own {amount1155.toString()}</div>
                 </div>
                 <div className="border-t border-gray-300">
                   {component === 'Buy' ? (
-                    <Buy total1155={totalSupply1155} />
+                    <Buy total1155={{ totalListed, nftData }} />
                   ) : component === 'Sell' ? (
-                    <Sell own1155={amount1155} />
+                    <Sell own1155={{ availableToList, nftData }} />
                   ) : (
                     <></>
                   )}
@@ -172,15 +278,13 @@ const NftDetail = () => {
                 <div className="p-6 text-xl text-left flex justify-between  ">
                   <div className="flex gap-2 align-bottom">
                     <p className="text-3xl">
-                      {priceOfToken} {chainCrypto}
-                    </p>
-                    <p className="text-sm text-gray-400 ">
-                      $ {priceOfToken * chainCryptoPrice}USD
+                      {nftData.isListed && parseFloat(priceOfToken)}{' '}
+                      {chainCrypto}
                     </p>
                   </div>
                 </div>
                 <div className="w-full h-fit border-t  border-gray-300">
-                  <Buy721 owner={ownerOfNft} />
+                  <Buy721 nftData={nftData} />
                 </div>
               </div>
             </>
@@ -192,11 +296,13 @@ const NftDetail = () => {
           <div className="border-2 border-gray-200 h-full w-full text-center rounded-xl my-4">
             <div className="p-6 text-xl text-left flex justify-between  ">
               <div className="flex gap-2 ">
-                <span class="material-symbols-outlined text-3xl">timeline</span>
+                <span className="material-symbols-outlined text-3xl items-center">
+                  timeline
+                </span>
                 Price History
               </div>
               <span
-                class="material-symbols-outlined cursor-pointer"
+                className="material-symbols-outlined cursor-pointer"
                 onClick={() => {
                   setHistoryDropdown(!historyDropdown);
                 }}
@@ -214,12 +320,12 @@ const NftDetail = () => {
           {/* Listing */}
           <div className="border-2 border-gray-200 h-full w-full text-center rounded-xl my-4">
             <div className="p-6 text-xl text-left flex justify-between  ">
-              <div className="flex gap-2 ">
-                <span class="material-symbols-outlined text-3xl">sell</span>
+              <div className="flex gap-2 items-center">
+                <span className="material-symbols-outlined text-3xl">sell</span>
                 Listings
               </div>
               <span
-                class="material-symbols-outlined cursor-pointer"
+                className="material-symbols-outlined cursor-pointer"
                 onClick={() => {
                   setListDropdown(!listDropdown);
                 }}
@@ -237,12 +343,12 @@ const NftDetail = () => {
           {/* Offers */}
           <div className="border-2 border-gray-200 h-full w-full text-center rounded-xl my-4">
             <div className="p-6 text-xl text-left flex justify-between  ">
-              <div className="flex gap-2 ">
-                <span class="material-symbols-outlined text-3xl">list</span>
+              <div className="flex gap-2 items-center">
+                <span className="material-symbols-outlined text-3xl">list</span>
                 Offers
               </div>
               <span
-                class="material-symbols-outlined cursor-pointer"
+                className="material-symbols-outlined cursor-pointer"
                 onClick={() => {
                   setOfferDropdown(!offerDropdown);
                 }}
@@ -251,7 +357,52 @@ const NftDetail = () => {
               </span>
             </div>
             {offerDropdown ? (
-              <div className="w-full h-48 border-t  border-gray-300"></div>
+              <div className="w-full h-fit border-t  border-gray-300">
+                {offerData.length === 0 ? (
+                  <p className="m-4 text-gray-400">No Offer Yet..!</p>
+                ) : (
+                  <>
+                    {offerData.map((offer, key) => {
+                      return (
+                        <div
+                          index={key}
+                          className="p-6 flex justify-between text-lg border-b items-center mx-4 border-gray-200 text-left"
+                        >
+                          <p>
+                            Amount : {parseFloat(offer.amount)}{' '}
+                            {chainId === 80001 || chainId === 137
+                              ? 'Matic'
+                              : 'ETH'}
+                          </p>
+                          <p>
+                            By :{' '}
+                            {offer.offerer.slice(0, 8) +
+                              '...' +
+                              offer.offerer.slice(-6)}
+                          </p>
+                          <button
+                            className={
+                              offer.nftOwnerAddress === walletAddress
+                                ? 'bg-blue-400 text-white rounded-xl p-2 hover:bg-blue-500'
+                                : 'hidden'
+                            }
+                            onClick={() => {
+                              acceptOffer(offer);
+                            }}
+                            // disabled={
+                            //   offerdata.nftOwnerAddress == walletAddress
+                            //     ? false
+                            //     : true
+                            // }
+                          >
+                            Accept
+                          </button>
+                        </div>
+                      );
+                    })}
+                  </>
+                )}
+              </div>
             ) : (
               <></>
             )}

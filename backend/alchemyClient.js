@@ -1,8 +1,8 @@
 const { Network, Alchemy } = require('alchemy-sdk');
-
+require('dotenv').config();
 const alchemyClient = async (walletAddress) => {
   const settings = {
-    apiKey: `${process.env.REACT_APP_ALCHEMY_API}`,
+    apiKey: `${process.env.ALCHEMY_API}`,
   };
   const alchemyMumbai = new Alchemy({
     ...settings,

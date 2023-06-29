@@ -1,11 +1,12 @@
-import React from 'react'
+import React from 'react';
 
 const Favorited = () => {
-    return (
-        <div> <div className='bg-green-500 h-96'>
+  return (
+    <div>
+      {' '}
+      <div className=" h-96">Future scope</div>
+    </div>
+  );
+};
 
-        </div></div>
-    )
-}
-
-export default Favorited
+export default Favorited;
