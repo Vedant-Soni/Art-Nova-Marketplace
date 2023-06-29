@@ -142,7 +142,7 @@ const Home = () => {
         {/* all collection NFT */}
         <div className="sm:px-8 md:px-10 lg:px-16 px-4">
           <div className="text-left m-2 ">
-            <p className="text-lg">ALL NFT COllection </p>
+            <p className="text-3xl font-semibold text-gray-700">All NFT Collection </p>
           </div>
           {/* loop all nft */}
           <div className="grid xl:grid-cols-5  lg:grid-cols-4  md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-8">

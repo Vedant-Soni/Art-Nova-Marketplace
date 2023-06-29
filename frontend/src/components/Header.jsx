@@ -12,8 +12,10 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 //images
 import openseaLogo from '../images/openseaLogo.png';
+import polygon from '../images/polygon.png'
+import Eth from '../images/eth.png'
 //Wagmi
-import { useSwitchNetwork } from 'wagmi';
+import { useSwitchNetwork,useNetwork } from 'wagmi';
 import {
   useAccount,
   useConnect,
@@ -39,6 +41,7 @@ const Header = () => {
   const { data: ensName } = useEnsName({ address });
   const { error, isLoading, pendingConnector } = useConnect();
   const { disconnect } = useDisconnect();
+  const { chain, chains } = useNetwork()
 
   const handleClickOpen = () => {
     setWalletOpen(true);
@@ -153,15 +156,19 @@ const Header = () => {
                       />
                     </div>
                     <div className="ml-2 text-white">
-                      <p className="font-bold text-black">OpenSea</p>
+                      <p className="font-bold text-black text-xl">OpenSea</p>
                     </div>
                   </NavLink>
                 </div>
 
                 <div className="w-px h-8 mx-6 bg-gray-500"></div>
-                <div className="lg:flex hidden">
-                  <p className="mx-2 text-black">Drops</p>
-                  <p className="mx-2 text-black">Stats</p>
+                <div className="lg:flex hidden text-lg">
+                  <p className="mx-2 text-gray-500">Drop</p>
+                  {isConnected? 
+                    <NavLink to='/create' className='cursor-pointer'>
+                    <p className="mx-2 text-black">Create</p>
+                      </NavLink>
+                      :<p className="mx-2 text-black cursor-pointer" onClick={()=>handleClickOpen()}>Create</p>}
                 </div>
                 <div></div>
               </div>
@@ -187,8 +194,14 @@ const Header = () => {
                         ? handleClickOpen()
                         : console.log('connected');
                     }}
-                  >
-                    <span className="mx-2 material-symbols-outlined">wallet</span>
+                    >
+                      <div className='mx-2 items-center'>
+                        {isConnected ? 
+                          chain.id == '80001'||chain.id == '137' ? <img src={polygon} alt='polygon' className='h-6'/> : <img src={Eth} alt='eth' className='h-6'/>
+                        :
+                          <span className="material-symbols-outlined">wallet</span>
+                        }
+                      </div>
                     <p className="px-2">
                       {isConnected
                         ? address.slice(0, 6) + '...' + address.slice(-4)

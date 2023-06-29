@@ -22,6 +22,7 @@ import { useNetwork, useSwitchNetwork } from 'wagmi';
 import { AppContext } from '../../App';
 import WalletConnect from '../WalletConnect';
 import { useNavigate } from 'react-router-dom';
+import DefaultNFT from '../../images/DefaultNFT.png'
 
 const Buy721 = (props) => {
   const accsessToken = localStorage.getItem('ArtNovaJwt');
@@ -29,8 +30,8 @@ const Buy721 = (props) => {
   const navigate = useNavigate();
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
-  const { walletopen, setWalletOpen } = useContext(AppContext);
-  const { isSuccess, switchNetwork } = useSwitchNetwork();
+  const { walletopen, setWalletOpen} = useContext(AppContext);
+  const { isSuccess, switchNetwork ,switchNetworkAsync } = useSwitchNetwork();
   const [open, setOpen] = React.useState(false);
   const [offerAmount, setOfferAmount] = useState(0);
   const [listingValue, setListingValue] = useState(0);
@@ -39,6 +40,10 @@ const Buy721 = (props) => {
   const [flag, setFlag] = useState(0);
   const { data: walletClient } = useSigner();
   const [loading, setLoading] = useState(false);
+
+  const { chain, chains } = useNetwork()
+  const { connectors, connect } = useConnect();
+
   //by vivek chain change
   window.ethereum.on('accountsChanged', (accounts) => {
     setFlag(flag + 1);
@@ -52,12 +57,11 @@ const Buy721 = (props) => {
     setWalletOpen(true);
   };
   const handleBuyNow = async () => {
-    handleClickOpen();
+    // handleClickOpen();
     try {
       setLoading(true);
       const nftContract = props.nftData?.nftJsonData.contract.address;
       const tokenId = props.nftData?.tokenId;
-      console.log(nftContract, tokenId);
       const response = await fetch(
         `http://localhost:5000/getOrder/${nftContract}/${tokenId}`,
         {
@@ -84,33 +88,48 @@ const Buy721 = (props) => {
           },
           body: JSON.stringify(updatedData),
         });
-        console.log('Success');
+        navigate('/profile');
       }
-      console.log('Finallyyyyyyyy:----');
     } catch (e) {
       console.log('Buy now error:', e);
     } finally {
       setLoading(false);
-
       handleClose();
-      navigate('/profile');
     }
   };
 
-  const handleClickOpen = () => {
-    setOpen(true);
+  const handleClickOpen = async() => {
+    props.nftData.network==chain.id? setOpen(true):
+                  await handleNetwork()
+   
   };
 
   const handleClose = () => {
     setOpen(false);
   };
+  function connectWallet() {
+    const connectrespo = connect({
+      connector: connectors[0],
+    });
+  }
+  const handleNetwork = async () => {
+    try {
+      
+      await switchNetworkAsync(props.nftData.network);
+      connectWallet()
+      setOpen(true);
+    }
+    catch (e) {
+      // connectWallet()
+      console.log(e,"network switch error")
+    }
+    //network switch handled
+  }
   // confirm listing
   const handleListItem = async () => {
-    const networkChangetx = switchNetwork(props.nftData.network); //network switch handled
+    
     console.log(isSuccess, ' :after listing after network switch req');
-    console.log('signer', walletClient);
     isConnected ? setWalletAddress(address) : console.log('need to connect');
-    console.log(listingValue); //listing value accsessible here
     const nftOwner = props.nftData?.nftOwnerAddress;
     const nftContract = props.nftData?.nftJsonData.contract.address;
     const tokenId = props.nftData?.tokenId;
@@ -124,7 +143,6 @@ const Buy721 = (props) => {
         offerer: address,
       });
 
-      console.log('Order:- ------', order);
       if (order) {
         const listedNftData = {
           nftOwner,
@@ -145,7 +163,6 @@ const Buy721 = (props) => {
         console.log(responseData);
       }
 
-      console.log('Here');
     } catch (e) {
       console.log('Listing error: ', e);
     } finally {
@@ -162,7 +179,6 @@ const Buy721 = (props) => {
       setLoading(true);
       const nftContract = props.nftData?.nftJsonData.contract.address;
       const tokenId = props.nftData?.tokenId;
-      console.log(nftContract, tokenId);
       const response = await fetch(
         `http://localhost:5000/getOrder/${nftContract}/${tokenId}`,
         {
@@ -174,13 +190,11 @@ const Buy721 = (props) => {
         },
       );
       const order = await response.json();
-      console.log(order);
       const cancel = await cancelOrder({
         order,
         offerer: address,
         signer: walletClient,
       });
-      console.log(cancel);
       if (cancel) {
         const params = { nftContract, tokenId };
 
@@ -193,7 +207,6 @@ const Buy721 = (props) => {
           body: JSON.stringify(params),
         });
         const message = await updateDB.json();
-        console.log(message);
       }
     } catch (e) {
       console.log('cancel list error : ', e);
@@ -206,8 +219,6 @@ const Buy721 = (props) => {
     try {
       setLoading(true);
 
-      console.log(offerAmount);
-      console.log('signer', walletClient);
       isConnected ? setWalletAddress(address) : console.log('need to connect');
 
       const nftOwner = props.nftData?.nftOwnerAddress;
@@ -236,10 +247,8 @@ const Buy721 = (props) => {
           },
           body: JSON.stringify(params),
         });
-        console.log(dbUpdate);
       }
 
-      // console.log(props.nftData.network);
     } catch (e) {
       console.log('Make offer error :', e);
     } finally {
@@ -321,7 +330,9 @@ const Buy721 = (props) => {
             <div className="flex gap-6 text-2xl h-full w-full p-4 px-8 rounded-xl text-center">
               <button
                 className="flex justify-center gap-4 h-full w-full text-white border bg-blue-400 transition-all duration-300 hover:bg-blue-600 border-gray-300 text-xl p-4 rounded-xl"
-                onClick={async () => {
+                    onClick={async () => {
+                      props.nftData.network==chain.id?handleClickOpen():
+                  await handleNetwork()
                   handleClickOpen();
                 }}
               >
@@ -388,7 +399,7 @@ const Buy721 = (props) => {
               <button
                 className="flex justify-center gap-4 h-full w-full text-white border bg-blue-400 hover:bg-blue-600 transition-all duration-300  border-gray-300 text-xl p-4 rounded-xl"
                 onClick={() => {
-                  isConnected ? handleBuyNow() : handlewalletOpen();
+                  isConnected ? handleClickOpen() : handlewalletOpen();
                 }}
               >
                 Buy now
@@ -398,13 +409,22 @@ const Buy721 = (props) => {
                 <DialogContent>
                   <div className="text-center  flex flex-col">
                     <img
-                      src={props.nftData.nftJsonData.tokenUri.raw}
+                      src={props.nftData?.nftJsonData.rawMetadata.image
+                        ? props.nftData?.nftJsonData.rawMetadata.image.includes('ipfs://')
+                          ? `https://ipfs.io/ipfs/` +
+                          props.nftData?.nftJsonData.rawMetadata.image.match(
+                              /ipfs:\/\/(.+)/,
+                            )[1]
+                          : props.nftData?.nftJsonData.rawMetadata.image
+                        : { DefaultNFT }}
                       alt="image"
-                      className="border border-gray-200 rounded-xl p-4"
+                      className="border border-gray-200 rounded-xl p-4 h-96"
                     />
-                    <div className="flex justify-between">
+                    <div className="flex justify-between text-xl">
                       <p>{props.nftData.nftJsonData.title}</p>
-                      <p>{props.nftData?.listingPrice}</p>
+                      <p>{parseFloat(props.nftData?.listingPrice)} {props.chainId === 80001 || props.chainId === 137
+                              ? 'Matic'
+                              : 'ETH'}</p>
                     </div>
                   </div>
                 </DialogContent>
@@ -422,7 +442,15 @@ const Buy721 = (props) => {
                     />
                   </div>
                 ) : (
-                  <DialogActions></DialogActions>
+                          <DialogActions>
+                            <Button onClick={handleClose}>Cancel</Button>
+                    <Button
+                              onClick={() => handleBuyNow()}
+                      variant="contained"
+                    >
+                      Confirm
+                    </Button>
+                  </DialogActions>
                 )}
               </Dialog>
               <Dialog

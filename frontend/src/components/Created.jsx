@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import avatr from '../images/avatr.png';
 import { NavLink } from 'react-router-dom';
 import { useAccount } from 'wagmi';
+import eth from '../images/Ether.png'
+import polygon from '../images/polygon.png'
 
 const Created = () => {
   const accsessToken = localStorage.getItem('ArtNovaJwt');
@@ -51,8 +53,11 @@ const Created = () => {
                     className="object-cover transition-transform duration-300 transform-gpu hover:scale-110 rounded-t-xl "
                   />
 
-                  <div className="overflow-hidden z-10 bg-slate-50 h-12 flex items-center pl-16 rounded-b-xl">
+                  <div className="overflow-hidden z-10 bg-slate-50 h-12 flex items-center px-4 justify-between rounded-b-xl">
+                    <p>
                     {nftdetail?.nftJsonData.rawMetadata.name}
+                    </p>
+                    <img src={nftdetail.network==80001 || nftdetail.network==137 ? polygon : eth} alt='network' className='h-6' />
                   </div>
                 </div>
               </NavLink>

@@ -34,6 +34,7 @@ const WalletConnect = () => {
   useEffect(() => {
     if (isConnected) {
       handleWalletConnect();
+      connectWallet()
     } else {
       console.log('isConnect is not true');
     }
@@ -140,7 +141,6 @@ const WalletConnect = () => {
             // Retrieve the data from the local storage
             const accsessToken = localStorage.getItem('ArtNovaJwt');
 
-            console.log(accsessToken);
 
             //verify jwt
             const verifyStatus = await fetch(
@@ -156,7 +156,6 @@ const WalletConnect = () => {
 
             const verifyResult = await verifyStatus.json();
             const verify = verifyResult.verify;
-            console.log(verify);
             if (!verify) {
 
               //get user address and nounce from backend
