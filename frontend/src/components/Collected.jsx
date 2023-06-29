@@ -1,234 +1,156 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useEffect } from 'react';
-import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import { alchemyClient } from '../alchemyClient';
-import avtar from '../images/avatr.png';
+import { useAccount, useConnect, useEnsName } from 'wagmi';
+import { InjectedConnector } from 'wagmi/connectors/injected';
+import DefaultNFT from '../images/DefaultNFT.png';
 
+import { ThreeDots } from 'react-loader-spinner';
 const Collected = () => {
-  const [nftsForOwnerMumbai, setnftsForOwnerMumbai] = useState(null);
-  const [nftsForOwnerSepolia, setnftsForOwnerSepolia] = useState(null);
-  const [nftsForOwnerMainnet, setnftsForOwnerMainnet] = useState(null);
-  const [nftsForOwnerPolygon, setnftsForOwnerPolygon] = useState(null);
+  const [nftData, setNftData] = useState(null);
+  const { address, connector, isConnected } = useAccount();
+  const [loading, setLoading] = useState(false);
+
+  const networks = {
+    1: 'Ethereum Mainnet',
+    11155111: 'Sepolia',
+    80001: 'Polygon Mumbai',
+    137: 'Polygon Mainnet',
+  };
 
   useEffect(() => {
-    const getNFT = async () => {
-      const {
-        nftsForOwnerMumbai,
-        nftsForOwnerSepolia,
-        nftsForOwnerMainnet,
-        nftsForOwnerPolygon,
-      } = await alchemyClient('0xcc1190D3Aad29b3E29FD435B793A830e8ccFE464');
-      if (nftsForOwnerMumbai.totalCount !== 0)
-        setnftsForOwnerMumbai(nftsForOwnerMumbai);
-      if (nftsForOwnerSepolia.totalCount !== 0)
-        setnftsForOwnerSepolia(nftsForOwnerSepolia);
-      if (nftsForOwnerMainnet.totalCount !== 0)
-        setnftsForOwnerMainnet(nftsForOwnerMainnet);
-      if (nftsForOwnerPolygon.totalCount !== 0)
-        setnftsForOwnerPolygon(nftsForOwnerPolygon);
+    const getNftData = async () => {
+      try {
+        setLoading(true);
+        if (isConnected) {
+          const response = await fetch(
+            `http://localhost:5000/collections/${address}`,
+            {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${localStorage.getItem('ArtNovaJwt')}`,
+              },
+            },
+          );
+          const getnftData = await response.json();
+          setNftData(getnftData.nftData);
+        }
+      } catch (error) {
+        console.log('get Nft error', error);
+      } finally {
+        setLoading(false);
+      }
     };
-    getNFT();
-  }, []);
+    getNftData();
+  }, [address, isConnected]);
 
   return (
     <div>
-      <div className=" h-96 py-4 px-4 rounded-xl">
+      <div className=" h-full py-4 pb-24 px-4 rounded-xl">
         <div className="grid grid-cols-8 py-2 border-b-2 border-gray-200 text-gray-400 text-left">
           <div className="col-span-2 pl-2">Items</div>
           <div>Floor price</div>
           <div>Best offer</div>
           <div>Listing price</div>
-          <div>Token Type</div>
-          <div>Network</div>
+          <div>Cost</div>
+          <div>Difference</div>
           <div></div>
         </div>
-
-        {nftsForOwnerMumbai &&
-          nftsForOwnerMumbai.ownedNfts.map((nftdetail, key) => {
-            return (
-              <NavLink
-                to={{
-                  pathname: `/nftdetail/${nftdetail.contract.address}/${nftdetail.tokenId}`,
-                  state: {
-                    nftsForOwner: nftsForOwnerMumbai,
-                    nftdetail: nftdetail,
-                  },
-                }}
-                key={key}
-              >
-                <div className="grid grid-cols-8 py-2 border-b-2 border-gray-200 group cursor-pointer text-left items-center">
-                  <div className="col-span-2 pl-2 relative image  items-center">
-                    <div className="flex items-center">
-                      <img
-                        src={
-                          nftdetail.rawMetadata.image
-                            ? nftdetail.rawMetadata.image
-                            : 'https://cdn3.iconfinder.com/data/icons/nft/64/nft_non_fungible_token_blockchain_sign_coin-512.png'
-                        }
-                        alt="NFT"
-                        className="h-10 w-10 m-2"
-                      />
-                      {nftdetail.title === '' ? '#untitled' : nftdetail.title}
+        {loading ? (
+          <div className="flex justify-center">
+            <ThreeDots
+              height="80"
+              width="80"
+              radius="9"
+              color="#9DB2BF"
+              ariaLabel="three-dots-loading"
+              wrapperStyle={{}}
+              wrapperClassName=""
+              visible={true}
+            />
+          </div>
+        ) : (
+          <>
+            {isConnected &&
+              nftData &&
+              nftData.map((nftdetail, key) => {
+                return (
+                  <NavLink
+                    to={{
+                      pathname: `/nftdetail/${nftdetail.nftContractAddress}/${nftdetail.tokenId}`,
+                    }}
+                  >
+                    <div
+                      index={key}
+                      className="grid grid-cols-8 py-2 border-b-2 border-gray-200 group hover:bg-gray-100 cursor-pointer text-left items-center"
+                    >
+                      <div className="col-span-2 pl-2 relative image  items-center">
+                        <div className="flex items-center">
+                          <img
+                            src={
+                              nftdetail?.nftJsonData.rawMetadata.image
+                                ? nftdetail?.nftJsonData.rawMetadata.image.includes(
+                                    'ipfs://',
+                                  )
+                                  ? `https://ipfs.io/ipfs/` +
+                                    nftdetail?.nftJsonData.rawMetadata.image.match(
+                                      /ipfs:\/\/(.+)/,
+                                    )[1]
+                                  : nftdetail?.nftJsonData.rawMetadata.image
+                                : { DefaultNFT }
+                            }
+                            alt="NFT"
+                            className="h-10 w-10 m-2"
+                          />
+                          {nftdetail.nftJsonData.title === ''
+                            ? '#untitled'
+                            : nftdetail.nftJsonData.title}
+                        </div>
+                        <div className="absolute left-0  mt-0 w-40 bg-gray-200 z-10 border border-gray-200 p-4 rounded-md opacity-0 group-hover:opacity-100 transition-all duration-300 shadow-lg h-40  group-hover:block">
+                          <img
+                            src={
+                              nftdetail?.nftJsonData.rawMetadata.image
+                                ? nftdetail?.nftJsonData.rawMetadata.image.includes(
+                                    'ipfs://',
+                                  )
+                                  ? `https://ipfs.io/ipfs/` +
+                                    nftdetail?.nftJsonData.rawMetadata.image.match(
+                                      /ipfs:\/\/(.+)/,
+                                    )[1]
+                                  : nftdetail?.nftJsonData.rawMetadata.image
+                                : { DefaultNFT }
+                            }
+                            alt="NFT"
+                            className="h-fit "
+                          />
+                        </div>
+                      </div>
+                      <div>
+                        {nftdetail.floorPrice === null
+                          ? '-- --'
+                          : nftdetail.floorPrice.slice(0, 7)}
+                      </div>
+                      <div>-- --</div>
+                      <div>
+                        {' '}
+                        {nftdetail.listingPrice === null
+                          ? '-- --'
+                          : nftdetail.listingPrice.slice(0, 7)}
+                      </div>
+                      <div>{nftdetail.nftJsonData.contract.tokenType}</div>
+                      <div>{networks[nftdetail.network]}</div>
+                      <div className=" justify-center hidden group-hover:flex">
+                        <span className="material-symbols-outlined text-center">
+                          sell
+                        </span>
+                      </div>
                     </div>
-                    <div class="absolute left-0  mt-0 w-40 bg-gray-200 z-10 border border-gray-200 p-4 rounded-md shadow-lg h-40 hidden group-hover:block">
-                      <img
-                        src={
-                          nftdetail.rawMetadata.image
-                            ? nftdetail.rawMetadata.image
-                            : 'https://cdn3.iconfinder.com/data/icons/nft/64/nft_non_fungible_token_blockchain_sign_coin-512.png'
-                        }
-                        alt="NFT"
-                        className="h-fit "
-                      />
-                    </div>
-                  </div>
-                  <div>-- -- </div>
-                  <div>-- --</div>
-                  <div>-- --</div>
-                  <div>{nftdetail.contract.tokenType}</div>
-                  <div>Polygon Mumbai</div>
-                  <div className=" justify-center hidden group-hover:flex">
-                    <span class="material-symbols-outlined text-center">
-                      sell
-                    </span>
-                  </div>
-                </div>
-              </NavLink>
-            );
-          })}
-        {nftsForOwnerSepolia &&
-          nftsForOwnerSepolia.ownedNfts.map((nftdetail, key) => {
-            return (
-              <NavLink
-                to={{
-                  pathname: `/nftdetail/${nftdetail.contract.address}/${nftdetail.tokenId}`,
-                  state: {
-                    nftsForOwner: nftsForOwnerSepolia,
-                    nftdetail: nftdetail,
-                  },
-                }}
-              >
-                <div className="grid grid-cols-8 py-2 border-b-2 border-gray-200 group cursor-pointer text-left items-center">
-                  <div className="col-span-2 pl-2 relative image  items-center">
-                    <div className="flex items-center">
-                      <img
-                        src={nftdetail.rawMetadata.image}
-                        alt="NFT"
-                        className="h-10 w-10 m-2"
-                      />
-                      {nftdetail.title === '' ? '#untitled' : nftdetail.title}
-                    </div>
-                    <div class="absolute left-0  mt-0 w-40 bg-gray-200 z-10 border border-gray-200 p-4 rounded-md shadow-lg h-40 hidden group-hover:block">
-                      <img
-                        src={nftdetail.rawMetadata.image}
-                        alt="NFT"
-                        className="h-fit "
-                      />
-                    </div>
-                  </div>
-                  <div>-- -- </div>
-                  <div>-- --</div>
-                  <div>-- --</div>
-                  <div>{nftdetail.contract.tokenType}</div>
-                  <div>Sepolia</div>
-                  <div className=" justify-center hidden group-hover:flex">
-                    <span class="material-symbols-outlined text-center">
-                      sell
-                    </span>
-                  </div>
-                </div>
-              </NavLink>
-            );
-          })}
-        {nftsForOwnerMainnet &&
-          nftsForOwnerMainnet.ownedNfts.map((nftdetail, key) => {
-            return (
-              <NavLink
-                to={{
-                  pathname: `/nftdetail/${nftdetail.contract.address}/${nftdetail.tokenId}`,
-                  state: {
-                    nftsForOwner: nftsForOwnerMainnet,
-                    nftdetail: nftdetail,
-                  },
-                }}
-              >
-                <div className="grid grid-cols-8 py-2 border-b-2 border-gray-200 group cursor-pointer text-left items-center">
-                  <div className="col-span-2 pl-2 relative image  items-center">
-                    <div className="flex items-center">
-                      <img
-                        src={nftdetail.rawMetadata.image}
-                        alt="NFT"
-                        className="h-10 w-10 m-2"
-                      />
-                      {nftdetail.title === '' ? '#untitled' : nftdetail.title}
-                    </div>
-                    <div class="absolute left-0  mt-0 w-40 bg-gray-200 z-10 border border-gray-200 p-4 rounded-md shadow-lg h-40 hidden group-hover:block">
-                      <img
-                        src={nftdetail.rawMetadata.image}
-                        alt="NFT"
-                        className="h-fit "
-                      />
-                    </div>
-                  </div>
-                  <div>-- -- </div>
-                  <div>-- --</div>
-                  <div>-- --</div>
-                  <div>{nftdetail.contract.tokenType}</div>
-                  <div>{nftsForOwnerMainnet.network}</div>
-                  <div className=" justify-center hidden group-hover:flex">
-                    <span class="material-symbols-outlined text-center">
-                      sell
-                    </span>
-                  </div>
-                </div>
-              </NavLink>
-            );
-          })}
-        {nftsForOwnerPolygon &&
-          nftsForOwnerPolygon.ownedNfts.map((nftdetail, key) => {
-            return (
-              <NavLink
-                to={{
-                  pathname: `/nftdetail/${nftdetail.contract.address}/${nftdetail.tokenId}`,
-                  state: {
-                    nftsForOwner: nftsForOwnerPolygon,
-                    nftdetail: nftdetail,
-                  },
-                }}
-              >
-                <div className="grid grid-cols-8 py-2 border-b-2 border-gray-200 group cursor-pointer text-left items-center">
-                  <div className="col-span-2 pl-2 relative image  items-center">
-                    <div className="flex items-center">
-                      <img
-                        src={nftdetail.rawMetadata.image}
-                        alt="NFT"
-                        className="h-10 w-10 m-2"
-                      />
-                      {nftdetail.title === '' ? '#untitled' : nftdetail.title}
-                    </div>
-                    <div class="absolute left-0  mt-0 w-40 bg-gray-200 z-10 border border-gray-200 p-4 rounded-md shadow-lg h-40 hidden group-hover:block">
-                      <img
-                        src={nftdetail.rawMetadata.image}
-                        alt="NFT"
-                        className="h-fit "
-                      />
-                    </div>
-                  </div>
-                  <div>-- -- </div>
-                  <div>-- --</div>
-                  <div>-- --</div>
-                  <div>{nftdetail.contract.tokenType}</div>
-                  <div>{nftsForOwnerPolygon.network}</div>
-                  <div className=" justify-center hidden group-hover:flex">
-                    <span class="material-symbols-outlined text-center">
-                      sell
-                    </span>
-                  </div>
-                </div>
-              </NavLink>
-            );
-          })}
+                  </NavLink>
+                );
+              })}
+          </>
+        )}
       </div>
     </div>
   );
