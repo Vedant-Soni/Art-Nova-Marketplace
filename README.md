@@ -33,7 +33,7 @@ To run this project locally, ensure you have the following installed:
 
 1. Clone the repository:
 ```
-git clone https://github.com/your-username/nft-marketplace.git
+git clone https://github.com/Vedant-Soni/Art-Nova-Marketplace.git
 ```
 
 2. Install the backend dependencies:
