@@ -1,4 +1,3 @@
-// Import required libraries
 
 const { Seaport } = require('@opensea/seaport-js');
 
@@ -9,19 +8,19 @@ export const fulfillorder = async ({
   signer,
 }) => {
   try {
-    console.log('Fullfile:- signer', signer);
+    
     const seaport = new Seaport(signer);
-    console.log('Fullfile:- Seaport', seaport);
+  
     let transaction;
-    console.log(order, ';;;;;;', fulfiller);
+    
     if (!Array.isArray(order)) {
       const orderParams = { order, accountAddress: fulfiller };
-      console.log('Hi 1');
+     
       if (unitsToFill) {
         orderParams.unitsToFill = unitsToFill;
       }
 
-      console.log('Hi 2');
+      
       const { executeAllActions } = await seaport.fulfillOrder(orderParams);
 
       transaction = await executeAllActions();
@@ -34,11 +33,11 @@ export const fulfillorder = async ({
 
       transaction = await executeAllActions();
     }
-    console.log('Hi 3');
+   
     return transaction.hash;
   } catch (e) {
     console.log(e);
   }
 };
 
-// module.exports = { fulfillorder };
+
